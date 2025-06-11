@@ -1,0 +1,60 @@
+### Adress show all
+GET http://localhost:3001/api/persons
+
+### Get a specific person
+GET http://localhost:3001/api/persons/4
+
+### Delete a specific person
+DELETE http://localhost:3001/api/persons/1
+
+### Create a new person
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Zlartibart Fass",
+  "number": "+49 30 113 23 44"
+}
+
+### try to create a person without a name
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "Nase": "Zlartibart Fass",
+  "number": "+49 30 113 23 44"
+}
+
+### try to create a person without a number
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Zlartibart Fass",
+  "bummer": "+49 30 113 23 44"
+}
+
+### Notes
+### post an invalid note
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "inhalt": "Die kuh rennt um See rum.",
+  "important": "false"
+}
+
+### post a valid note
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "content": "Die kuh rennt um See rum.",
+  "important": "true"
+}
+
+#### get all notes
+GET http://localhost:3001/api/notes
+
+#### delete a specific node
+DELETE http://localhost:3001/api/notes/4
