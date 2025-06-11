@@ -1,5 +1,4 @@
 const express = require('express')
-const cors = require('cors')
 const morgan = require('morgan')
 
 const notesApp = require('./notes_backend.js')
@@ -11,7 +10,6 @@ const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
-app.use(cors())
 app.use(express.json())
 app.use(express.static('dist'))
 morgan.token('request-json', function (req, res) { return JSON.stringify(req.body) })

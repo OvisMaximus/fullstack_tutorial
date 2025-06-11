@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "notesdb": "json-server --port 3001 notes.json",
-    "phonedb": "json-server --port 3001 phonebook.json"
+    "phonedb": "json-server --port 3001 phonebook.json",
+    "deploy": "@powershell Remove-Item -Recurse -Force dist && npm run build && @powershell Remove-Item -Recurse -Force ../backend/dist && @powershell Copy-Item dist -Recurse ../backend/dist"
   },
   "dependencies": {
     "axios": "^1.9.0",
