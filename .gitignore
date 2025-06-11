@@ -230,3 +230,4 @@ tags
 [._]*.un~
 
 package-lock.json
+frontend/dist
