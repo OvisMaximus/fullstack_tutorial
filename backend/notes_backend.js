@@ -39,12 +39,6 @@ const getNote = (request, response) => {
 const updateNote = (request, response) => {
     const body = request.body
     const id = request.params.id
-    const note = [].find(note => note.id === id)
-    if (!note) {
-        return response.status(404).json({
-            error: 'no note found with id ' + id
-        })
-    }
 
     if (!body.content) {
         return response.status(400).json({
@@ -52,14 +46,13 @@ const updateNote = (request, response) => {
         })
     }
 
-    const newNote = {
-        content: body.content,
-        important: body.important || false,
-        id
-    }
-    //TODO
-
-    response.json(newNote)
+    Note.findByIdAndUpdate(id, body, {new: true}).then(savedNote => {
+        response.json(savedNote)
+    }).catch(err => {
+        response.status(404).json({
+            error: 'no note found with id ' + id + " " + JSON.stringify(err)
+        })
+    })
 }
 
 const deleteNote = (request, response) => {
