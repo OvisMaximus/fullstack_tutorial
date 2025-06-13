@@ -1,12 +1,15 @@
 const mongoose = require('mongoose')
-const dbPasswd = process.env.MONGODB_DBPASSWORD;
-const url = `mongodb+srv://laurawetterwachs:${dbPasswd}@fullstacktutorial.3rn4lnq.mongodb.net/fullstackTutorial?retryWrites=true&w=majority&appName=fullstackTutorial`;
+const url = process.env.DB_URL;
 
-function run() {
+function connect() {
     mongoose.set('strictQuery', false)
-    mongoose.connect(url)
-        .then(() => console.log('Connected to mongodb'))
-        .catch(err => console.error("Error connecting to mongodb:", err));
+    if (! url) {
+        console.error('MongoDB URI is missing, please define DB_URL')
+    } else {
+        mongoose.connect(url)
+            .then(() => console.log('Connected to mongodb'))
+            .catch(err => console.error("Error connecting to mongodb:", err));
+    }
 }
 
-module.exports = {run};
+module.exports = {connect};
