@@ -21,6 +21,7 @@ const addNote =  (request, response) => {
 }
 
 const getAllNotes = (request, response) => {
+    // noinspection JSCheckFunctionSignatures
     Note.find({}).then(notes => {
         response.json(notes)
     })
@@ -28,10 +29,11 @@ const getAllNotes = (request, response) => {
 
 const getNote = (request, response) => {
     const id = request.params.id
+    // noinspection JSCheckFunctionSignatures
     Note.findById(id)
         .then(note => {
             response.json(note)
-        }).catch(err => {
+        }).catch(_ => {
             response.status(404).end()
         })
 }
@@ -46,6 +48,7 @@ const updateNote = (request, response) => {
         })
     }
 
+    // noinspection JSCheckFunctionSignatures
     Note.findByIdAndUpdate(id, body, {new: true}).then(savedNote => {
         response.json(savedNote)
     }).catch(err => {
