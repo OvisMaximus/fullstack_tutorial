@@ -1,9 +1,12 @@
 const express = require('express')
 const morgan = require('morgan')
 
+const mongodb = require('./services/mongodb.js')
+mongodb.run()
+
 const notesApp = require('./notes_backend.js')
 const phonebookApp = require('./phonebook_backend.js')
-const mongodb = require('./services/mongodb.js')
+
 
 const app = express()
 
@@ -29,4 +32,3 @@ const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
-mongodb.run().catch(console.dir);

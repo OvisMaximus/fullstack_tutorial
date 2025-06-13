@@ -1,27 +1,4 @@
-let notes = [
-    {
-        id: "1",
-        content: "HTML is easy",
-        important: true
-    },
-    {
-        id: "2",
-        content: "Browser can execute only JavaScript",
-        important: false
-    },
-    {
-        id: "3",
-        content: "GET and POST are the most important methods of HTTP protocol",
-        important: true
-    }
-]
-
-const generateId = () => {
-    const maxId = notes.length > 0
-        ? Math.max(...notes.map(n => Number(n.id)))
-        : 0
-    return String(maxId + 1)
-}
+const Note = require("./services/notes_schema");
 
 const addNote =  (request, response) => {
     const body = request.body
@@ -32,24 +9,27 @@ const addNote =  (request, response) => {
         })
     }
 
-    const note = {
+    const note = new Note({
         content: body.content,
-        important: body.important || false,
-        id: generateId(),
-    }
+        important: body.important || false
+    })
 
-    notes = notes.concat(note)
-
-    response.json(note)
+    note.save().then(result => {
+        console.log('note saved!', result)
+        response.json(result)
+    })
 }
 
 const getAllNotes = (request, response) => {
-    response.json(notes)
+    Note.find({}).then(notes => {
+        response.json(notes)
+    })
 }
 
 const getNote = (request, response) => {
     const id = request.params.id
-    const note = notes.find(note => note.id === id)
+    const note = [].find(note => note.id === id)
+    //TODO
     if (note) {
         response.json(note)
     } else {
@@ -60,7 +40,7 @@ const getNote = (request, response) => {
 const updateNote = (request, response) => {
     const body = request.body
     const id = request.params.id
-    const note = notes.find(note => note.id === id)
+    const note = [].find(note => note.id === id)
     if (!note) {
         return response.status(404).json({
             error: 'no note found with id ' + id
@@ -78,15 +58,15 @@ const updateNote = (request, response) => {
         important: body.important || false,
         id
     }
-
-    notes = notes.map(oldNote => oldNote.id === newNote.id? newNote: oldNote)
+    //TODO
 
     response.json(newNote)
 }
 
 const deleteNote = (request, response) => {
     const id = request.params.id
-    notes = notes.filter(note => note.id !== id)
+
+    //TODO
 
     response.status(204).end()
 }
@@ -99,4 +79,4 @@ function registerRoutesIn (app) {
     app.put('/api/notes/:id', updateNote)
 }
 
-export {registerRoutesIn}
+module.exports = {registerRoutesIn}
