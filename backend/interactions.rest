@@ -57,4 +57,4 @@ Content-Type: application/json
 GET http://localhost:3001/api/notes
 
 #### delete a specific node
-DELETE http://localhost:3001/api/notes/4
+DELETE http://localhost:3001/api/notes/684bf9ddc649fd4b5bcbfeac

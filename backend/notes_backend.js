@@ -14,9 +14,9 @@ const addNote =  (request, response) => {
         important: body.important || false
     })
 
-    note.save().then(result => {
-        console.log('note saved!', result)
-        response.json(result)
+    note.save().then(savedNote => {
+        console.log('note saved!', savedNote)
+        response.json(savedNote)
     })
 }
 
@@ -28,13 +28,12 @@ const getAllNotes = (request, response) => {
 
 const getNote = (request, response) => {
     const id = request.params.id
-    const note = [].find(note => note.id === id)
-    //TODO
-    if (note) {
-        response.json(note)
-    } else {
-        response.status(404).end()
-    }
+    Note.findById(id)
+        .then(note => {
+            response.json(note)
+        }).catch(err => {
+            response.status(404).end()
+        })
 }
 
 const updateNote = (request, response) => {
@@ -66,7 +65,7 @@ const updateNote = (request, response) => {
 const deleteNote = (request, response) => {
     const id = request.params.id
 
-    //TODO
+    Note.deleteOne({ _id: id })
 
     response.status(204).end()
 }
