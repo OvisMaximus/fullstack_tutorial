@@ -1,16 +1,13 @@
+require('dotenv').config()
 const mongoose = require('mongoose')
 
-
-const dbPasswd = process.env.MONGODB_DBPASSWORD;
-if (!dbPasswd) {
-    console.error('please provide mongodb dbPasswd as environment variable "MONGODB_DBPASSWORD"');
+const url = process.env.DB_URL
+if (!url) {
+    console.error('please provide mongodb url as environment variable "DB_URL"');
     process.exit(1)
 }
-const url = `mongodb+srv://laurawetterwachs:${dbPasswd}@fullstacktutorial.3rn4lnq.mongodb.net/fullstackTutorial?retryWrites=true&w=majority&appName=fullstackTutorial`;
 
 mongoose.set('strictQuery',false)
-
-mongoose.connect(url)
 
 const noteSchema = new mongoose.Schema({
     content: String,
@@ -19,20 +16,39 @@ const noteSchema = new mongoose.Schema({
 
 const Note = mongoose.model('Note', noteSchema)
 
-/*
-const note = new Note({
-    content: 'Mongoose makes things easy',
-    important: true,
-})
-
-note.save().then(result => {
-    console.log('note saved!')
-    mongoose.connection.close()
-})
-*/
-Note.find({}).then(result => {
-    result.forEach(note => {
-        console.log(note);
+const addNewNote = (content, important) => {
+    const note = new Note({
+        content,
+        important
     })
-    mongoose.connection.close()
-})
+
+    note.save().then(async _ => {
+        console.log('note saved!')
+        await mongoose.connection.close()
+    })
+
+}
+
+const listNotes = () => {
+    // noinspection JSCheckFunctionSignatures
+    Note.find({}).then(async result => {
+        result.forEach(note => {
+            console.log(note);
+        })
+        await mongoose.connection.close()
+    })
+}
+
+const main = async () => {
+    await mongoose.connect(url)
+    if (process.argv.length <= 2) {
+        listNotes()
+    } else if (process.argv.length <= 4) {
+        const content = process.argv[2];
+        const important = process.argv[3];
+        addNewNote(content, important)
+    } else {
+        console.error("please provide name and number to add a person")
+    }
+}
+main().catch(console.error)
