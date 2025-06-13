@@ -21,5 +21,5 @@ async function run() {
         await client.close();
     }
 }
-console.log("mongo db password:", dbPasswd);
+
 module.exports = {run};
