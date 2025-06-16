@@ -1,25 +1,5 @@
-let persons = [
-    {
-        "id": "1",
-        "name": "Arto Hellas",
-        "phoneNumber": "040-123456"
-    },
-    {
-        "id": "2",
-        "name": "Ada Lovelace",
-        "phoneNumber": "39-44-5323523"
-    },
-    {
-        "id": "3",
-        "name": "Dan Abramov",
-        "phoneNumber": "12-43-234345"
-    },
-    {
-        "id": "4",
-        "name": "Mary Poppendieck",
-        "phoneNumber": "39-23-6423122"
-    }
-]
+import Person from "./services/person_schema.js";
+
 let clients = []
 
 const registerClient = (response) => {
@@ -38,7 +18,10 @@ const notifyClients = () => {
     clients.forEach((response) => {
         try {
             console.log('notify client')
-            response.write(`data: ${JSON.stringify({persons: persons})}\n\n`)
+            // noinspection JSCheckFunctionSignatures
+            Person.find({}).then(persons => {
+                response.write(`data: ${JSON.stringify({persons: persons})}\n\n`)
+            })
         } catch (error) {
             console.log('Failed to write to client, removing...')
             unregisterClient(response)
@@ -46,32 +29,33 @@ const notifyClients = () => {
     })
 }
 
-const createId = () => {
-    const newRandomId = () => Math.floor(Math.random() * 100000000)
-    let newId = newRandomId()
-    while (persons.find(person => person.id === newId) ) {
-        newId = newRandomId()
-    }
-    return newId
-}
-
 const deletePerson = (request, response) => {
     const id = request.params.id
-    persons = persons.filter(person => person.id !== id)
-    notifyClients()
-    response.status(204).end()
+
+    Person.findByIdAndDelete(id, {lean:true}).then(()=>{
+        notifyClients()
+        response.status(204).end()
+    }).catch(_ => {
+        response.status(404).end()
+    })
+
 }
 
 const getPerson = (request, response) => {
     const id = request.params.id
-    const person = persons.find(person => person.id === id)
-    if (person) {
-        return response.json(person)
-    }
-    return response.status(404).end()
+    // noinspection JSCheckFunctionSignatures
+    Person.findById(id)
+            .then(person => {
+                response.json(person)
+            }).catch(_ => {
+            response.status(404).end()
+        })
 }
 const getAllPersons = (request, response) => {
-    response.json(persons)
+    // noinspection JSCheckFunctionSignatures
+    Person.find({}).then(persons => {
+        response.json(persons)
+    })
 }
 const addPerson = (request, response) => {
     const body = request.body
@@ -80,23 +64,29 @@ const addPerson = (request, response) => {
     if (!name) {
         return response.status(400).json({error: 'name is missing'})
     }
-    if (persons.find(person => person.name === name))
-        return response.status(400).json({error: 'person already exists'})
 
     const phoneNumber = body.phoneNumber
     if (!phoneNumber) {
         return response.status(400).json({error: 'phoneNumber is missing'})
     }
 
-    const id = createId()
-    const newPerson = {"id": id.toString(), name, phoneNumber}
+// TODO prevent storing a person as new if a person with the same name exists already => return response.status(400).json({error: 'person already exists'})
 
-    persons.push(newPerson)
-    response.json(newPerson)
-    notifyClients()
+    const person = new Person({name, phoneNumber})
+
+    person.save().then(savedPerson => {
+        console.log('person saved!', savedPerson)
+        response.json(savedPerson)
+        notifyClients()
+    })
+
+
 }
 const getStatusInfo = (request, response) => {
-    response.send(`Phonebook has info for ${persons.length} people<br/>${new Date().toString()}`)
+    // noinspection JSCheckFunctionSignatures
+    Person.find({}).then(persons => {
+        response.send(`Phonebook has info for ${persons.length} people<br/>${new Date().toString()}`)
+    })
 }
 
 const provideUpdates = (request, response) => {

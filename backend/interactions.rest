@@ -5,7 +5,7 @@ GET http://localhost:3001/api/persons
 GET http://localhost:3001/api/persons/4
 
 ### Delete a specific person
-DELETE http://localhost:3001/api/persons/1
+DELETE http://localhost:3001/api/persons/684fd93ca67023f841ad80cf
 
 ### Create a new person
 POST http://localhost:3001/api/persons
