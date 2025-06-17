@@ -110,12 +110,31 @@ const provideUpdates = (request, response) => {
     registerClient(response)
 }
 
+const updatePerson = (request, response, next) => {
+    const body = request.body
+    const id = request.params.id
+
+    if (!body || !body.name) {
+        response.status(400).json({
+            error: 'name missing'
+        })
+        return
+    }
+
+    // noinspection JSCheckFunctionSignatures
+    Person.findByIdAndUpdate(id, body, { new: true })
+        .then(savedPerson => {
+            response.json(savedPerson)
+        })
+        .catch(error => next(error))
+}
 function registerRoutesIn(app) {
     app.get('/api/persons/updates', provideUpdates)
     app.delete('/api/persons/:id', deletePerson)
     app.get('/api/persons/:id', getPerson)
     app.get('/api/persons', getAllPersons)
     app.post('/api/persons', addPerson)
+    app.put('/api/persons/:id', updatePerson)
     app.get('/info', getStatusInfo)
 }
 
