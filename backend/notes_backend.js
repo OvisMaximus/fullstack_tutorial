@@ -32,9 +32,17 @@ const getNote = (request, response) => {
     // noinspection JSCheckFunctionSignatures
     Note.findById(id)
         .then(note => {
-            response.json(note)
-        }).catch(_ => {
-            response.status(404).end()
+            if (note) {
+                response.json(note)
+            } else {
+                response.status(404).end()
+            }
+        }).catch(error => {
+        console.error(error)
+        if (error.name === 'CastError') {
+            response.status(400).json({error: 'malformatted id'}).end()
+        } else
+            response.status(500).end()
         })
 }
 

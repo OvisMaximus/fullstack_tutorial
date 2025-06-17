@@ -44,11 +44,20 @@ const deletePerson = (request, response) => {
 const getPerson = (request, response) => {
     const id = request.params.id
     // noinspection JSCheckFunctionSignatures
-    Person.findById(id)
-            .then(person => {
+    Person
+        .findById(id)
+        .then(person => {
+            if (person) {
                 response.json(person)
-            }).catch(_ => {
-            response.status(404).end()
+            } else {
+                response.status(404).end()
+            }
+        }).catch(error => {
+            console.error(error)
+            if (error.name === 'CastError') {
+                response.status(400).json({error: 'malformatted id'}).end()
+            } else
+                response.status(500).end()
         })
 }
 const getAllPersons = (request, response) => {
