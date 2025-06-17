@@ -29,16 +29,15 @@ const notifyClients = () => {
     })
 }
 
-const deletePerson = (request, response) => {
+const deletePerson = (request, response, next) => {
     const id = request.params.id
 
-    Person.findByIdAndDelete(id, {lean:true}).then(()=>{
-        notifyClients()
-        response.status(204).end()
-    }).catch(_ => {
-        response.status(404).end()
-    })
-
+    Person.findByIdAndDelete(id, {lean: true})
+        .then(() => {
+            notifyClients()
+            response.status(204).end()
+        })
+        .catch(error => next(error))
 }
 
 const getPerson = (request, response, next) => {
@@ -111,7 +110,7 @@ const provideUpdates = (request, response) => {
     registerClient(response)
 }
 
-function registerRoutesIn (app) {
+function registerRoutesIn(app) {
     app.get('/api/persons/updates', provideUpdates)
     app.delete('/api/persons/:id', deletePerson)
     app.get('/api/persons/:id', getPerson)

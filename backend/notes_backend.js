@@ -1,6 +1,6 @@
 const Note = require("./services/notes_schema");
 
-const addNote =  (request, response) => {
+const addNote = (request, response) => {
     const body = request.body
 
     if (!body.content) {
@@ -40,35 +40,37 @@ const getNote = (request, response, next) => {
         }).catch(error => next(error))
 }
 
-const updateNote = (request, response) => {
+const updateNote = (request, response, next) => {
     const body = request.body
     const id = request.params.id
 
-    if (!body.content) {
-        return response.status(400).json({
+    if (!body || !body.content) {
+        response.status(400).json({
             error: 'content missing'
         })
+        return
     }
 
     // noinspection JSCheckFunctionSignatures
-    Note.findByIdAndUpdate(id, body, {new: true}).then(savedNote => {
-        response.json(savedNote)
-    }).catch(err => {
-        response.status(404).json({
-            error: 'no note found with id ' + id + " " + JSON.stringify(err)
+    Note.findByIdAndUpdate(id, body, { new: true })
+        .then(savedNote => {
+            response.json(savedNote)
         })
-    })
+        .catch(error => next(error))
 }
 
-const deleteNote = (request, response) => {
+const deleteNote = (request, response, next) => {
     const id = request.params.id
 
-    Note.deleteOne({ _id: id })
-
-    response.status(204).end()
+    // noinspection JSCheckFunctionSignatures
+    Note.findOneAndDelete(id)
+        .then(_ => {
+            response.status(204).end()
+        })
+        .catch(error => next(error))
 }
 
-function registerRoutesIn (app) {
+function registerRoutesIn(app) {
     app.delete('/api/notes/:id', deleteNote)
     app.get('/api/notes/:id', getNote)
     app.get('/api/notes', getAllNotes)
