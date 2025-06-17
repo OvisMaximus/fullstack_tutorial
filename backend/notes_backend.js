@@ -27,7 +27,7 @@ const getAllNotes = (request, response) => {
     })
 }
 
-const getNote = (request, response) => {
+const getNote = (request, response, next) => {
     const id = request.params.id
     // noinspection JSCheckFunctionSignatures
     Note.findById(id)
@@ -37,13 +37,7 @@ const getNote = (request, response) => {
             } else {
                 response.status(404).end()
             }
-        }).catch(error => {
-        console.error(error)
-        if (error.name === 'CastError') {
-            response.status(400).json({error: 'malformatted id'}).end()
-        } else
-            response.status(500).end()
-        })
+        }).catch(error => next(error))
 }
 
 const updateNote = (request, response) => {

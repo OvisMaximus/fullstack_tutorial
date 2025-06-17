@@ -15,6 +15,17 @@ const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        response.status(400).json({error: 'malformatted id'}).end()
+    } else
+        response.status(500).end()
+
+    next(error)
+}
+
 app.use(express.json())
 app.use(express.static('dist'))
 morgan.token('request-json', function (req, res) { return JSON.stringify(req.body) })
@@ -28,6 +39,7 @@ app.get('/', (request, response) => {
 notesApp.registerRoutesIn(app)
 phonebookApp.registerRoutesIn(app)
 app.use(unknownEndpoint)
+app.use(errorHandler) // remember, has to be the last middleware!
 
 const portNumber = process.env.PORT
 app.listen(portNumber, () => {
