@@ -49,7 +49,7 @@ const NewPersonForm = ({persons, setPersons, successMessage, errorMessage}) => {
                 successMessage(`updated ${newName}`)
             })
             .catch(error => {
-                console.log('error: ', error)
+                console.log('error while updating person: ', error)
                 errorMessage(`error: The person ${newName} was already removed from server`)
              })
     }
@@ -63,6 +63,10 @@ const NewPersonForm = ({persons, setPersons, successMessage, errorMessage}) => {
             .then(newPerson => {
                 setPersons(persons.concat(newPerson))
                 successMessage(`added ${newName}`)
+            })
+            .catch(error => {
+                console.log('error while creating person: ', error)
+                errorMessage(`error: ${newName} could not be added: ${error.response.data.error}`)
             })
     }
 

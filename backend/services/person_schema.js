@@ -1,8 +1,16 @@
 const mongoose = require('mongoose')
 
 personSchema = new mongoose.Schema({
-    name: String,
-    phoneNumber: String,
+    name: {
+        type: String,
+        minLength: 3,
+        required: true
+    },
+    phoneNumber: {
+        type: String,
+        minLength: 9,
+        required: true
+    },
 })
 personSchema.set('toJSON', {
     transform: (document, returnedObject) => {
