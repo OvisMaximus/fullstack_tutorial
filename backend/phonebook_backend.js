@@ -59,30 +59,24 @@ const getAllPersons = (request, response) => {
         response.json(persons)
     })
 }
-const addPerson = (request, response) => {
+const addPerson = (request, response, next) => {
     const body = request.body
-
-    const name = body.name
-    if (!name) {
-        return response.status(400).json({error: 'name is missing'})
+    if (!body) {
+        response.status(400).json({error: 'no data for person provided'}).end()
+        return
     }
-
-    const phoneNumber = body.phoneNumber
-    if (!phoneNumber) {
-        return response.status(400).json({error: 'phoneNumber is missing'})
-    }
+    const {name, phoneNumber} = body.name
+    const person = new Person({name, phoneNumber})
 
 // TODO prevent storing a person as new if a person with the same name exists already => return response.status(400).json({error: 'person already exists'})
 
-    const person = new Person({name, phoneNumber})
-
-    person.save().then(savedPerson => {
-        console.log('person saved!', savedPerson)
-        response.json(savedPerson)
-        notifyClients()
-    })
-
-
+    person.save()
+        .then(savedPerson => {
+            console.log('person saved!', savedPerson)
+            response.json(savedPerson)
+            notifyClients()
+        })
+        .catch(error => next(error))
 }
 const getStatusInfo = (request, response) => {
     // noinspection JSCheckFunctionSignatures
@@ -122,7 +116,7 @@ const updatePerson = (request, response, next) => {
     }
 
     // noinspection JSCheckFunctionSignatures
-    Person.findByIdAndUpdate(id, body, { new: true })
+    Person.findByIdAndUpdate(id, body, { new: true, runValidators: true})
         .then(savedPerson => {
             response.json(savedPerson)
         })

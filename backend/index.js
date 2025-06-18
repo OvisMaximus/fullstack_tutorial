@@ -16,13 +16,16 @@ const unknownEndpoint = (request, response) => {
 }
 
 const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
+    //console.error(JSON.stringify(error))
 
     if (error.name === 'CastError') {
+        console.error('malformatted id: ', error.message)
         response.status(400).json({error: 'malformatted id'}).end()
     } else if (error.name === 'ValidationError') {
-        response.status(400).json({ error: error.message }).end()
+        console.error('validation error: ', error.message)
+        response.status(400).json({error: error.message }).end()
     } else {
+        console.error('unknown error: ', error)
         response.status(500).end()
         next(error)
     }
