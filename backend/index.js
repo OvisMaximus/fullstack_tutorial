@@ -20,10 +20,12 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'CastError') {
         response.status(400).json({error: 'malformatted id'}).end()
-    } else
+    } else if (error.name === 'ValidationError') {
+        response.status(400).json({ error: error.message }).end()
+    } else {
         response.status(500).end()
-
-    next(error)
+        next(error)
+    }
 }
 
 app.use(express.json())

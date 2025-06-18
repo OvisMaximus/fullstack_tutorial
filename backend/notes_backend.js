@@ -1,6 +1,6 @@
 const Note = require("./services/notes_schema");
 
-const addNote = (request, response) => {
+const addNote = (request, response, next) => {
     const body = request.body
 
     if (!body.content) {
@@ -14,10 +14,12 @@ const addNote = (request, response) => {
         important: body.important || false
     })
 
-    note.save().then(savedNote => {
-        console.log('note saved!', savedNote)
-        response.json(savedNote)
-    })
+    note.save()
+        .then(savedNote => {
+            console.log('note saved!', savedNote)
+            response.json(savedNote)
+        })
+        .catch(error => next(error))
 }
 
 const getAllNotes = (request, response) => {
@@ -52,7 +54,7 @@ const updateNote = (request, response, next) => {
     }
 
     // noinspection JSCheckFunctionSignatures
-    Note.findByIdAndUpdate(id, body, { new: true })
+    Note.findByIdAndUpdate(id, body, {new: true})
         .then(savedNote => {
             response.json(savedNote)
         })
