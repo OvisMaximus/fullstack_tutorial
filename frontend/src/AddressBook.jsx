@@ -50,7 +50,7 @@ const NewPersonForm = ({persons, setPersons, successMessage, errorMessage}) => {
             })
             .catch(error => {
                 console.log('error while updating person: ', error)
-                errorMessage(`error: The person ${newName} was already removed from server`)
+                errorMessage(`${newName} could not be updated: ${error.response.data.error}`)
              })
     }
 
@@ -66,7 +66,7 @@ const NewPersonForm = ({persons, setPersons, successMessage, errorMessage}) => {
             })
             .catch(error => {
                 console.log('error while creating person: ', error)
-                errorMessage(`error: ${newName} could not be added: ${error.response.data.error}`)
+                errorMessage(`${newName} could not be added: ${error.response.data.error}`)
             })
     }
 

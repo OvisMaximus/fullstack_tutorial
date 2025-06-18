@@ -65,7 +65,7 @@ const addPerson = (request, response, next) => {
         response.status(400).json({error: 'no data for person provided'}).end()
         return
     }
-    const {name, phoneNumber} = body.name
+    const {name, phoneNumber} = body
     const person = new Person({name, phoneNumber})
 
 // TODO prevent storing a person as new if a person with the same name exists already => return response.status(400).json({error: 'person already exists'})
