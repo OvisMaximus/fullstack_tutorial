@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const url = process.env.DB_URL;
+const url = process.env.DB_URL
 
 function connect() {
     mongoose.set('strictQuery', false)
@@ -8,8 +8,8 @@ function connect() {
     } else {
         mongoose.connect(url)
             .then(() => console.log('Connected to mongodb'))
-            .catch(err => console.error("Error connecting to mongodb:", err));
+            .catch(err => console.error('Error connecting to mongodb:', err))
     }
 }
 
-module.exports = {connect};
+module.exports = { connect }

@@ -1,4 +1,4 @@
-const Note = require("./services/notes_schema");
+const Note = require('./services/notes_schema')
 
 const addNote = (request, response, next) => {
     const body = request.body
@@ -54,7 +54,7 @@ const updateNote = (request, response, next) => {
     }
 
     // noinspection JSCheckFunctionSignatures
-    Note.findByIdAndUpdate(id, body, {new: true})
+    Note.findByIdAndUpdate(id, body, { new: true })
         .then(savedNote => {
             response.json(savedNote)
         })
@@ -66,7 +66,7 @@ const deleteNote = (request, response, next) => {
 
     // noinspection JSCheckFunctionSignatures
     Note.findOneAndDelete(id)
-        .then(_ => {
+        .then(() => {
             response.status(204).end()
         })
         .catch(error => next(error))
@@ -80,4 +80,4 @@ function registerRoutesIn(app) {
     app.put('/api/notes/:id', updateNote)
 }
 
-module.exports = {registerRoutesIn}
+module.exports = { registerRoutesIn }

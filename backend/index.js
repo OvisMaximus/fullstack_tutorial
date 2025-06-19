@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 
@@ -20,10 +20,10 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'CastError') {
         console.error('malformatted id: ', error.message)
-        response.status(400).json({error: 'malformatted id'}).end()
+        response.status(400).json({ error: 'malformatted id' }).end()
     } else if (error.name === 'ValidationError') {
         console.error('validation error: ', error.message)
-        response.status(400).json({error: error.message }).end()
+        response.status(400).json({ error: error.message }).end()
     } else {
         console.error('unknown error: ', error)
         response.status(500).end()
@@ -33,7 +33,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(express.json())
 app.use(express.static('dist'))
-morgan.token('request-json', function (req, res) { return JSON.stringify(req.body) })
+morgan.token('request-json', function (req) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :request-json'))
 
 

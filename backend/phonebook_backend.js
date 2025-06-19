@@ -1,4 +1,4 @@
-import Person from "./services/person_schema.js";
+const Person = require('./services/person_schema.js')
 
 let clients = []
 
@@ -20,10 +20,10 @@ const notifyClients = () => {
             console.log('notify client')
             // noinspection JSCheckFunctionSignatures
             Person.find({}).then(persons => {
-                response.write(`data: ${JSON.stringify({persons: persons})}\n\n`)
+                response.write(`data: ${JSON.stringify({ persons: persons })}\n\n`)
             })
         } catch (error) {
-            console.log('Failed to write to client, removing...')
+            console.log(`Failed to write to client (${error.message}), removing...`)
             unregisterClient(response)
         }
     })
@@ -32,7 +32,7 @@ const notifyClients = () => {
 const deletePerson = (request, response, next) => {
     const id = request.params.id
 
-    Person.findByIdAndDelete(id, {lean: true})
+    Person.findByIdAndDelete(id, { lean: true })
         .then(() => {
             notifyClients()
             response.status(204).end()
@@ -62,13 +62,13 @@ const getAllPersons = (request, response) => {
 const addPerson = (request, response, next) => {
     const body = request.body
     if (!body) {
-        response.status(400).json({error: 'no data for person provided'}).end()
+        response.status(400).json({ error: 'no data for person provided' }).end()
         return
     }
-    const {name, phoneNumber} = body
-    const person = new Person({name, phoneNumber})
+    const { name, phoneNumber } = body
+    const person = new Person({ name, phoneNumber })
 
-// TODO prevent storing a person as new if a person with the same name exists already => return response.status(400).json({error: 'person already exists'})
+    // TODO prevent storing a person as new if a person with the same name exists already => return response.status(400).json({error: 'person already exists'})
 
     person.save()
         .then(savedPerson => {
@@ -116,7 +116,7 @@ const updatePerson = (request, response, next) => {
     }
 
     // noinspection JSCheckFunctionSignatures
-    Person.findByIdAndUpdate(id, body, { new: true, runValidators: true})
+    Person.findByIdAndUpdate(id, body, { new: true, runValidators: true })
         .then(savedPerson => {
             response.json(savedPerson)
         })
@@ -132,4 +132,4 @@ function registerRoutesIn(app) {
     app.get('/info', getStatusInfo)
 }
 
-export {registerRoutesIn}
+module.exports = { registerRoutesIn }
