@@ -1,9 +1,10 @@
 require('dotenv').config()
 const mongoose = require('mongoose')
+const logger = require('./utils/logger')
 
 const url = process.env.DB_URL
 if (!url) {
-    console.error('please provide mongodb url as environment variable "DB_URL"')
+    logger.error('please provide mongodb url as environment variable "DB_URL"')
     process.exit(1)
 }
 
@@ -23,7 +24,7 @@ const addNewNote = (content, important) => {
     })
 
     note.save().then(async () => {
-        console.log('note saved!')
+        logger.info('note saved!')
         await mongoose.connection.close()
     })
 
@@ -33,7 +34,7 @@ const listNotes = () => {
     // noinspection JSCheckFunctionSignatures
     Note.find({}).then(async result => {
         result.forEach(note => {
-            console.log(note)
+            logger.info(note)
         })
         await mongoose.connection.close()
     })
@@ -48,7 +49,7 @@ const main = async () => {
         const important = process.argv[3]
         addNewNote(content, important)
     } else {
-        console.error('please provide name and number to add a person')
+        logger.error('please provide name and number to add a person')
     }
 }
-main().catch(console.error)
+main().catch(logger.error)

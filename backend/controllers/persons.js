@@ -1,4 +1,6 @@
-const Person = require('./services/person_schema.js')
+const personsRouter = require('express').Router()
+const Person = require('../models/person.js')
+const logger = require('../utils/logger')
 
 let clients = []
 
@@ -10,20 +12,20 @@ const unregisterClient = (response) => {
     const index = clients.indexOf(response)
     if (index > -1) {
         clients.splice(index, 1)
-        console.log(`Client removed. Active clients: ${clients.length}`)
+        logger.info(`Client removed. Active clients: ${clients.length}`)
     }
 }
 
 const notifyClients = () => {
     clients.forEach((response) => {
         try {
-            console.log('notify client')
+            logger.info('notify client')
             // noinspection JSCheckFunctionSignatures
             Person.find({}).then(persons => {
                 response.write(`data: ${JSON.stringify({ persons: persons })}\n\n`)
             })
         } catch (error) {
-            console.log(`Failed to write to client (${error.message}), removing...`)
+            logger.info(`Failed to write to client (${error.message}), removing...`)
             unregisterClient(response)
         }
     })
@@ -72,7 +74,7 @@ const addPerson = (request, response, next) => {
 
     person.save()
         .then(savedPerson => {
-            console.log('person saved!', savedPerson)
+            logger.info('person saved!', savedPerson)
             response.json(savedPerson)
             notifyClients()
         })
@@ -86,18 +88,18 @@ const getStatusInfo = (request, response) => {
 }
 
 const provideUpdates = (request, response) => {
-    console.log('provideUpdates')
+    logger.info('provideUpdates')
     response.setHeader('Content-type', 'text/event-stream')
     response.setHeader('Cache-Control', 'no-cache')
     response.setHeader('Connection', 'keep-alive')
 
     request.on('close', () => {
-        console.log('Client disconnected')
+        logger.info('Client disconnected')
         unregisterClient(response)
     })
 
     request.on('aborted', () => {
-        console.log('Client aborted connection')
+        logger.info('Client aborted connection')
         unregisterClient(response)
     })
 
@@ -122,14 +124,13 @@ const updatePerson = (request, response, next) => {
         })
         .catch(error => next(error))
 }
-function registerRoutesIn(app) {
-    app.get('/api/persons/updates', provideUpdates)
-    app.delete('/api/persons/:id', deletePerson)
-    app.get('/api/persons/:id', getPerson)
-    app.get('/api/persons', getAllPersons)
-    app.post('/api/persons', addPerson)
-    app.put('/api/persons/:id', updatePerson)
-    app.get('/info', getStatusInfo)
-}
 
-module.exports = { registerRoutesIn }
+personsRouter.get('/updates', provideUpdates)
+personsRouter.get('/info', getStatusInfo)
+personsRouter.delete('/:id', deletePerson)
+personsRouter.put('/:id', updatePerson)
+personsRouter.get('/:id', getPerson)
+personsRouter.get('/', getAllPersons)
+personsRouter.post('/', addPerson)
+
+module.exports = personsRouter

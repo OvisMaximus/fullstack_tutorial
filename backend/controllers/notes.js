@@ -1,4 +1,6 @@
-const Note = require('./services/notes_schema')
+const notesRouter = require('express').Router()
+const Note = require('../models/note')
+const logger = require('../utils/logger')
 
 const addNote = (request, response, next) => {
     const body = request.body
@@ -16,7 +18,7 @@ const addNote = (request, response, next) => {
 
     note.save()
         .then(savedNote => {
-            console.log('note saved!', savedNote)
+            logger.info('note saved!', savedNote)
             response.json(savedNote)
         })
         .catch(error => next(error))
@@ -72,12 +74,10 @@ const deleteNote = (request, response, next) => {
         .catch(error => next(error))
 }
 
-function registerRoutesIn(app) {
-    app.delete('/api/notes/:id', deleteNote)
-    app.get('/api/notes/:id', getNote)
-    app.get('/api/notes', getAllNotes)
-    app.post('/api/notes', addNote)
-    app.put('/api/notes/:id', updateNote)
-}
+notesRouter.delete('/:id', deleteNote)
+notesRouter.get('/:id', getNote)
+notesRouter.put('/:id', updateNote)
+notesRouter.get('/', getAllNotes)
+notesRouter.post('/', addNote)
 
-module.exports = { registerRoutesIn }
+module.exports = notesRouter
