@@ -58,3 +58,17 @@ GET http://localhost:3001/api/notes
 
 #### delete a specific node
 DELETE http://localhost:3001/api/notes/684bf9ddc649fd4b5bcbfeac
+
+#### get all blogposts
+GET http://localhost:3001/api/blogs
+
+#### add a blog post
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Was sich bei den VmWare Alternativen gerade tut",
+  "author": "Jens Söldner",
+  "url": "https://www.heise.de/hintergrund/Was-sich-bei-den-VMware-Alternativen-gerade-tut-10452540.html",
+  "likes": 0
+}
