@@ -1,7 +1,7 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
 
-const addNote = async (request, response, next) => {
+const addNote = async (request, response) => {
     const body = request.body
 
     if (!body.content) {
@@ -15,12 +15,8 @@ const addNote = async (request, response, next) => {
         important: body.important || false
     })
 
-    try {
-        const savedNote = await note.save()
-        response.status(201).json(savedNote)
-    } catch (error) {
-        next(error)
-    }
+    const savedNote = await note.save()
+    response.status(201).json(savedNote)
 }
 
 const getAllNotes = async (request, response) => {
