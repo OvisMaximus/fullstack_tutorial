@@ -24,11 +24,10 @@ const addNote = (request, response, next) => {
         .catch(error => next(error))
 }
 
-const getAllNotes = (request, response) => {
+const getAllNotes = async (request, response) => {
     // noinspection JSCheckFunctionSignatures
-    Note.find({}).then(notes => {
-        response.json(notes)
-    })
+    const allNotes = await Note.find({})
+    response.json(allNotes)
 }
 
 const getNote = (request, response, next) => {
