@@ -4,9 +4,9 @@
   "description": "https://fullstackopen.com/en/part3/node_js_and_express",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js",
-    "test": "node --test",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "test": "cross-env  NODE_ENV=test node --test",
     "build:ui": "cd ../frontend && npm run deploy",
     "deploy:full": "npm run build:ui && git add dist && git commit -m uibuild && git push",
     "lint": "eslint .",
@@ -15,6 +15,7 @@
   "author": "Laura Wetterwachs",
   "license": "MIT",
   "dependencies": {
+    "cross-env": "^7.0.3",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "lodash": "^4.17.21",
