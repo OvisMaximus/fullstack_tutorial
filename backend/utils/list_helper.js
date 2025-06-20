@@ -1,23 +1,17 @@
 const _ = require('lodash')
 
-const totalLikes = (blogs) => {
-    return !blogs || blogs.length === 0 ? 0
-        : blogs
-            .map(blog => blog.likes)
-            .reduce((sum, item) => sum + item, 0)
-}
+const totalLikes = (blogs) => !blogs || blogs.length === 0
+    ? 0
+    : _.sumBy(blogs, 'likes')
 
-const favoriteBlog = (blogs) => {
-    if (blogs && blogs.length > 0) {
-        return blogs.reduce((a, b) => a.likes > b.likes ? a : b)
-    }
-    return null
-}
+const favoriteBlog = (blogs) => blogs && blogs.length > 0
+    ? _.maxBy(blogs, 'likes')
+    : null
 
 const mostBlogs = (blogs) => {
     if( !blogs || blogs.length === 0 ) return null
-    const articlesByAuthor = _.groupBy(blogs, blog => blog.author)
-    const authors = Object.keys(articlesByAuthor)
+    const articlesByAuthor = _.groupBy(blogs, 'author')
+    const authors = _.keys(articlesByAuthor)
     const mostBlogsAuthor = _.maxBy(authors, (author) => articlesByAuthor[author].length)
     return {
         author: mostBlogsAuthor,
@@ -27,9 +21,9 @@ const mostBlogs = (blogs) => {
 
 const mostLikes = (blogs) => {
     if (!blogs || blogs.length === 0 ) return null
-    const articlesByAuthor = _.groupBy(blogs, blog => blog.author)
-    const likesOfAuthor = (author) => articlesByAuthor[author].reduce((a, b) => a + b.likes, 0)
-    const authors = Object.keys(articlesByAuthor)
+    const articlesByAuthor = _.groupBy(blogs, 'author')
+    const likesOfAuthor = (author) => _.sumBy(articlesByAuthor[author], 'likes')
+    const authors = _.keys(articlesByAuthor)
     const mostLikesAuthor = _.maxBy(authors, likesOfAuthor)
     return {
         author: mostLikesAuthor,
