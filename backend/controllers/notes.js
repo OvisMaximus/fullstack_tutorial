@@ -1,8 +1,7 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
-const logger = require('../utils/logger')
 
-const addNote = (request, response, next) => {
+const addNote = async (request, response, next) => {
     const body = request.body
 
     if (!body.content) {
@@ -16,12 +15,12 @@ const addNote = (request, response, next) => {
         important: body.important || false
     })
 
-    note.save()
-        .then(savedNote => {
-            logger.info('note saved!', savedNote)
-            response.json(savedNote)
-        })
-        .catch(error => next(error))
+    try {
+        const savedNote = await note.save()
+        response.status(201).json(savedNote)
+    } catch (error) {
+        next(error)
+    }
 }
 
 const getAllNotes = async (request, response) => {
@@ -30,17 +29,15 @@ const getAllNotes = async (request, response) => {
     response.json(allNotes)
 }
 
-const getNote = (request, response, next) => {
+const getNote = async (request, response) => {
     const id = request.params.id
     // noinspection JSCheckFunctionSignatures
-    Note.findById(id)
-        .then(note => {
-            if (note) {
-                response.json(note)
-            } else {
-                response.status(404).end()
-            }
-        }).catch(error => next(error))
+    const note = await Note.findById(id)
+    if (note) {
+        response.json(note)
+    } else {
+        response.status(404).end()
+    }
 }
 
 const updateNote = (request, response, next) => {
@@ -62,15 +59,12 @@ const updateNote = (request, response, next) => {
         .catch(error => next(error))
 }
 
-const deleteNote = (request, response, next) => {
+const deleteNote = async (request, response) => {
     const id = request.params.id
 
     // noinspection JSCheckFunctionSignatures
-    Note.findOneAndDelete(id)
-        .then(() => {
-            response.status(204).end()
-        })
-        .catch(error => next(error))
+    await Note.findByIdAndDelete(id)
+    response.status(204).end()
 }
 
 notesRouter.delete('/:id', deleteNote)
