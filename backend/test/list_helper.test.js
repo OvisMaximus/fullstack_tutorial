@@ -2,7 +2,14 @@ const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
 const blogs = require('./test_data')
+const { info } = require('../utils/logger')
 const emptyBlogs = []
+const blogsSingle = [{
+    title: 'blog1',
+    author: 'author1',
+    url: 'url1',
+    likes: 5
+}]
 
 describe('total likes', () => {
     test('of an empty list shall be zero', () => {
@@ -11,9 +18,6 @@ describe('total likes', () => {
     })
 
     test('of a list with one blog shall be the likes of that blog', () => {
-        const blogsSingle = [{
-            likes: 5
-        }]
         const result = listHelper.totalLikes(blogsSingle)
         assert.strictEqual(result, 5)
     })
@@ -31,12 +35,6 @@ describe('favorite blog', () => {
     })
 
     test('of a list with one blog is that blog', () => {
-        const blogsSingle = [{
-            title: 'blog1',
-            author: 'author1',
-            url: 'url1',
-            likes: 5
-        }]
         const result = listHelper.favoriteBlog(blogsSingle)
         assert.deepStrictEqual(result, blogsSingle[0])
     })
@@ -45,4 +43,24 @@ describe('favorite blog', () => {
         const result = listHelper.favoriteBlog(blogs)
         assert.strictEqual(result.likes, 12)
     })
+})
+
+describe('most Blogs', () => {
+    test('of an empty list returns null', () => {
+        const result = listHelper.mostBlogs(emptyBlogs)
+        assert.strictEqual(result, null)
+    })
+
+    test('of a list with one blog returns the author of that entry and 1 as number of articles', () => {
+        const result = listHelper.mostBlogs(blogsSingle)
+        info('one:', result)
+        assert.deepStrictEqual(result, { author: 'author1', blogs: 1 })
+    })
+
+    test('of a list with multiple blogs returns the author of the most entries and their number of articles', () => {
+        const result = listHelper.mostBlogs(blogs)
+        info('many:', result)
+        assert.deepStrictEqual(result, { author: 'Robert C. Martin', blogs: 3 })
+    })
+
 })
