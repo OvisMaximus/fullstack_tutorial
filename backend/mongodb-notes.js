@@ -2,9 +2,9 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 const logger = require('./utils/logger')
 
-const url = process.env.DB_URL
+const url = process.env.TEST_DB_URL
 if (!url) {
-    logger.error('please provide mongodb url as environment variable "DB_URL"')
+    logger.error('please provide mongodb url as environment variable "TEST_DB_URL"')
     process.exit(1)
 }
 
