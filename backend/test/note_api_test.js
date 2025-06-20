@@ -9,13 +9,10 @@ const helper = require('./notes_test_helper')
 const Note = require('../models/note')
 
 const api = supertest(app)
-
+// TODO https://fullstackopen.com/en/part4/testing_the_backend#optimizing-the-before-each-function
 beforeEach(async () => {
     await Note.deleteMany({})
-    let noteObject = new Note(helper.initialNotes[0])
-    await noteObject.save()
-    noteObject = new Note(helper.initialNotes[1])
-    await noteObject.save()
+    await Note.insertMany(helper.initialNotes)
 })
 
 test('notes are returned as json', async () => {
