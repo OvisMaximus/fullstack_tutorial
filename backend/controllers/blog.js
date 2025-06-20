@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const logger = require('../utils/logger')
+
 const getAllBlogPosts = (request, response) => {
     // noinspection JSCheckFunctionSignatures
     Blog.find({}).then(blogs => {
