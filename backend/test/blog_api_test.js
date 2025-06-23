@@ -65,6 +65,21 @@ describe.only('blog api', () => {
         const contents = blogsAtEnd.map(n => n.title)
         assert(contents.includes('Greatest blog post of all time'))
     })
+
+    test('when a new blog post without likes is added, these should default to 0', async () => {
+        const newBlog = {
+            title: 'Greatest blog post of all time',
+            author: 'Ovis Maximus',
+            url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        }
+        const response = await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+        assert.strictEqual(response.body.likes, 0)
+    })
+
     /*
     test('note without content is not added', async () => {
         const newNote = {

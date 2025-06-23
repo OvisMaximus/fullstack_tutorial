@@ -19,7 +19,7 @@ const addBlogPost = async (request, response) => {
 
     const blogPost = new Blog(body)
 
-    const savedNote = blogPost.save()
+    const savedNote = await blogPost.save()
     logger.info('blog post saved!', savedNote)
     response.status(201).json(savedNote)
 }
