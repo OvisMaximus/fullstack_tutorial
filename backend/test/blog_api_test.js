@@ -80,21 +80,37 @@ describe.only('blog api', () => {
         assert.strictEqual(response.body.likes, 0)
     })
 
-    /*
-    test('note without content is not added', async () => {
-        const newNote = {
-            important: true
+    test('a post without title is not added', async () => {
+        const newBlog = {
+            author: 'Ovis Maximus',
+            url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
         }
 
         await api
-            .post('/api/notes')
-            .send(newNote)
+            .post('/api/blogs')
+            .send(newBlog)
             .expect(400)
 
-        const notesAtEnd = await helper.notesInDb()
-        assert.strictEqual(notesAtEnd.length, helper.initialNotes.length)
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
     })
 
+
+    test('a post without url is not added', async () => {
+        const newBlog = {
+            title: 'Greatest blog post of all time',
+            author: 'Ovis Maximus',
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+    })
+    /*
     test('a specific note can be viewed', async () => {
         const notesAtStart = await helper.notesInDb()
         const noteToView = notesAtStart[0]
