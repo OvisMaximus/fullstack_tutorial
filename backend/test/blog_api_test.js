@@ -10,7 +10,7 @@ const Blog = require('../models/blog')
 
 const api = supertest(app)
 
-describe('blog api', () => {
+describe.only('blog api', () => {
 
     beforeEach(async () => {
         await Blog.deleteMany({})
@@ -24,9 +24,18 @@ describe('blog api', () => {
             .expect('Content-Type', /application\/json/)
     })
 
-    test.only('all blog posts are returned', async () => {
+    test('all blog posts are returned', async () => {
         const response = await api.get('/api/blogs')
         assert.strictEqual(response.body.length, helper.initialBlogs.length)
+    })
+
+    test('"id" is used as unique id by the database', async () => {
+        const blogs = await helper.blogsInDb()
+        const id = blogs[0].id
+        assert(id !== undefined)
+        assert(id !== null)
+        assert(typeof id === 'string')
+        assert(id.length > 0)
     })
 
     /*
