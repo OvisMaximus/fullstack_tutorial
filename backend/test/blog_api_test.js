@@ -1,6 +1,6 @@
 // noinspection JSCheckFunctionSignatures,JSUnresolvedReference
 
-const {test, describe, after, beforeEach} = require('node:test')
+const { test, describe, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
@@ -44,26 +44,28 @@ describe.only('blog api', () => {
         const contents = response.body.map(e => e.content)
         assert(contents.includes('HTML is easy'))
     })
-
-    test('a valid note can be added ', async () => {
-        const newNote = {
-            content: 'async/await simplifies making async calls',
-            important: true,
+*/
+    test('a valid blog post can be added ', async () => {
+        const newBlog = {
+            title: 'Greatest blog post of all time',
+            author: 'Ovis Maximus',
+            url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            likes: 1001,
         }
 
         await api
-            .post('/api/notes')
-            .send(newNote)
+            .post('/api/blogs')
+            .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
 
-        const notesAtEnd = await helper.notesInDb()
-        assert.strictEqual(notesAtEnd.length, helper.initialNotes.length + 1)
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
 
-        const contents = notesAtEnd.map(n => n.content)
-        assert(contents.includes('async/await simplifies making async calls'))
+        const contents = blogsAtEnd.map(n => n.title)
+        assert(contents.includes('Greatest blog post of all time'))
     })
-
+    /*
     test('note without content is not added', async () => {
         const newNote = {
             important: true

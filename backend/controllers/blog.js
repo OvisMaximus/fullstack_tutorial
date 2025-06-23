@@ -2,14 +2,13 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const logger = require('../utils/logger')
 
-const getAllBlogPosts = (request, response) => {
+const getAllBlogPosts = async (request, response) => {
     // noinspection JSCheckFunctionSignatures
-    Blog.find({}).then(blogs => {
-        response.json(blogs)
-    })
+    const blogs = await Blog.find({})
+    response.json(blogs)
 }
 
-const addBlogPost = (request, response, next) => {
+const addBlogPost = async (request, response) => {
     const body = request.body
 
     if (!body) {
@@ -20,12 +19,9 @@ const addBlogPost = (request, response, next) => {
 
     const blogPost = new Blog(body)
 
-    blogPost.save()
-        .then(savedNote => {
-            logger.info('blog post saved!', savedNote)
-            response.status(201).json(savedNote)
-        })
-        .catch(error => next(error))
+    const savedNote = blogPost.save()
+    logger.info('blog post saved!', savedNote)
+    response.status(201).json(savedNote)
 }
 
 blogsRouter.get('/', getAllBlogPosts)
