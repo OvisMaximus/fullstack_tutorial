@@ -3,7 +3,7 @@ const initialBlogs = require('./blogs_test_data')
 
 
 const nonExistingId = async () => {
-    const blog = new Blog({ title: 'willRemoveThisSoon' })
+    const blog = new Blog({ title: 'willRemoveThisSoon', author: 'sbdy', url: 'http://sbdy.com' })
     await blog.save()
     await blog.deleteOne()
 

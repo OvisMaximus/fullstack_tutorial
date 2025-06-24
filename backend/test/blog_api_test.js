@@ -2,15 +2,16 @@
 
 const { test, describe, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
-const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const helper = require('./blog_test_helper')
 const Blog = require('../models/blog')
+const mongodb = require('../utils/mongodb')
+const _ = require('lodash')
 
 const api = supertest(app)
 
-describe.only('blog api', () => {
+describe('blog api', () => {
 
     beforeEach(async () => {
         await Blog.deleteMany({})
@@ -38,95 +39,132 @@ describe.only('blog api', () => {
         assert(id.length > 0)
     })
 
-    /*
-    test('a specific note is within the returned notes', async () => {
-        const response = await api.get('/api/notes')
-        const contents = response.body.map(e => e.content)
-        assert(contents.includes('HTML is easy'))
-    })
-*/
-    test('a valid blog post can be added ', async () => {
-        const newBlog = {
-            title: 'Greatest blog post of all time',
-            author: 'Ovis Maximus',
-            url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-            likes: 1001,
-        }
+    describe('addition of a new blog post', () => {
+        test('a valid blog post can be added ', async () => {
+            const newBlog = {
+                title: 'Greatest blog post of all time',
+                author: 'Ovis Maximus',
+                url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                likes: 1001,
+            }
 
-        await api
-            .post('/api/blogs')
-            .send(newBlog)
-            .expect(201)
-            .expect('Content-Type', /application\/json/)
+            await api
+                .post('/api/blogs')
+                .send(newBlog)
+                .expect(201)
+                .expect('Content-Type', /application\/json/)
 
-        const blogsAtEnd = await helper.blogsInDb()
-        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+            const blogsAtEnd = await helper.blogsInDb()
+            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
 
-        const contents = blogsAtEnd.map(n => n.title)
-        assert(contents.includes('Greatest blog post of all time'))
-    })
+            const contents = blogsAtEnd.map(n => n.title)
+            assert(contents.includes('Greatest blog post of all time'))
+        })
 
-    test('when a new blog post without likes is added, these should default to 0', async () => {
-        const newBlog = {
-            title: 'Greatest blog post of all time',
-            author: 'Ovis Maximus',
-            url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-        }
-        const response = await api
-            .post('/api/blogs')
-            .send(newBlog)
-            .expect(201)
-            .expect('Content-Type', /application\/json/)
-        assert.strictEqual(response.body.likes, 0)
-    })
+        test('when a new blog post without likes is added, these should default to 0', async () => {
+            const newBlog = {
+                title: 'Greatest blog post of all time',
+                author: 'Ovis Maximus',
+                url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            }
+            const response = await api
+                .post('/api/blogs')
+                .send(newBlog)
+                .expect(201)
+                .expect('Content-Type', /application\/json/)
+            assert.strictEqual(response.body.likes, 0)
+        })
 
-    test('a post without title is not added', async () => {
-        const newBlog = {
-            author: 'Ovis Maximus',
-            url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-        }
+        test('a post without title is not added', async () => {
+            const newBlog = {
+                author: 'Ovis Maximus',
+                url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            }
 
-        await api
-            .post('/api/blogs')
-            .send(newBlog)
-            .expect(400)
+            await api
+                .post('/api/blogs')
+                .send(newBlog)
+                .expect(400)
 
-        const blogsAtEnd = await helper.blogsInDb()
-        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
-    })
+            const blogsAtEnd = await helper.blogsInDb()
+            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+        })
 
 
-    test('a post without url is not added', async () => {
-        const newBlog = {
-            title: 'Greatest blog post of all time',
-            author: 'Ovis Maximus',
-        }
+        test('a post without url is not added', async () => {
+            const newBlog = {
+                title: 'Greatest blog post of all time',
+                author: 'Ovis Maximus',
+            }
 
-        await api
-            .post('/api/blogs')
-            .send(newBlog)
-            .expect(400)
+            await api
+                .post('/api/blogs')
+                .send(newBlog)
+                .expect(400)
 
-        const blogsAtEnd = await helper.blogsInDb()
-        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
-    })
-    /*
-    test('a specific note can be viewed', async () => {
-        const notesAtStart = await helper.notesInDb()
-        const noteToView = notesAtStart[0]
-
-        const resultNote = await api
-            .get(`/api/notes/${noteToView.id}`)
-            .expect(200)
-            .expect('Content-Type', /application\/json/)
-
-        assert.deepStrictEqual(resultNote.body, noteToView)
+            const blogsAtEnd = await helper.blogsInDb()
+            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+        })
     })
 
+    describe('updating a specific blog post', () => {
+        test('with a non existing id fails with 404', async () => {
+            const validNonexistingId = await helper.nonExistingId()
+            const changedBlog = {
+                title: 'Greatest blog post of all time',
+                author: 'Ovis Maximus',
+                url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            }
+            changedBlog.id = validNonexistingId
+            await api
+                .put(`/api/blogs/${validNonexistingId}`)
+                .send(changedBlog)
+                .expect(404)
+        })
+        test('with a missing link fails with 400', async () => {
+            const blogsInDb = await helper.blogsInDb()
+            const originalPost = blogsInDb[0]
+            const modifiedPost = { ... originalPost, url: null }
+            await api
+                .put(`/api/blogs/${modifiedPost.id}`)
+                .send(modifiedPost)
+                .expect(400)
+            const blogsAtEnd = await helper.blogsInDb()
+            const blogsById = _.keyBy(blogsAtEnd, 'id')
+            const resultPost = blogsById[originalPost.id]
+            assert.deepStrictEqual(resultPost, originalPost)
+        })
+        test('with a missing title fails with 400', async () => {
+            const blogsInDb = await helper.blogsInDb()
+            const originalPost = blogsInDb[0]
+            const modifiedPost = { ... originalPost, title: null }
+            await api
+                .put(`/api/blogs/${modifiedPost.id}`)
+                .send(modifiedPost)
+                .expect(400)
+            const blogsAtEnd = await helper.blogsInDb()
+            const blogsById = _.keyBy(blogsAtEnd, 'id')
+            const resultPost = blogsById[originalPost.id]
+            assert.deepStrictEqual(resultPost, originalPost)
+        })
+        test('with valid data succeeds', async () => {
+            const blogsInDb = await helper.blogsInDb()
+            const originalPost = blogsInDb[0]
+            const modifiedPost = { ... originalPost, likes: originalPost.likes + 1 }
+            await api
+                .put(`/api/blogs/${modifiedPost.id}`)
+                .send(modifiedPost)
+                .expect(200)
 
+            const blogsAtEnd = await helper.blogsInDb()
+            const blogsById = _.keyBy(blogsAtEnd, 'id')
+            const resultPost = blogsById[modifiedPost.id]
+            assert.deepStrictEqual(resultPost, modifiedPost)
+        })
 
-    */
-    describe.only('deletion of a post', () => {
+    })
+
+    describe('deletion of a post', () => {
         test('succeeds with status code 204 if the id is valid', async () => {
             const blogsAtStart = await helper.blogsInDb()
             const blogToDelete = blogsAtStart[0]
@@ -138,12 +176,12 @@ describe.only('blog api', () => {
             const blogsAtEnd = await helper.blogsInDb()
             const contents = blogsAtEnd.map(n => n.title)
 
-            assert( ! contents.includes(blogToDelete.title))
+            assert(!contents.includes(blogToDelete.title))
             assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
         })
     })
+})
 
-    after(async () => {
-        await mongoose.connection.close()
-    })
+after(async () => {
+    await mongodb.disconnect()
 })
