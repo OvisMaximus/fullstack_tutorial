@@ -24,6 +24,14 @@ const addBlogPost = async (request, response) => {
     response.status(201).json(savedNote)
 }
 
+const deleteBlogPost = async (request, response) => {
+    const id = request.params.id
+    // noinspection JSCheckFunctionSignatures
+    await Blog.findByIdAndDelete(id)
+    response.status(204).end()
+}
+
+blogsRouter.delete('/:id', deleteBlogPost)
 blogsRouter.get('/', getAllBlogPosts)
 blogsRouter.post('/', addBlogPost)
 
