@@ -1,21 +1,37 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
+const User = require('../models/user')
 
 const addNote = async (request, response) => {
     const body = request.body
-
     if (!body.content) {
-        return response.status(400).json({
-            error: 'content missing'
-        })
+        response.status(400).json({ error: 'content missing' }).end()
+        return
+    }
+
+    const userId = body.userId
+    if (!userId) {
+        response.status(400).json({ error: 'userId missing' }).end()
+        return
+    }
+
+    // noinspection JSCheckFunctionSignatures
+    const user = await User.findById(userId)
+    if (!user) {
+        response.status(400).json({ error: 'user not found' }).end()
+        return
     }
 
     const note = new Note({
         content: body.content,
-        important: body.important || false
+        important: body.important || false,
+        user: user.id
     })
 
     const savedNote = await note.save()
+    user.notes = user.notes.concat(savedNote.id)
+    await user.save()
+
     response.status(201).json(savedNote)
 }
 

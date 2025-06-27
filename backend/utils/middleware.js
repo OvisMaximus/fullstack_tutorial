@@ -24,7 +24,8 @@ const errorHandler = (error, request, response, next) => {
     }
     else {
         logger.error('unknown error: ', error)
-        response.status(500).end()
+        const status = error.statusCode || 500
+        response.status(status).end()
         next(error)
     }
 }

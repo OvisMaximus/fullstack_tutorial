@@ -11,6 +11,12 @@ const initialNotes = [
     }
 ]
 
+const initDatabase = async () => {
+    await Note.deleteMany({})
+    // noinspection JSUnresolvedReference
+    await Note.insertMany(initialNotes)
+}
+
 const nonExistingId = async () => {
     const note = new Note({ content: 'willRemoveThisSoon' })
     await note.save()
@@ -27,5 +33,5 @@ const notesInDb = async () => {
 }
 
 module.exports = {
-    initialNotes, nonExistingId, notesInDb
+    initialNotes, initDatabase, nonExistingId, notesInDb
 }

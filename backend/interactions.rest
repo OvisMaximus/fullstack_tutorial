@@ -50,7 +50,8 @@ Content-Type: application/json
 
 {
   "content": "Die kuh rennt um See rum.",
-  "important": "true"
+  "important": "true",
+  "userId": "685e566bc236288783d99e40"
 }
 
 #### get all notes

@@ -6,13 +6,14 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const helper = require('./notes_test_helper')
-const Note = require('../models/note')
+const userHelper = require('./user_test_helper')
 
 const api = supertest(app)
+
 describe('when there is initially some notes saved', () => {
     beforeEach(async () => {
-        await Note.deleteMany({})
-        await Note.insertMany(helper.initialNotes)
+        await helper.initDatabase()
+        await userHelper.initDatabase()
     })
 
     test('notes are returned as json', async () => {
@@ -61,9 +62,12 @@ describe('when there is initially some notes saved', () => {
 
     describe('addition of a new note', () => {
         test('succeeds with valid data', async () => {
+            const userId = await userHelper.validUserId()
+
             const newNote = {
                 content: 'async/await simplifies making async calls',
                 important: true,
+                userId: userId
             }
 
             await api
