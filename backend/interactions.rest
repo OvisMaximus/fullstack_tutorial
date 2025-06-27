@@ -72,3 +72,16 @@ Content-Type: application/json
   "url": "https://www.heise.de/hintergrund/Was-sich-bei-den-VMware-Alternativen-gerade-tut-10452540.html",
   "likes": 0
 }
+
+#### add a user
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "name": "superuser",
+  "password": "BlahFasel"
+}
+
+#### show a list of users
+GET http://localhost:3001/api/users

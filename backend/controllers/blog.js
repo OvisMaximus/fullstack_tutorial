@@ -1,7 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const logger = require('../utils/logger')
-const Note = require('../models/note')
 
 const getAllBlogPosts = async (request, response) => {
     // noinspection JSCheckFunctionSignatures

@@ -5,6 +5,7 @@ const middleware = require('./utils/middleware')
 const notesRoutes = require('./controllers/notes.js')
 const personsRouter = require('./controllers/persons.js')
 const blogsRouter = require('./controllers/blog')
+const usersRouter = require('./controllers/user')
 
 mongodb.connect()
 
@@ -18,6 +19,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :r
 app.use('/api/notes', notesRoutes)
 app.use('/api/persons', personsRouter)
 app.use('/api/blogs', blogsRouter)
+app.use('/api/users', usersRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler) // remember, has to be the last middleware!
