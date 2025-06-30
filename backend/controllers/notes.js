@@ -37,7 +37,9 @@ const addNote = async (request, response) => {
 
 const getAllNotes = async (request, response) => {
     // noinspection JSCheckFunctionSignatures
-    const allNotes = await Note.find({})
+    const allNotes = await Note
+        .find({})
+        .populate('user', { username: 1, name: 1 })
     response.json(allNotes)
 }
 

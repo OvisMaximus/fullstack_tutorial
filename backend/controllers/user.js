@@ -21,7 +21,7 @@ const createUser = async (request, response) => {
 
 const getAllUsers = async (request, response) => {
     // noinspection JSCheckFunctionSignatures
-    const users = await User.find({})
+    const users = await User.find({}).populate('notes', { content: 1, important: 1 })
     response.json(users)
 }
 usersRouter.get('/', getAllUsers)
