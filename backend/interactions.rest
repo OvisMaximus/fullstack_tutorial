@@ -47,7 +47,7 @@ Content-Type: application/json
 ### post a valid note
 POST http://localhost:3001/api/notes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2ODVlNTY2YmMyMzYyODg3ODNkOTllNDAiLCJpYXQiOjE3NTEyNzM3MjV9.UX7PuMUBMNDw4Uv2iTgPwFptAHJwj5tLvDwwkt9YSuk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2ODVlNTY2YmMyMzYyODg3ODNkOTllNDAiLCJpYXQiOjE3NTEyNzU1MDQsImV4cCI6MTc1MTI3OTEwNH0.hStHgRvtrmhVkNzWNBb36rwtglzwj78OHV0xn3_T_-o
 
 {
   "content": "Fackelmann und Blasehase",

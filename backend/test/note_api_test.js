@@ -12,8 +12,8 @@ const api = supertest(app)
 
 describe('when there is initially some notes saved', () => {
     beforeEach(async () => {
-        await helper.initDatabase()
         await userHelper.initDatabase()
+        await helper.initDatabase()
     })
 
     test('notes are returned as json', async () => {
@@ -62,16 +62,16 @@ describe('when there is initially some notes saved', () => {
 
     describe('addition of a new note', () => {
         test('succeeds with valid data', async () => {
-            const userId = await userHelper.validUserId()
+            const userToken = await userHelper.authenticatedUserToken(userHelper.initialUsers[1], api)
 
             const newNote = {
                 content: 'async/await simplifies making async calls',
                 important: true,
-                userId: userId
             }
 
             await api
                 .post('/api/notes')
+                .set('Authorization', `Bearer ${userToken}`)
                 .send(newNote)
                 .expect(201)
                 .expect('Content-Type', /application\/json/)
@@ -81,6 +81,7 @@ describe('when there is initially some notes saved', () => {
 
             const contents = notesAtEnd.map(n => n.content)
             assert(contents.includes('async/await simplifies making async calls'))
+
         })
 
         test('fails with status code 400 if data is invalid', async () => {

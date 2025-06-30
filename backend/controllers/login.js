@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/user')
+const logger = require('../utils/logger')
 
 const loginUser = async (request, response) => {
 
@@ -12,8 +13,14 @@ const loginUser = async (request, response) => {
     }
 
     const { username, password } = request.body
-
     const user = await User.findOne({ username })
+
+    if (user && ! user.passwordHash) {
+        return response.status(400).json({
+            error: 'user exists but no password set'
+        })
+    }
+
     const passwordCorrect = user === null
         ? false
         : await bcrypt.compare(password, user.passwordHash)
@@ -37,7 +44,7 @@ const loginUser = async (request, response) => {
 
     response
         .status(200)
-        .send({ token, username: user.username, name: user.name })
+        .json({ token, username: user.username, name: user.name })
 }
 
 loginRouter.post('/', loginUser)

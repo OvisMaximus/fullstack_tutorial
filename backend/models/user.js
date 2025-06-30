@@ -7,7 +7,10 @@ const userSchema = new mongoose.Schema({
         unique: true // this ensures the uniqueness of username
     },
     name: String,
-    passwordHash: String,
+    passwordHash: {
+        type: String,
+        required: true
+    },
     notes: [
         {
             type: mongoose.Schema.Types.ObjectId,
