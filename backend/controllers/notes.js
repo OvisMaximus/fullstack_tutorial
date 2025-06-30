@@ -1,26 +1,28 @@
 const notesRouter = require('express').Router()
+const jwt = require('jsonwebtoken')
 const Note = require('../models/note')
 const User = require('../models/user')
+
+const getTokenFrom = request => {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        return authorization.substring(7)
+    }
+    return null
+}
 
 const addNote = async (request, response) => {
     const body = request.body
     if (!body.content) {
-        response.status(400).json({ error: 'content missing' }).end()
+        response.status(400).json({ error: 'request body missing' }).end()
         return
     }
 
-    const userId = body.userId
-    if (!userId) {
-        response.status(400).json({ error: 'userId missing' }).end()
-        return
+    const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' })
     }
-
-    // noinspection JSCheckFunctionSignatures
-    const user = await User.findById(userId)
-    if (!user) {
-        response.status(400).json({ error: 'user not found' }).end()
-        return
-    }
+    const user = await User.findById(decodedToken.id)
 
     const note = new Note({
         content: body.content,
