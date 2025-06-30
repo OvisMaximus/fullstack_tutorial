@@ -1,20 +1,11 @@
-const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
+const userTools = require('../utils/userTools')
 
 const createUser = async (request, response) => {
     const { username, name, password } = request.body
 
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds)
-
-    const user = new User({
-        username,
-        name,
-        passwordHash,
-    })
-
-    const savedUser = await user.save()
+    const savedUser = await userTools.createDbRecord(username, name, password)
 
     response.status(201).json(savedUser)
 }

@@ -1,5 +1,5 @@
 const User = require('../models/user')
-const bcrypt = require('bcrypt')
+const userTools = require('../utils/userTools')
 
 const initialUsers = [
     {
@@ -18,18 +18,7 @@ const initDatabase = async () => {
     await User.deleteMany({})
     const promises = []
     initialUsers.forEach((user) => {
-        const createDbUser = async (user) => {
-            const saltRounds = 10
-            const passwordHash = await bcrypt.hash(user.password, saltRounds)
-
-            const newUser = new User({
-                username: user.username,
-                name: user.name,
-                passwordHash,
-            })
-            return newUser.save()
-        }
-        promises.push(createDbUser(user))
+        promises.push(userTools.createDbRecord(user.username, user.name, user.password))
     })
     // noinspection JSUnresolvedReference
     await Promise.all(promises)
