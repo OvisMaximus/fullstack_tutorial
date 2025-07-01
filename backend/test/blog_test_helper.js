@@ -10,7 +10,11 @@ const populateDatabaseWithInitialBlogs = async () => {
         blog.user = user.id
         promises.push(Blog.create(blog))
     })
-    return Promise.all(promises)
+    await Promise.all(promises)
+    const dbUser = await userHelper.getUserFromDb(user.id)
+    const storedBlogs = await blogsInDb()
+    dbUser.blogs = storedBlogs.map(blog => blog.id)
+    return await dbUser.save()
 }
 
 const initDatabase = async () => {

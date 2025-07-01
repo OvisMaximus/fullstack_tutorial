@@ -42,7 +42,6 @@ describe('blog api', () => {
     test('blog posts contain the user who created them', async () => {
         const blogs = await helper.blogsInDb()
         blogs.forEach(blog => {
-            console.log('blog:', blog)
             assert(blog.user !== undefined)
             assert(blog.user.username !== undefined)
         })
@@ -160,7 +159,6 @@ describe('blog api', () => {
             const blogsInDb = await helper.blogsInDb()
             const originalPost = blogsInDb[0]
             const modifiedPost = { ... originalPost, likes: originalPost.likes + 1 }
-            console.log('modifiedPost:', modifiedPost)
             await api
                 .put(`/api/blogs/${modifiedPost.id}`)
                 .send(modifiedPost)
