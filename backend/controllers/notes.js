@@ -48,7 +48,9 @@ const getAllNotes = async (request, response) => {
 const getNote = async (request, response) => {
     const id = request.params.id
     // noinspection JSCheckFunctionSignatures
-    const note = await Note.findById(id)
+    const note = await Note
+        .findById(id)
+        .populate('user', { username: 1, name: 1 })
     if (note) {
         response.json(note)
     } else {

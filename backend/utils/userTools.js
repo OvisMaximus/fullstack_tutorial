@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 
-async function createUserInDb(username, name, password) {
+const createUserInDb = async (username, name, password) => {
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(password, saltRounds)
 
@@ -13,6 +13,12 @@ async function createUserInDb(username, name, password) {
     return newUser.save()
 }
 
+const getAnyUserFromDb = async () => {
+    // noinspection JSCheckFunctionSignatures
+    return User.findOne()
+}
+
 module.exports = {
-    createDbRecord: createUserInDb
+    createUserInDb,
+    getAnyUserFromDb
 }

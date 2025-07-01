@@ -5,7 +5,7 @@ const assert = require('node:assert')
 const supertest = require('supertest')
 const app = require('../app')
 const helper = require('./blog_test_helper')
-const Blog = require('../models/blog')
+const userTestHelper = require('./user_test_helper')
 const mongodb = require('../utils/mongodb')
 const _ = require('lodash')
 
@@ -14,8 +14,8 @@ const api = supertest(app)
 describe('blog api', () => {
 
     beforeEach(async () => {
-        await Blog.deleteMany({})
-        await Blog.insertMany(helper.initialBlogs)
+        await userTestHelper.initDatabase()
+        await helper.initDatabase()
     })
 
     test('blog posts are returned as json', async () => {
@@ -37,6 +37,15 @@ describe('blog api', () => {
         assert(id !== null)
         assert(typeof id === 'string')
         assert(id.length > 0)
+    })
+
+    test('blog posts contain the user who created them', async () => {
+        const blogs = await helper.blogsInDb()
+        blogs.forEach(blog => {
+            console.log('blog:', blog)
+            assert(blog.user !== undefined)
+            assert(blog.user.username !== undefined)
+        })
     })
 
     describe('addition of a new blog post', () => {
@@ -151,6 +160,7 @@ describe('blog api', () => {
             const blogsInDb = await helper.blogsInDb()
             const originalPost = blogsInDb[0]
             const modifiedPost = { ... originalPost, likes: originalPost.likes + 1 }
+            console.log('modifiedPost:', modifiedPost)
             await api
                 .put(`/api/blogs/${modifiedPost.id}`)
                 .send(modifiedPost)

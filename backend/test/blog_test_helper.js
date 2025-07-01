@@ -1,6 +1,22 @@
 const Blog = require('../models/blog')
 const initialBlogs = require('./blogs_test_data')
+const userHelper = require('./user_test_helper')
 
+const populateDatabaseWithInitialBlogs = async () => {
+    const users = await userHelper.usersInDb()
+    const user = users[0]
+    const promises = []
+    initialBlogs.forEach((blog) => {
+        blog.user = user.id
+        promises.push(Blog.create(blog))
+    })
+    return Promise.all(promises)
+}
+
+const initDatabase = async () => {
+    await Blog.deleteMany({})
+    await populateDatabaseWithInitialBlogs()
+}
 
 const nonExistingId = async () => {
     const blog = new Blog({ title: 'willRemoveThisSoon', author: 'sbdy', url: 'http://sbdy.com' })
@@ -12,11 +28,14 @@ const nonExistingId = async () => {
 
 const blogsInDb = async () => {
     // noinspection JSCheckFunctionSignatures
-    const notes = await Blog.find({})
+    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
     // noinspection JSUnresolvedReference
-    return notes.map(note => note.toJSON())
+    return blogs.map(note => note.toJSON())
 }
 
 module.exports = {
-    initialBlogs, nonExistingId, blogsInDb
+    initialBlogs,
+    initDatabase,
+    nonExistingId,
+    blogsInDb
 }

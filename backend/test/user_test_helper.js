@@ -18,7 +18,7 @@ const initDatabase = async () => {
     await User.deleteMany({})
     const promises = []
     initialUsers.forEach((user) => {
-        promises.push(userTools.createDbRecord(user.username, user.name, user.password))
+        promises.push(userTools.createUserInDb(user.username, user.name, user.password))
     })
     // noinspection JSUnresolvedReference
     await Promise.all(promises)
@@ -29,6 +29,13 @@ const usersInDb = async () => {
     const users = await User.find({})
     // noinspection JSUnresolvedReference
     return users.map(u => u.toJSON())
+}
+
+const getUserFromDb = async (userId) => {
+    const matchingUsers = await User.find({ '_id': userId })
+    return await User(matchingUsers[0]).populate(
+        'notes', { content: 1, important: 1 })
+    // , 'blogs', { title: 1, author: 1, url: 1, likes: 1 })
 }
 
 const validUserId = async () => {
@@ -56,6 +63,7 @@ module.exports = {
     initialUsers,
     initDatabase,
     usersInDb,
+    getUserFromDb,
     validUserId,
     authenticatedUserToken
 }

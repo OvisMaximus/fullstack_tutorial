@@ -97,6 +97,28 @@ describe('when there is initially some notes saved', () => {
             const notesAtEnd = await helper.notesInDb()
             assert.strictEqual(notesAtEnd.length, helper.initialNotes.length)
         })
+        test('after adding a new note it is listed in the notes list of a user', async () => {
+            const loginUser = userHelper.initialUsers[1]
+            const userToken = await userHelper.authenticatedUserToken(loginUser, api)
+            const newNote = {
+                content: 'population is quite tricky',
+                important: true,
+            }
+            await api
+                .post('/api/notes')
+                .set('Authorization', `Bearer ${userToken}`)
+                .send(newNote)
+                .expect(201)
+            const notesAtEnd = await helper.notesInDb()
+            const storedNote = notesAtEnd.filter(note => note.content.startsWith('population'))[0]
+            const noteDbUserId = storedNote.user.id
+            const noteDbUser = await userHelper.getUserFromDb(noteDbUserId)
+            assert.strictEqual(noteDbUser.username, loginUser.username)
+            const notes = noteDbUser.notes
+            assert(notes.length > 0)
+            const matchingNotesInUser = noteDbUser.notes.filter(note => note.id === storedNote.id)
+            assert(matchingNotesInUser.length === 1)
+        })
     })
 
     describe('deletion of a note', () => {
