@@ -12,6 +12,18 @@ const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
+const validateRequestContainsDataInPostAndPut = (request, response, next) => {
+    if (request.method !== 'POST' && request.method !== 'PUT') {
+        next()
+        return
+    }
+    if ( ! request.body || Object.keys(request.body).length === 0) {
+        response.status(400).json({ error: 'request body must be a JSON object' }).end()
+        return
+    }
+    next()
+}
+
 const errorHandler = (error, request, response, next) => {
     if (error.name === 'CastError') {
         logger.error('malformatted id: ', error.message)
@@ -40,5 +52,6 @@ const errorHandler = (error, request, response, next) => {
 module.exports = {
     requestLogger,
     unknownEndpoint,
-    errorHandler
+    errorHandler,
+    validateRequestContainsDataInPostAndPut
 }

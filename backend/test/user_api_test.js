@@ -54,11 +54,107 @@ describe('when there is initially one user in db', () => {
             .send(newUser)
             .expect(400)
             .expect('Content-Type', /application\/json/)
-
-        const usersAtEnd = await helper.usersInDb()
         assert(result.body.error.includes('expected `username` to be unique'))
 
+        const usersAtEnd = await helper.usersInDb()
         assert.strictEqual(usersAtEnd.length, usersAtStart.length)
     })
 
+    test('creation fails when username is missing', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            name: 'King of America',
+            password: 'salainen',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        assert(result.body.error.includes('`username` is required.'))
+
+        const usersAtEnd = await helper.usersInDb()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+    test('creation fails when username is too short', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'JC',
+            name: 'Jay Cee',
+            password: 'pappelWatz',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        assert(result.body.error.includes('shorter than the minimum allowed length'))
+
+        const usersAtEnd = await helper.usersInDb()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+    test('creation fails when the password is missing', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'jayC',
+            name: 'Jay Cee',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        assert(result.body.error.includes('password is missing'))
+
+        const usersAtEnd = await helper.usersInDb()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+
+    test('creation fails when the password is too short', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'jayC',
+            name: 'Jay Cee',
+            password: 'pa',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        assert(result.body.error.includes('shorter than the minimum allowed length'))
+
+        const usersAtEnd = await helper.usersInDb()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+    test('creation fails when the request is invalid', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const result = await api
+            .post('/api/users')
+            .send('')
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        assert(result.body.error.includes('request body must be a JSON object'))
+
+        const usersAtEnd = await helper.usersInDb()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
 })
