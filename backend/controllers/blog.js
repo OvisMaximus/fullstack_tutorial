@@ -25,11 +25,6 @@ const addBlogPost = async (request, response) => {
     }
     body.user = userId
     const user = await User.findById(userId)
-    if (!user) {
-        response.status(401).end()
-        return
-    }
-
     const blogPost = new Blog(body)
 
     // noinspection JSUnresolvedReference
@@ -44,6 +39,10 @@ const addBlogPost = async (request, response) => {
 
 const deleteBlogPost = async (request, response) => {
     const id = request.params.id
+    if (!request.userId) {
+        response.status(401).end()
+        return
+    }
     // noinspection JSCheckFunctionSignatures
     await Blog.findByIdAndDelete(id)
     response.status(204).end()

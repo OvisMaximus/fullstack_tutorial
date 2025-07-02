@@ -209,17 +209,27 @@ describe('blog api', () => {
     })
 
     describe('deletion of a post', () => {
-        test('succeeds with status code 204 if the id is valid', async () => {
+        test('fails with status code 401 if the user is not authenticated', async () => {
             const blogsAtStart = await helper.blogsInDb()
             const blogToDelete = blogsAtStart[0]
 
             await api
                 .delete(`/api/blogs/${blogToDelete.id}`)
+                .expect(401)
+            await testStoredBlogsDelta(0)
+        })
+        test('succeeds with status code 204 if the id is valid and the user is authenticated', async () => {
+            const blogsAtStart = await helper.blogsInDb()
+            const blogToDelete = blogsAtStart[0]
+            const token = await getAuthenticatedUserToken()
+
+            await api
+                .delete(`/api/blogs/${blogToDelete.id}`)
+                .set('Authorization', `Bearer ${token}`)
                 .expect(204)
 
             const blogsAtEnd = await testStoredBlogsDelta(-1)
             const contents = blogsAtEnd.map(n => n.title)
-
             assert(!contents.includes(blogToDelete.title))
 
         })
