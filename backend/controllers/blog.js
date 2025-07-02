@@ -1,7 +1,7 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const logger = require('../utils/logger')
-const { getAnyUserFromDb } = require('../utils/userTools')
+const User = require('../models/user')
 
 const getAllBlogPosts = async (request, response) => {
     // noinspection JSCheckFunctionSignatures
@@ -18,14 +18,26 @@ const addBlogPost = async (request, response) => {
         })
     }
 
-    const user = await getAnyUserFromDb()
-    body.user = user.id
+    const userId = request.userId
+    if (!userId) {
+        response.status(401).end()
+        return
+    }
+    body.user = userId
+    const user = await User.findById(userId)
+    if (!user) {
+        response.status(401).end()
+        return
+    }
 
     const blogPost = new Blog(body)
 
     // noinspection JSUnresolvedReference
     const savedPost = await Blog(await blogPost.save())
         .populate('user', { username: 1, name: 1 })
+    user.blogs.push(savedPost.id)
+    await user.save()
+
     logger.info('blog post saved!', savedPost)
     response.status(201).json(savedPost)
 }

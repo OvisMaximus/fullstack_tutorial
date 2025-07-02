@@ -33,9 +33,9 @@ const usersInDb = async () => {
 
 const getUserFromDb = async (userId) => {
     const matchingUsers = await User.find({ '_id': userId })
-    return await User(matchingUsers[0]).populate(
-        'notes', { content: 1, important: 1 })
-    // , 'blogs', { title: 1, author: 1, url: 1, likes: 1 })
+    const user = await User(matchingUsers[0])
+    await user .populate('notes', { content: 1, important: 1 })
+    return await user.populate('blogs', { title: 1, author: 1, url: 1, likes: 1 })
 }
 
 const validUserId = async () => {

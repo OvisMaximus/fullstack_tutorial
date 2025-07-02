@@ -13,12 +13,6 @@ const createUserInDb = async (username, name, password) => {
     return newUser.save()
 }
 
-const getAnyUserFromDb = async () => {
-    // noinspection JSCheckFunctionSignatures
-    return User.findOne()
-}
-
 module.exports = {
-    createUserInDb,
-    getAnyUserFromDb
+    createUserInDb
 }

@@ -47,8 +47,49 @@ describe('blog api', () => {
         })
     })
 
+    async function testStoredBlogsDelta(delta) {
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + delta)
+        return blogsAtEnd
+    }
+
+    async function getAuthenticatedUserToken() {
+        const initialUser = userTestHelper.initialUsers[1]
+        return await userTestHelper.authenticatedUserToken(initialUser, api)
+    }
+
     describe('addition of a new blog post', () => {
         test('a valid blog post can be added ', async () => {
+            const initialUser = userTestHelper.initialUsers[1]
+            const token = await userTestHelper.authenticatedUserToken(initialUser, api)
+            const newBlog = {
+                title: 'Greatest blog post of all time',
+                author: 'Ovis Maximus',
+                url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                likes: 1001,
+            }
+
+            await api
+                .post('/api/blogs')
+                .set('Authorization', `Bearer ${token}`)
+                .send(newBlog)
+                .expect(201)
+                .expect('Content-Type', /application\/json/)
+
+            const blogsAtEnd = await testStoredBlogsDelta(1)
+
+            const storedBlog = blogsAtEnd.filter(blog => blog.title.startsWith('Greatest blog post of all time'))[0]
+            assert(storedBlog !== undefined && storedBlog !== null)
+
+            const storedBlogUserId = storedBlog.user.id
+            const authorizedUser = await userTestHelper.getUserFromDb(storedBlogUserId)
+            assert.strictEqual(authorizedUser.name, initialUser.name )
+            assert.strictEqual(storedBlog.likes, 1001)
+            const blogAlsoStoredInUser =  authorizedUser.blogs.find(blog => blog.id === storedBlog.id)
+            assert( blogAlsoStoredInUser !== undefined,'blog id shall be stored in user blogs')
+        })
+
+        test('a valid blog post can not be stored when the user is not logged in', async () => {
             const newBlog = {
                 title: 'Greatest blog post of all time',
                 author: 'Ovis Maximus',
@@ -59,17 +100,12 @@ describe('blog api', () => {
             await api
                 .post('/api/blogs')
                 .send(newBlog)
-                .expect(201)
-                .expect('Content-Type', /application\/json/)
-
-            const blogsAtEnd = await helper.blogsInDb()
-            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
-
-            const contents = blogsAtEnd.map(n => n.title)
-            assert(contents.includes('Greatest blog post of all time'))
+                .expect(401)
+            await testStoredBlogsDelta(0)
         })
 
         test('when a new blog post without likes is added, these should default to 0', async () => {
+            const token = await getAuthenticatedUserToken()
             const newBlog = {
                 title: 'Greatest blog post of all time',
                 author: 'Ovis Maximus',
@@ -77,6 +113,7 @@ describe('blog api', () => {
             }
             const response = await api
                 .post('/api/blogs')
+                .set('Authorization', `Bearer ${token}`)
                 .send(newBlog)
                 .expect(201)
                 .expect('Content-Type', /application\/json/)
@@ -84,6 +121,7 @@ describe('blog api', () => {
         })
 
         test('a post without title is not added', async () => {
+            const token = await getAuthenticatedUserToken()
             const newBlog = {
                 author: 'Ovis Maximus',
                 url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
@@ -91,15 +129,16 @@ describe('blog api', () => {
 
             await api
                 .post('/api/blogs')
+                .set('Authorization', `Bearer ${token}`)
                 .send(newBlog)
                 .expect(400)
 
-            const blogsAtEnd = await helper.blogsInDb()
-            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+            await testStoredBlogsDelta(0)
         })
 
 
         test('a post without url is not added', async () => {
+            const token = await getAuthenticatedUserToken()
             const newBlog = {
                 title: 'Greatest blog post of all time',
                 author: 'Ovis Maximus',
@@ -107,11 +146,11 @@ describe('blog api', () => {
 
             await api
                 .post('/api/blogs')
+                .set('Authorization', `Bearer ${token}`)
                 .send(newBlog)
                 .expect(400)
 
-            const blogsAtEnd = await helper.blogsInDb()
-            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+            await testStoredBlogsDelta(0)
         })
     })
 
@@ -127,7 +166,7 @@ describe('blog api', () => {
                 .put(`/api/blogs/${modifiedPost.id}`)
                 .send(modifiedPost)
                 .expect(400)
-            const blogsAtEnd = await helper.blogsInDb()
+            const blogsAtEnd = await testStoredBlogsDelta(0)
             const blogsById = _.keyBy(blogsAtEnd, 'id')
             const resultPost = blogsById[originalPost.id]
             assert.deepStrictEqual(resultPost, originalPost)
@@ -161,7 +200,7 @@ describe('blog api', () => {
                 .send(modifiedPost)
                 .expect(200)
 
-            const blogsAtEnd = await helper.blogsInDb()
+            const blogsAtEnd = await testStoredBlogsDelta(0)
             const blogsById = _.keyBy(blogsAtEnd, 'id')
             const resultPost = blogsById[modifiedPost.id]
             assert.deepStrictEqual(resultPost, modifiedPost)
@@ -178,11 +217,11 @@ describe('blog api', () => {
                 .delete(`/api/blogs/${blogToDelete.id}`)
                 .expect(204)
 
-            const blogsAtEnd = await helper.blogsInDb()
+            const blogsAtEnd = await testStoredBlogsDelta(-1)
             const contents = blogsAtEnd.map(n => n.title)
 
             assert(!contents.includes(blogToDelete.title))
-            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+
         })
     })
 })
