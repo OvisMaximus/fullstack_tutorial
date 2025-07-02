@@ -2,6 +2,7 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const logger = require('../utils/logger')
 const User = require('../models/user')
+const mw = require('../utils/middleware')
 
 const getAllBlogPosts = async (request, response) => {
     // noinspection JSCheckFunctionSignatures
@@ -18,13 +19,8 @@ const addBlogPost = async (request, response) => {
         })
     }
 
-    const userId = request.userId
-    if (!userId) {
-        response.status(401).end()
-        return
-    }
-    body.user = userId
-    const user = await User.findById(userId)
+    const user = await User.findById(request.user.id)
+    body.user = user.id
     const blogPost = new Blog(body)
 
     // noinspection JSUnresolvedReference
@@ -39,10 +35,8 @@ const addBlogPost = async (request, response) => {
 
 const deleteBlogPost = async (request, response) => {
     const id = request.params.id
-    if (!request.userId) {
-        response.status(401).end()
-        return
-    }
+    // Todo is logged in user creator?
+    //  Todo remove blog from user.blogs
     // noinspection JSCheckFunctionSignatures
     await Blog.findByIdAndDelete(id)
     response.status(204).end()
@@ -72,9 +66,9 @@ const updateBlogPost = async (request, response) => {
     response.json(populatedBlog).status(200).end()
 }
 
-blogsRouter.delete('/:id', deleteBlogPost)
-blogsRouter.put('/:id', updateBlogPost)
+blogsRouter.delete('/:id', mw.userExtractor, deleteBlogPost)
+blogsRouter.put('/:id', mw.userExtractor, updateBlogPost)
 blogsRouter.get('/', getAllBlogPosts)
-blogsRouter.post('/', addBlogPost)
+blogsRouter.post('/', mw.userExtractor, addBlogPost)
 
 module.exports = blogsRouter

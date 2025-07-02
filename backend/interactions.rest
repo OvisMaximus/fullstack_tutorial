@@ -38,6 +38,7 @@ Content-Type: application/json
 ### post an invalid note
 POST http://localhost:3001/api/notes
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2ODVlNTY2YmMyMzYyODg3ODNkOTllNDAiLCJpYXQiOjE3NTE0NTQzODMsImV4cCI6MTc1MTQ1Nzk4M30.y3dQU6wgdL6aZ3vSDaZSS4h4Sik3KsHMt8kYLIRrmys
 
 {
   "inhalt": "Die kuh rennt um See rum.",
@@ -47,7 +48,7 @@ Content-Type: application/json
 ### post a valid note
 POST http://localhost:3001/api/notes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2ODVlNTY2YmMyMzYyODg3ODNkOTllNDAiLCJpYXQiOjE3NTEyNzU1MDQsImV4cCI6MTc1MTI3OTEwNH0.hStHgRvtrmhVkNzWNBb36rwtglzwj78OHV0xn3_T_-o
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2ODVlNTY2YmMyMzYyODg3ODNkOTllNDAiLCJpYXQiOjE3NTE0NTQzODMsImV4cCI6MTc1MTQ1Nzk4M30.y3dQU6wgdL6aZ3vSDaZSS4h4Sik3KsHMt8kYLIRrmys
 
 {
   "content": "Fackelmann und Blasehase",
@@ -59,6 +60,8 @@ GET http://localhost:3001/api/notes
 
 #### delete a specific node
 DELETE http://localhost:3001/api/notes/684bf9ddc649fd4b5bcbfeac
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2ODVlNTY2YmMyMzYyODg3ODNkOTllNDAiLCJpYXQiOjE3NTE0NTQzODMsImV4cCI6MTc1MTQ1Nzk4M30.y3dQU6wgdL6aZ3vSDaZSS4h4Sik3KsHMt8kYLIRrmys
+
 
 #### get all blogposts
 GET http://localhost:3001/api/blogs

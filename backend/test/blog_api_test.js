@@ -158,12 +158,14 @@ describe('blog api', () => {
 
     describe('updating a specific blog post', () => {
         async function checkPresenceOfMandatoryAttribute(attributeName) {
+            const token = await getAuthenticatedUserToken()
             const blogsInDb = await helper.blogsInDb()
             const originalPost = blogsInDb[0]
             const modifiedPost = { ...originalPost }
             modifiedPost[attributeName] = null
             await api
                 .put(`/api/blogs/${modifiedPost.id}`)
+                .set('Authorization', `Bearer ${token}`)
                 .send(modifiedPost)
                 .expect(400)
             const blogsAtEnd = await testStoredBlogsDelta(0)
@@ -173,6 +175,7 @@ describe('blog api', () => {
         }
 
         test('with a non existing id fails with 404', async () => {
+            const token = await getAuthenticatedUserToken()
             const validNonexistingId = await helper.nonExistingId()
             const changedBlog = {
                 title: 'Greatest blog post of all time',
@@ -182,6 +185,7 @@ describe('blog api', () => {
             changedBlog.id = validNonexistingId
             await api
                 .put(`/api/blogs/${validNonexistingId}`)
+                .set('Authorization', `Bearer ${token}`)
                 .send(changedBlog)
                 .expect(404)
         })
@@ -192,11 +196,13 @@ describe('blog api', () => {
             await checkPresenceOfMandatoryAttribute('title')
         })
         test('with valid data succeeds', async () => {
+            const token = await getAuthenticatedUserToken()
             const blogsInDb = await helper.blogsInDb()
             const originalPost = blogsInDb[0]
             const modifiedPost = { ... originalPost, likes: originalPost.likes + 1 }
             await api
                 .put(`/api/blogs/${modifiedPost.id}`)
+                .set('Authorization', `Bearer ${token}`)
                 .send(modifiedPost)
                 .expect(200)
 
