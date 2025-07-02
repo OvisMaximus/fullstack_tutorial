@@ -33,7 +33,7 @@ const usersInDb = async () => {
 
 const getUserFromDb = async (userId) => {
     const matchingUsers = await User.find({ '_id': userId })
-    const user = await User(matchingUsers[0])
+    const user = User(matchingUsers[0])
     await user .populate('notes', { content: 1, important: 1 })
     return await user.populate('blogs', { title: 1, author: 1, url: 1, likes: 1 })
 }

@@ -35,10 +35,14 @@ const addBlogPost = async (request, response) => {
 
 const deleteBlogPost = async (request, response) => {
     const id = request.params.id
-    // Todo is logged in user creator?
-    //  Todo remove blog from user.blogs
+
     // noinspection JSCheckFunctionSignatures
-    await Blog.findByIdAndDelete(id)
+    const blog = await Blog.findById(id)
+    if( ! blog.user.equals(request.user.id)) {
+        response.status(403).json({ error: 'authenticated user is not owner' }).end()
+        return
+    }
+    await blog.deleteOne()
     response.status(204).end()
 }
 

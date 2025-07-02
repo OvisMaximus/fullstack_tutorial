@@ -224,10 +224,14 @@ describe('blog api', () => {
                 .expect(401)
             await testStoredBlogsDelta(0)
         })
-        test('succeeds with status code 204 if the id is valid and the user is authenticated', async () => {
+        test('succeeds with status code 204 if the user is valid and authenticated', async () => {
             const blogsAtStart = await helper.blogsInDb()
             const blogToDelete = blogsAtStart[0]
-            const token = await getAuthenticatedUserToken()
+            const username = blogToDelete.user.username
+            const password = userTestHelper.initialUsers.find(user => user.username === username).password
+            const token = await userTestHelper.authenticatedUserToken({ username, password }, api)
+            const allUsers = await userTestHelper.usersInDb()
+            const userBefore = allUsers.find(user => user.username === username)
 
             await api
                 .delete(`/api/blogs/${blogToDelete.id}`)
@@ -237,7 +241,34 @@ describe('blog api', () => {
             const blogsAtEnd = await testStoredBlogsDelta(-1)
             const contents = blogsAtEnd.map(n => n.title)
             assert(!contents.includes(blogToDelete.title))
+            assert(userBefore
+                .blogs
+                .filter(blogId => blogId.equals(blogToDelete.id))
+                .length === 1
+            )
+            const userAfter = await userTestHelper.getUserFromDb(userBefore.id)
+            assert( userAfter
+                .blogs
+                .filter(blog => {
+                    blog._id.equals(blogToDelete.id)
+                })
+                .length === 0
+            )
 
+        })
+        test('fails with status code 403 if the user is authenticated but not the creator', async () => {
+            const blogsAtStart = await helper.blogsInDb()
+            const blogToDelete = blogsAtStart[0]
+            const username = blogToDelete.user.username
+            const otherrUsers = userTestHelper.initialUsers.filter(user => user.username !== username)
+            const token = await userTestHelper.authenticatedUserToken(otherrUsers[0], api)
+            assert(token !== undefined)
+
+            await api
+                .delete(`/api/blogs/${blogToDelete.id}`)
+                .set('Authorization', `Bearer ${token}`)
+                .expect(403)
+            await testStoredBlogsDelta(0)
         })
     })
 })
