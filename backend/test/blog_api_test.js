@@ -115,7 +115,24 @@ describe('blog api', () => {
         })
     })
 
+
+
     describe('updating a specific blog post', () => {
+        async function checkPresenceOfMandatoryAttribute(attributeName) {
+            const blogsInDb = await helper.blogsInDb()
+            const originalPost = blogsInDb[0]
+            const modifiedPost = { ...originalPost }
+            modifiedPost[attributeName] = null
+            await api
+                .put(`/api/blogs/${modifiedPost.id}`)
+                .send(modifiedPost)
+                .expect(400)
+            const blogsAtEnd = await helper.blogsInDb()
+            const blogsById = _.keyBy(blogsAtEnd, 'id')
+            const resultPost = blogsById[originalPost.id]
+            assert.deepStrictEqual(resultPost, originalPost)
+        }
+
         test('with a non existing id fails with 404', async () => {
             const validNonexistingId = await helper.nonExistingId()
             const changedBlog = {
@@ -130,30 +147,10 @@ describe('blog api', () => {
                 .expect(404)
         })
         test('with a missing link fails with 400', async () => {
-            const blogsInDb = await helper.blogsInDb()
-            const originalPost = blogsInDb[0]
-            const modifiedPost = { ... originalPost, url: null }
-            await api
-                .put(`/api/blogs/${modifiedPost.id}`)
-                .send(modifiedPost)
-                .expect(400)
-            const blogsAtEnd = await helper.blogsInDb()
-            const blogsById = _.keyBy(blogsAtEnd, 'id')
-            const resultPost = blogsById[originalPost.id]
-            assert.deepStrictEqual(resultPost, originalPost)
+            await checkPresenceOfMandatoryAttribute('url')
         })
         test('with a missing title fails with 400', async () => {
-            const blogsInDb = await helper.blogsInDb()
-            const originalPost = blogsInDb[0]
-            const modifiedPost = { ... originalPost, title: null }
-            await api
-                .put(`/api/blogs/${modifiedPost.id}`)
-                .send(modifiedPost)
-                .expect(400)
-            const blogsAtEnd = await helper.blogsInDb()
-            const blogsById = _.keyBy(blogsAtEnd, 'id')
-            const resultPost = blogsById[originalPost.id]
-            assert.deepStrictEqual(resultPost, originalPost)
+            await checkPresenceOfMandatoryAttribute('title')
         })
         test('with valid data succeeds', async () => {
             const blogsInDb = await helper.blogsInDb()
