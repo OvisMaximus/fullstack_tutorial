@@ -44,7 +44,6 @@ const errorHandler = (error, request, response, next) => {
     }
     else {
         logger.error('unknown error: ', error)
-        console.log(error)
         const status = error.statusCode || 500
         response.status(status).end()
         next(error)

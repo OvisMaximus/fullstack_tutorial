@@ -19,7 +19,7 @@ const createUser = async (request, response) => {
         })
         return
     }
-    const savedUser = await userTools.createDbRecord(username, name, password)
+    const savedUser = await userTools.createUserInDb(username, name, password)
 
     response.status(201).json(savedUser)
 }

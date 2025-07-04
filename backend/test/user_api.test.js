@@ -1,10 +1,11 @@
-const { describe, test, beforeEach } = require('node:test')
+const { describe, test, beforeEach, after } = require('node:test')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const assert = require('node:assert')
 const helper = require('./user_test_helper')
 const supertest = require('supertest')
 const app = require('../app')
+const mongoose = require('mongoose')
 
 const api = supertest(app)
 
@@ -16,6 +17,10 @@ describe('when there is initially one user in db', () => {
         const user = new User({ username: 'root', passwordHash })
 
         await user.save()
+    })
+
+    after(async () => {
+        await mongoose.connection.close()
     })
 
     test('creation succeeds with a fresh username', async () => {
@@ -152,7 +157,7 @@ describe('when there is initially one user in db', () => {
             .expect(400)
             .expect('Content-Type', /application\/json/)
 
-        assert(result.body.error.includes('request body must be a JSON object'))
+        assert(result.body.error.includes('request body must not be empty'))
 
         const usersAtEnd = await helper.usersInDb()
         assert.strictEqual(usersAtEnd.length, usersAtStart.length)
