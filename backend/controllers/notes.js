@@ -1,17 +1,27 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
 const User = require('../models/user')
+require('../utils/http_status_code')
+
+const OK = global.HttpStatus.OK.code
+const CREATED = global.HttpStatus.CREATED.code
+const BAD_REQUEST = global.HttpStatus.BAD_REQUEST.code
+const UNAUTHORIZED = global.HttpStatus.UNAUTHORIZED.code
+const NO_CONTENT = global.HttpStatus.NO_CONTENT.code
+const FORBIDDEN = global.HttpStatus.FORBIDDEN.code
+const NOT_FOUND = global.HttpStatus.NOT_FOUND.code
+
 
 const addNote = async (request, response) => {
     const body = request.body
     if (!body.content) {
-        response.status(400).json({ error: 'request body missing' }).end()
+        response.status(BAD_REQUEST).json({ error: 'request body missing' }).end()
         return
     }
 
     const user = await User.findById(request.userId)
     if (!user) {
-        response.status(401).end()
+        response.status(UNAUTHORIZED).end()
         return
     }
 
@@ -25,7 +35,7 @@ const addNote = async (request, response) => {
     user.notes = user.notes.concat(savedNote.id)
     await user.save()
 
-    response.status(201).json(savedNote)
+    response.status(CREATED).json(savedNote)
 }
 
 const getAllNotes = async (request, response) => {
@@ -45,7 +55,7 @@ const getNote = async (request, response) => {
     if (note) {
         response.json(note)
     } else {
-        response.status(404).end()
+        response.status(NOT_FOUND).end()
     }
 }
 
@@ -54,7 +64,7 @@ const updateNote = (request, response, next) => {
     const id = request.params.id
 
     if (!body || !body.content) {
-        response.status(400).json({
+        response.status(BAD_REQUEST).json({
             error: 'content missing'
         })
         return
@@ -63,7 +73,7 @@ const updateNote = (request, response, next) => {
     // noinspection JSCheckFunctionSignatures
     Note.findByIdAndUpdate(id, body, { new: true })
         .then(savedNote => {
-            response.json(savedNote)
+            response.status(OK).json(savedNote)
         })
         .catch(error => next(error))
 }
@@ -73,7 +83,7 @@ const deleteNote = async (request, response) => {
 
     // noinspection JSCheckFunctionSignatures
     await Note.findByIdAndDelete(id)
-    response.status(204).end()
+    response.status(NO_CONTENT).end()
 }
 
 notesRouter.delete('/:id', deleteNote)
