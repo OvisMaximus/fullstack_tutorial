@@ -259,10 +259,7 @@ describe('blog api', () => {
         test('fails with status code 403 if the user is authenticated but not the creator', async () => {
             const blogsAtStart = await helper.blogsInDb()
             const blogToDelete = blogsAtStart[0]
-            const username = blogToDelete.user.username
-            const otherrUsers = userTestHelper.initialUsers.filter(user => user.username !== username)
-            const token = await userTestHelper.authenticatedUserToken(otherrUsers[0], api)
-            assert(token !== undefined)
+            const token = await userTestHelper.tokenOfdifferentUser(blogToDelete.user, api)
 
             await api
                 .delete(`/api/blogs/${blogToDelete.id}`)

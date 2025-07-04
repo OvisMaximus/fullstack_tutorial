@@ -85,18 +85,21 @@ describe('when there is initially some notes saved', () => {
         })
 
         test('fails with status code 400 if data is invalid', async () => {
+            const userToken = await userHelper.authenticatedUserToken(userHelper.initialUsers[1], api)
             const newNote = {
                 important: true
             }
 
             await api
                 .post('/api/notes')
+                .set('Authorization', `Bearer ${userToken}`)
                 .send(newNote)
                 .expect(400)
 
             const notesAtEnd = await helper.notesInDb()
             assert.strictEqual(notesAtEnd.length, helper.initialNotes.length)
         })
+
         test('after adding a new note it is listed in the notes list of a user', async () => {
             const loginUser = userHelper.initialUsers[1]
             const userToken = await userHelper.authenticatedUserToken(loginUser, api)
@@ -128,6 +131,26 @@ describe('when there is initially some notes saved', () => {
 
             await api
                 .delete(`/api/notes/${noteToDelete.id}`)
+                .expect(204)
+
+            const notesAtEnd = await helper.notesInDb()
+
+            const contents = notesAtEnd.map(n => n.content)
+            assert(!contents.includes(noteToDelete.content))
+
+            assert.strictEqual(notesAtEnd.length, helper.initialNotes.length - 1)
+        })
+
+        test('fails with status code 403 (Forbidden) if the user is not the creator', async () => {
+            const notesAtStart = await helper.notesInDb()
+            const noteToDelete = notesAtStart[0]
+            const token = await userHelper.tokenOfdifferentUser(noteToDelete.user, api)
+            assert( token !== undefined)
+
+
+            await api
+                .delete(`/api/notes/${noteToDelete.id}`)
+                .set('Authorization', `Bearer ${token}`)
                 .expect(204)
 
             const notesAtEnd = await helper.notesInDb()

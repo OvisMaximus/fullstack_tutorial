@@ -2,38 +2,33 @@ const notesRouter = require('express').Router()
 const Note = require('../models/note')
 const User = require('../models/user')
 require('../utils/http_status_code')
+const { userExtractor } = require('../utils/middleware')
 
 const OK = global.HttpStatus.OK.code
 const CREATED = global.HttpStatus.CREATED.code
 const BAD_REQUEST = global.HttpStatus.BAD_REQUEST.code
-const UNAUTHORIZED = global.HttpStatus.UNAUTHORIZED.code
 const NO_CONTENT = global.HttpStatus.NO_CONTENT.code
 const FORBIDDEN = global.HttpStatus.FORBIDDEN.code
 const NOT_FOUND = global.HttpStatus.NOT_FOUND.code
 
 
 const addNote = async (request, response) => {
+    const loggedInUser = User(request.user)
     const body = request.body
     if (!body.content) {
         response.status(BAD_REQUEST).json({ error: 'request body missing' }).end()
         return
     }
 
-    const user = await User.findById(request.userId)
-    if (!user) {
-        response.status(UNAUTHORIZED).end()
-        return
-    }
-
     const note = new Note({
         content: body.content,
         important: body.important || false,
-        user: user.id
+        user: loggedInUser.id
     })
 
     const savedNote = await note.save()
-    user.notes = user.notes.concat(savedNote.id)
-    await user.save()
+    loggedInUser.notes = loggedInUser.notes.concat(savedNote.id)
+    await loggedInUser.save()
 
     response.status(CREATED).json(savedNote)
 }
@@ -90,6 +85,6 @@ notesRouter.delete('/:id', deleteNote)
 notesRouter.get('/:id', getNote)
 notesRouter.put('/:id', updateNote)
 notesRouter.get('/', getAllNotes)
-notesRouter.post('/', addNote)
+notesRouter.post('/', userExtractor, addNote)
 
 module.exports = notesRouter

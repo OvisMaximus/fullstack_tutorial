@@ -59,11 +59,19 @@ const authenticatedUserToken = async (user, api) => {
     return response.token
 }
 
+async function tokenOfdifferentUser(user, api) {
+    const username = user.username
+    const otherUsers = initialUsers.filter(user => user.username !== username)
+    const token = await authenticatedUserToken(otherUsers[0], api)
+    return token
+}
+
 module.exports = {
     initialUsers,
     initDatabase,
     usersInDb,
     getUserFromDb,
     validUserId,
-    authenticatedUserToken
+    authenticatedUserToken,
+    tokenOfdifferentUser
 }
