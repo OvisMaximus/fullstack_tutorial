@@ -128,17 +128,41 @@ describe('when there is initially some notes saved', () => {
         test('succeeds with status code 204 if the id is valid', async () => {
             const notesAtStart = await helper.notesInDb()
             const noteToDelete = notesAtStart[0]
+            const user = userHelper.initialUsers.filter(user => user.username === noteToDelete.user.username)[0]
+            const token = await userHelper.authenticatedUserToken(user, api)
 
             await api
                 .delete(`/api/notes/${noteToDelete.id}`)
+                .set('Authorization', `Bearer ${token}`)
                 .expect(204)
 
             const notesAtEnd = await helper.notesInDb()
+            assert.strictEqual(notesAtEnd.length, helper.initialNotes.length - 1)
 
             const contents = notesAtEnd.map(n => n.content)
             assert(!contents.includes(noteToDelete.content))
 
-            assert.strictEqual(notesAtEnd.length, helper.initialNotes.length - 1)
+
+        })
+
+        test('fails with status code 403 (Forbidden) if the user is not the creator', async () => {
+            const notesAtStart = await helper.notesInDb()
+            const noteToDelete = notesAtStart[0]
+            const token = await userHelper.tokenOfdifferentUser(noteToDelete.user, api)
+            assert( token !== undefined)
+
+
+            await api
+                .delete(`/api/notes/${noteToDelete.id}`)
+                .set('Authorization', `Bearer ${token}`)
+                .expect(403)
+
+            const notesAtEnd = await helper.notesInDb()
+
+            const contents = notesAtEnd.map(n => n.content)
+            assert(contents.includes(noteToDelete.content))
+
+            assert.strictEqual(notesAtEnd.length, helper.initialNotes.length)
         })
 
         test('fails with status code 403 (Forbidden) if the user is not the creator', async () => {

@@ -25,6 +25,12 @@ const loginUser = async (request, response) => {
         })
     }
 
+    if (! password) {
+        return response.status(BAD_REQUEST).json({
+            error: 'no password provided'
+        })
+    }
+
     const passwordCorrect = user === null
         ? false
         : await bcrypt.compare(password, user.passwordHash)

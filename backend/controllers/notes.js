@@ -77,11 +77,18 @@ const deleteNote = async (request, response) => {
     const id = request.params.id
 
     // noinspection JSCheckFunctionSignatures
-    await Note.findByIdAndDelete(id)
+    const note = await Note.findById(id)
+
+    if( ! note.user.equals(request.user._id)) {
+        response.status(FORBIDDEN).json({ error: 'authenticated user is not owner' }).end()
+        return
+    }
+
+    await note.deleteOne()
     response.status(NO_CONTENT).end()
 }
 
-notesRouter.delete('/:id', deleteNote)
+notesRouter.delete('/:id', userExtractor, deleteNote)
 notesRouter.get('/:id', getNote)
 notesRouter.put('/:id', updateNote)
 notesRouter.get('/', getAllNotes)
