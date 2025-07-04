@@ -11,7 +11,6 @@ const NO_CONTENT = global.HttpStatus.NO_CONTENT.code
 const FORBIDDEN = global.HttpStatus.FORBIDDEN.code
 const NOT_FOUND = global.HttpStatus.NOT_FOUND.code
 
-
 const addNote = async (request, response) => {
     const loggedInUser = User(request.user)
     const body = request.body
