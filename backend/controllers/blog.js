@@ -3,6 +3,14 @@ const Blog = require('../models/blog')
 const logger = require('../utils/logger')
 const User = require('../models/user')
 const mw = require('../utils/middleware')
+require('../utils/http_status_code')
+
+const OK = global.HttpStatus.OK.code
+const CREATED = global.HttpStatus.CREATED.code
+const BAD_REQUEST = global.HttpStatus.BAD_REQUEST.code
+const NO_CONTENT = global.HttpStatus.NO_CONTENT.code
+const FORBIDDEN = global.HttpStatus.FORBIDDEN.code
+const NOT_FOUND = global.HttpStatus.NOT_FOUND.code
 
 const getAllBlogPosts = async (request, response) => {
     // noinspection JSCheckFunctionSignatures
@@ -14,7 +22,7 @@ const addBlogPost = async (request, response) => {
     const body = request.body
 
     if (!body) {
-        return response.status(400).json({
+        return response.status(BAD_REQUEST.code).json({
             error: 'content missing'
         })
     }
@@ -30,7 +38,7 @@ const addBlogPost = async (request, response) => {
     await user.save()
 
     logger.info('blog post saved!', savedPost)
-    response.status(201).json(savedPost)
+    response.status(CREATED).json(savedPost)
 }
 
 const deleteBlogPost = async (request, response) => {
@@ -39,11 +47,11 @@ const deleteBlogPost = async (request, response) => {
     // noinspection JSCheckFunctionSignatures
     const blog = await Blog.findById(id)
     if( ! blog.user.equals(request.user.id)) {
-        response.status(403).json({ error: 'authenticated user is not owner' }).end()
+        response.status(FORBIDDEN).json({ error: 'authenticated user is not owner' }).end()
         return
     }
     await blog.deleteOne()
-    response.status(204).end()
+    response.status(NO_CONTENT).end()
 }
 
 const updateBlogPost = async (request, response) => {
@@ -61,13 +69,13 @@ const updateBlogPost = async (request, response) => {
     })
 
     if (!savedBlog) {
-        response.status(404).end()
+        response.status(NOT_FOUND).end()
         return
     }
 
     const populatedBlog = await Blog(savedBlog).populate('user', { username: 1, name: 1 })
     logger.info('blog post updated: ', populatedBlog)
-    response.json(populatedBlog).status(200).end()
+    response.json(populatedBlog).status(OK).end()
 }
 
 blogsRouter.delete('/:id', mw.userExtractor, deleteBlogPost)

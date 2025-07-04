@@ -3,11 +3,15 @@ const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/user')
 const logger = require('../utils/logger')
+require('../utils/http_status_code')
+const OK = global.HttpStatus.OK.code
+const BAD_REQUEST = global.HttpStatus.BAD_REQUEST.code
+const UNAUTHORIZED = global.HttpStatus.UNAUTHORIZED.code
 
 const loginUser = async (request, response) => {
 
     if (!request.body) {
-        return response.status(400).json({
+        return response.status(BAD_REQUEST).json({
             error: 'request body missing'
         })
     }
@@ -16,7 +20,7 @@ const loginUser = async (request, response) => {
     const user = await User.findOne({ username })
 
     if (user && ! user.passwordHash) {
-        return response.status(400).json({
+        return response.status(BAD_REQUEST).json({
             error: 'user exists but no password set'
         })
     }
@@ -26,7 +30,7 @@ const loginUser = async (request, response) => {
         : await bcrypt.compare(password, user.passwordHash)
 
     if (!(user && passwordCorrect)) {
-        return response.status(401).json({
+        return response.status(UNAUTHORIZED).json({
             error: 'invalid username or password'
         })
     }
@@ -43,7 +47,7 @@ const loginUser = async (request, response) => {
     )
 
     response
-        .status(200)
+        .status(OK)
         .json({ token, username: user.username, name: user.name })
 }
 
