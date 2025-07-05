@@ -4,11 +4,10 @@ import {Footer} from "./components/Footer.jsx";
 import {useState, useEffect} from "react";
 import noteService from "./services/notes";
 
-const Notes = () => {
+const Notes = ({errorMessage, successMessage}) => {
     const [notes, setNotes] = useState([])
     const [newNote, setNewNote] = useState('')
     const [showAll, setShowAll] = useState(true)
-    const [errorMessage, setErrorMessage] = useState(null)
 
     const fetchNotes = () => {
         console.log('fetch notes')
@@ -37,7 +36,9 @@ const Notes = () => {
                 setNotes(notes.concat(newNote))
                 setNewNote('')
                 document.getElementById('newNoteInputField').value = ''
-            })
+            }).catch(error => {
+                errorMessage(`error: ${error.response.data.error}`)
+        })
     }
 
     const handleNoteChange = (event) => {
@@ -66,7 +67,6 @@ const Notes = () => {
     return (
         <div>
             <h1>Notes</h1>
-            <Notification message = {errorMessage} className={'error'}/>
             <button onClick={() => setShowAll(!showAll)}>show {showAll? 'only important':'all'}</button>
             <ul>
                 {notesToRender.map(note =>

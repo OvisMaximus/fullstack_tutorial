@@ -1,0 +1,25 @@
+import {useState} from "react";
+import {initErrorMessage, initSuccessMessage} from "./components/helper/notification.js";
+import {Notification} from "./components/Notification.jsx";
+import UserAuthentication from "./components/UserAuthentication.jsx";
+import AddressBook from "./AddressBook.jsx";
+import Notes from "./Notes.jsx";
+
+const Application = () => {
+    const [message, setMessage] = useState(null)
+    const [status, setStatus] = useState('success')
+    const errorMessage = initErrorMessage(setMessage, setStatus)
+    const successMessage = initSuccessMessage(setMessage, setStatus)
+    console.log('render errorMessage', errorMessage)
+
+    return (
+        <div>
+            <Notification message = {message} className={status}/>
+            <UserAuthentication errorMessage={errorMessage} successMessage={successMessage} dummy='nase'/>
+            <AddressBook errorMessage={errorMessage} successMessage={successMessage}/>
+            <Notes successMessage={successMessage} errorMessage={errorMessage}/>
+        </div>
+    )
+}
+
+export default Application

@@ -1,22 +1,8 @@
 import {useEffect, useState} from 'react'
 import personService from './services/persons'
-import {Notification} from "./components/Notification.jsx";
 
 const handleWith = handler => (event) => handler(event.target.value)
 
-const displayMessage = (setMessage, setStatus, status, message) => {
-    setMessage(message)
-    setStatus(status)
-    setTimeout(() => setMessage(null), 5000)
-}
-
-const initErrorMessage = (setMessage, setStatus) => (message) => {
-    displayMessage(setMessage, setStatus, 'error', message)
-}
-
-const initSuccessMessage = (setMessage, setStatus) => (message) => {
-    displayMessage(setMessage, setStatus, 'success', message)
-}
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
@@ -147,13 +133,9 @@ const ListOfPersons = ({persons, setPersons, successMessage, errorMessage, filte
     )
 }
 
-const AddressBook = () => {
+const AddressBook = ({errorMessage, successMessage}) => {
     const [persons, setPersons] = useState([])
     const [filter, setFilter] = useState('')
-    const [message, setMessage] = useState(null)
-    const [status, setStatus] = useState('success')
-    const errorMessage = initErrorMessage(setMessage, setStatus)
-    const successMessage = initSuccessMessage(setMessage, setStatus)
 
     const fetchPersons = () => {
         console.log('fetch persons')
@@ -171,7 +153,6 @@ const AddressBook = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message = {message} className={status}/>
             <Filter filter={filter} setFilter={setFilter}/>
             <h2>Add a new</h2>
             <NewPersonForm persons={persons} setPersons={setPersons} successMessage={successMessage} errorMessage={errorMessage} />
