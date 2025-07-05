@@ -37,6 +37,7 @@ const Notes = ({errorMessage, successMessage, token}) => {
                 setNotes(notes.concat(newNote))
                 setNewNote('')
                 document.getElementById('newNoteInputField').value = ''
+                successMessage(`added note: ${newNote.content}`)
             }).catch(error => {
                 errorMessage(`error: ${error.response.data.error}`)
         })
