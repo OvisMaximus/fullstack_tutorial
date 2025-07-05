@@ -1,7 +1,7 @@
 import loginService from '../services/login.js'
 import {useState} from "react";
 
-const Login = ({successMessage, errorMessage, setUser}) => {
+const Login = ({successMessage, errorMessage, setUser, setToken}) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -12,8 +12,10 @@ const Login = ({successMessage, errorMessage, setUser}) => {
             const user = await loginService.login({
                 username, password,
             })
+
             successMessage(`Welcome ${user.name}`)
             setUser(user)
+            setToken(user.token)
             setUsername('')
             setPassword('')
         } catch (_) {
@@ -49,11 +51,27 @@ const Login = ({successMessage, errorMessage, setUser}) => {
     )
 }
 
-const UserAuthentication = ({successMessage, errorMessage}) => {
+const ActiveUser = ({user}) => {
+    return (
+        <div>
+            <p>
+                {user.name} logged in
+            </p>
+        </div>
+    )
+}
+const UserAuthentication = ({successMessage, errorMessage, setToken}) => {
     const [user, setUser] = useState(null)
     return (
         <div>
-            <Login errorMessage={errorMessage} successMessage={successMessage} setUser={setUser}/>
+            {user === null
+                ? <Login
+                    errorMessage={errorMessage}
+                    successMessage={successMessage}
+                    setUser={setUser}
+                    setToken={setToken}/>
+                : <ActiveUser user={user}/>}
+
         </div>
     )
 }

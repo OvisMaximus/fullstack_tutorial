@@ -1,10 +1,9 @@
 import {Note} from "./components/Note.jsx";
-import {Notification} from "./components/Notification.jsx";
 import {Footer} from "./components/Footer.jsx";
 import {useState, useEffect} from "react";
 import noteService from "./services/notes";
 
-const Notes = ({errorMessage, successMessage}) => {
+const Notes = ({errorMessage, successMessage, token}) => {
     const [notes, setNotes] = useState([])
     const [newNote, setNewNote] = useState('')
     const [showAll, setShowAll] = useState(true)
@@ -29,8 +28,10 @@ const Notes = ({errorMessage, successMessage}) => {
             important: Math.random() < 0.5,
         }
 
+        console.log('addNote: ', newNoteObject)
+        console.log('token: ', token)
         noteService
-            .create(newNoteObject)
+            .create(newNoteObject, token)
             .then(newNote => {
                 console.log('newNote: ', newNote)
                 setNotes(notes.concat(newNote))
@@ -51,14 +52,13 @@ const Notes = ({errorMessage, successMessage}) => {
         const changedNote = { ...note, important: !note.important }
 
         noteService
-            .update(id, changedNote)
+            .update(id, changedNote, token)
             .then(updatedNote => {
                 console.log('updated note: ', updatedNote)
                 setNotes(notes.map(note => note.id === id ? updatedNote : note))
             })
             .catch(error => {
-                setErrorMessage(`error: The note '${note.content}' was already removed from server`)
-                setTimeout(() => setErrorMessage(null), 5000)
+                errorMessage(`error: The note '${note.content}' was already removed from server`)
                 console.log('error: ', error)
                 setNotes(notes.filter(n => n.id !== id))
             })
