@@ -52,6 +52,7 @@ const Notes = ({errorMessage, successMessage}) => {
     const handleNoteChange = (event) => {
         setNewNote(event.target.value)
     }
+
     const toggleImportanceOf = (id) => () => {
         console.log(`toggle ${id} requested`)
         const note = notes.find(n => n.id === id)
@@ -88,7 +89,6 @@ const Notes = ({errorMessage, successMessage}) => {
                         <button type="submit">save</button>
                     </form>
                 ) : ""}
-            <Footer/>
         </div>
     )
 }
