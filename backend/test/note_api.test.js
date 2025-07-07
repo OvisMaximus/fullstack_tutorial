@@ -164,25 +164,39 @@ describe('when there is initially some notes saved', () => {
 
             assert.strictEqual(notesAtEnd.length, helper.initialNotes.length)
         })
+    })
 
-        test('fails with status code 403 (Forbidden) if the user is not the creator', async () => {
+    describe('modification of a note', () => {
+        test('succeeds with status code 200 if data is valid and user is authenticated', async () => {
             const notesAtStart = await helper.notesInDb()
-            const noteToDelete = notesAtStart[0]
-            const token = await userHelper.tokenOfdifferentUser(noteToDelete.user, api)
-            assert( token !== undefined)
+            const noteToModify = notesAtStart[0]
+            const user = userHelper.initialUsers.filter(user => user.username === noteToModify.user.username)[0]
+            const token = await userHelper.authenticatedUserToken(user, api)
+            const newContent = 'and now to something completely different'
+            noteToModify.content = newContent
+            const newImportance = ! noteToModify.important
 
+            noteToModify.content = newContent
+            noteToModify.important = newImportance
 
-            await api
-                .delete(`/api/notes/${noteToDelete.id}`)
+            const test = await api
+                .put(`/api/notes/${noteToModify.id}`)
                 .set('Authorization', `Bearer ${token}`)
-                .expect(204)
+                .send(noteToModify)
+                .expect(200)
 
             const notesAtEnd = await helper.notesInDb()
+            assert.strictEqual(notesAtEnd.length, helper.initialNotes.length)
 
             const contents = notesAtEnd.map(n => n.content)
-            assert(!contents.includes(noteToDelete.content))
+            assert(contents.includes(newContent))
 
-            assert.strictEqual(notesAtEnd.length, helper.initialNotes.length - 1)
+            assert(test.body.content)
+
+        })
+
+        test('TODO fail on unauthorized and invalid content', async () => {
+
         })
     })
 

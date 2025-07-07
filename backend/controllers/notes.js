@@ -53,7 +53,7 @@ const getNote = async (request, response) => {
     }
 }
 
-const updateNote = (request, response, next) => {
+const updateNote = async (request, response) => {
     const body = request.body
     const id = request.params.id
 
@@ -65,11 +65,17 @@ const updateNote = (request, response, next) => {
     }
 
     // noinspection JSCheckFunctionSignatures
-    Note.findByIdAndUpdate(id, body, { new: true })
-        .then(savedNote => {
-            response.status(OK).json(savedNote)
-        })
-        .catch(error => next(error))
+    const note = await Note.findById(id)
+    if( ! note.user.equals(request.user._id)) {
+        response.status(FORBIDDEN).json({ error: 'authenticated user is not owner' }).end()
+        return
+    }
+
+    note.set(body)
+    note.user = request.user._id
+    const savedNote = await note.save()
+
+    response.status(OK).json(savedNote)
 }
 
 const deleteNote = async (request, response) => {
@@ -89,7 +95,7 @@ const deleteNote = async (request, response) => {
 
 notesRouter.delete('/:id', userExtractor, deleteNote)
 notesRouter.get('/:id', getNote)
-notesRouter.put('/:id', updateNote)
+notesRouter.put('/:id', userExtractor, updateNote)
 notesRouter.get('/', getAllNotes)
 notesRouter.post('/', userExtractor, addNote)
 

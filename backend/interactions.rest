@@ -62,6 +62,15 @@ GET http://localhost:3001/api/notes
 DELETE http://localhost:3001/api/notes/684bf9ddc649fd4b5bcbfeac
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2ODVlNTY2YmMyMzYyODg3ODNkOTllNDAiLCJpYXQiOjE3NTE0NTQzODMsImV4cCI6MTc1MTQ1Nzk4M30.y3dQU6wgdL6aZ3vSDaZSS4h4Sik3KsHMt8kYLIRrmys
 
+#### update a specific node
+PUT http://localhost:3001/api/notes/68625829a43abfb9db7aeb46
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2ODVlNTY2YmMyMzYyODg3ODNkOTllNDAiLCJpYXQiOjE3NTE4NzEzNjEsImV4cCI6MTc1MTg3NDk2MX0.692wbotNQMf3OLtBMQJvOlWiVU8NY7VHgSBI5wNeLo4
+
+{
+  "content": "und nu ma wat völlich andres",
+  "important": "true"
+}
 
 #### get all blogposts
 GET http://localhost:3001/api/blogs
