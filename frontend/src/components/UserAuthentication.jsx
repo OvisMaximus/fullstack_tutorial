@@ -1,7 +1,8 @@
 import loginService from '../services/login.js'
 import {useState} from "react";
+import {Button} from "./Button.jsx";
 
-const Login = ({successMessage, errorMessage, setUser, setToken}) => {
+const Login = ({successMessage, errorMessage}) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -14,8 +15,7 @@ const Login = ({successMessage, errorMessage, setUser, setToken}) => {
             })
 
             successMessage(`Welcome ${user.name}`)
-            setUser(user)
-            setToken(user.token)
+            window.localStorage.setItem('loggedUser', JSON.stringify(user))
             setUsername('')
             setPassword('')
         } catch (_) {
@@ -51,27 +51,31 @@ const Login = ({successMessage, errorMessage, setUser, setToken}) => {
     )
 }
 
-const ActiveUser = ({user}) => {
+const ActiveUser = ({user, successMessage}) => {
+    const logOff = () => {
+        window.localStorage.removeItem('loggedUser')
+        successMessage('logged off')
+    }
     return (
         <div>
             <p>
-                {user.name} logged in
+                {user.name} logged in <Button text='log off' onClick={logOff}/>
             </p>
         </div>
     )
 }
-const UserAuthentication = ({successMessage, errorMessage, setToken}) => {
-    const [user, setUser] = useState(null)
+const UserAuthentication = ({successMessage, errorMessage}) => {
+    const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    const user = loggedUserJSON ? JSON.parse(loggedUserJSON) : null
+
     return (
         <div>
             {user === null
                 ? <Login
-                    errorMessage={errorMessage}
-                    successMessage={successMessage}
-                    setUser={setUser}
-                    setToken={setToken}/>
-                : <ActiveUser user={user}/>}
-
+                        errorMessage={errorMessage}
+                        successMessage={successMessage}
+                    />
+                : <ActiveUser user={user} successMessage={successMessage}/>}
         </div>
     )
 }

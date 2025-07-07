@@ -1,10 +1,9 @@
 import {useEffect, useState} from 'react'
 import personService from './services/persons'
+import {Button} from "./components/Button.jsx";
 
 const handleWith = handler => (event) => handler(event.target.value)
 
-
-const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
 const Filter = ({filter, setFilter}) => {
     return (

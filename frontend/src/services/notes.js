@@ -11,12 +11,16 @@ const getAll = () => {
         })
 }
 
-const create = (newObject, token) => {
-    const request = axios.post(baseUrl, newObject, {
+const authorizationHeader = token => {
+    return {
         headers: {
             Authorization: `Bearer ${token}`
         }
-    })
+    }
+}
+
+const create = (newObject, token) => {
+    const request = axios.post(baseUrl, newObject, authorizationHeader(token))
     return request
         .then(response => response.data)
         .catch(error => {
@@ -25,11 +29,7 @@ const create = (newObject, token) => {
 }
 
 const update = (id, newObject, token) => {
-    const request = axios.put(`${baseUrl}/${id}`, newObject, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+    const request = axios.put(`${baseUrl}/${id}`, newObject, authorizationHeader(token))
     return request
         .then(response => response.data)
         .catch(error => {

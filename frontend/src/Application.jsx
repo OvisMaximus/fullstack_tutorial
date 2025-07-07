@@ -8,7 +8,6 @@ import Notes from "./Notes.jsx";
 const Application = () => {
     const [message, setMessage] = useState(null)
     const [status, setStatus] = useState('success')
-    const [token, setToken] = useState(null)
     const errorMessage = initErrorMessage(setMessage, setStatus)
     const successMessage = initSuccessMessage(setMessage, setStatus)
     console.log('render errorMessage', errorMessage)
@@ -16,9 +15,9 @@ const Application = () => {
     return (
         <div>
             <Notification message = {message} className={status}/>
-            <UserAuthentication errorMessage={errorMessage} successMessage={successMessage} setToken={setToken}/>
+            <UserAuthentication errorMessage={errorMessage} successMessage={successMessage}/>
             <AddressBook errorMessage={errorMessage} successMessage={successMessage}/>
-            <Notes successMessage={successMessage} errorMessage={errorMessage} token={token}/>
+            <Notes successMessage={successMessage} errorMessage={errorMessage}/>
         </div>
     )
 }

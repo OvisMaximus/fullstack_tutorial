@@ -1,12 +1,18 @@
 import {Note} from "./components/Note.jsx";
 import {Footer} from "./components/Footer.jsx";
-import {useState, useEffect} from "react";
+import {useEffect, useState} from "react";
 import noteService from "./services/notes";
 
-const Notes = ({errorMessage, successMessage, token}) => {
+function extractUserFromLocalStorage() {
+    const userJson = window.localStorage.getItem('loggedUser')
+    return userJson ? JSON.parse(userJson) : null;
+}
+
+const Notes = ({errorMessage, successMessage}) => {
     const [notes, setNotes] = useState([])
     const [newNote, setNewNote] = useState('')
     const [showAll, setShowAll] = useState(true)
+    const user = extractUserFromLocalStorage() // script uses useEffect for initialization. why?
 
     const fetchNotes = () => {
         console.log('fetch notes')
@@ -29,9 +35,9 @@ const Notes = ({errorMessage, successMessage, token}) => {
         }
 
         console.log('addNote: ', newNoteObject)
-        console.log('token: ', token)
+        console.log('token: ', user.token)
         noteService
-            .create(newNoteObject, token)
+            .create(newNoteObject, user.token)
             .then(newNote => {
                 console.log('newNote: ', newNote)
                 setNotes(notes.concat(newNote))
@@ -53,7 +59,7 @@ const Notes = ({errorMessage, successMessage, token}) => {
         const changedNote = { ...note, important: !note.important }
 
         noteService
-            .update(id, changedNote, token)
+            .update(id, changedNote, user.token)
             .then(updatedNote => {
                 console.log('updated note: ', updatedNote)
                 setNotes(notes.map(note => note.id === id ? updatedNote : note))
@@ -70,18 +76,18 @@ const Notes = ({errorMessage, successMessage, token}) => {
             <h1>Notes</h1>
             <button onClick={() => setShowAll(!showAll)}>show {showAll? 'only important':'all'}</button>
             <ul>
-                {notesToRender.map(note =>
-                    <Note
-                        key={note.id}
-                        note={note}
-                        toggleImportance={toggleImportanceOf(note.id)}
-                    />
+                {notesToRender.map(note => user
+                    ? <Note key={note.id} note={note} toggleImportance={toggleImportanceOf(note.id)}/>
+                    : <Note key={note.id} note={note} />
                 )}
             </ul>
-            <form onSubmit={addNote}>
-                <input id="newNoteInputField" defaultValue={newNote} onChange={handleNoteChange}/>
-                <button type="submit">save</button>
-            </form>
+            {user
+                ? (
+                    <form onSubmit={addNote}>
+                        <input id="newNoteInputField" defaultValue={newNote} onChange={handleNoteChange}/>
+                        <button type="submit">save</button>
+                    </form>
+                ) : ""}
             <Footer/>
         </div>
     )
