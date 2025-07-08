@@ -6,6 +6,8 @@ import AddressBook from "./AddressBook.jsx";
 import Notes from "./Notes.jsx";
 import Blogs from "./components/Blogs.jsx";
 import {Footer} from "./components/Footer.jsx";
+import Togglable from "./components/Togglable.jsx";
+import RenderOnlyWhen from "./components/RenderOnlyWhen.jsx";
 
 const Application = () => {
     const [message, setMessage] = useState(null)
@@ -20,9 +22,17 @@ const Application = () => {
         <div>
             <Notification message = {message} className={status}/>
             <UserAuthentication errorMessage={errorMessage} successMessage={successMessage}/>
-            <AddressBook errorMessage={errorMessage} successMessage={successMessage}/>
-            <Notes successMessage={successMessage} errorMessage={errorMessage}/>
-            {user ? <Blogs successMessage={successMessage} errorMessage={errorMessage} /> : ""}
+            <Togglable showButtonLabel = "show Addressbook" hideButtonLabel = "hide Addressbook">
+                <AddressBook errorMessage={errorMessage} successMessage={successMessage}/>
+            </Togglable>
+            <Togglable showButtonLabel = "show Notes" hideButtonLabel = "hide Notes">
+                <Notes successMessage={successMessage} errorMessage={errorMessage}/>
+            </Togglable>
+            <RenderOnlyWhen condition={user}>
+                <Togglable showButtonLabel = "show Blog List" hideButtonLabel = "hide Blog List">
+                    <Blogs successMessage={successMessage} errorMessage={errorMessage} />
+                </Togglable>
+            </RenderOnlyWhen>
             <Footer/>
         </div>
     )

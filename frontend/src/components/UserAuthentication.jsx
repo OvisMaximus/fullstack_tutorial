@@ -1,6 +1,8 @@
 import loginService from '../services/login.js'
 import {useState} from "react";
 import {Button} from "./Button.jsx";
+import Togglable from "./Togglable.jsx";
+import RenderOnlyWhen from "./RenderOnlyWhen.jsx";
 
 const Login = ({successMessage, errorMessage}) => {
     const [username, setUsername] = useState('')
@@ -70,12 +72,22 @@ const UserAuthentication = ({successMessage, errorMessage}) => {
 
     return (
         <div>
-            {user === null
-                ? <Login
+
+            <RenderOnlyWhen condition={user}>
+                <ActiveUser
+                    user={user}
+                    successMessage={successMessage}
+                />
+            </RenderOnlyWhen>
+            <RenderOnlyWhen condition={!user}>
+                <Togglable showButtonLabel='login'
+                           hideButtonLabel='cancel' >
+                    <Login
                         errorMessage={errorMessage}
                         successMessage={successMessage}
                     />
-                : <ActiveUser user={user} successMessage={successMessage}/>}
+                </Togglable>
+            </RenderOnlyWhen>
         </div>
     )
 }

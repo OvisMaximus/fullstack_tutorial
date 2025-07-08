@@ -1,7 +1,9 @@
 import {Note} from "./components/Note.jsx";
-import {Footer} from "./components/Footer.jsx";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import noteService from "./services/notes";
+import NoteForm from "./components/NoteForm.jsx";
+import Togglable from "./components/Togglable.jsx";
+import RenderOnlyWhen from "./components/RenderOnlyWhen.jsx";
 
 function extractUserFromLocalStorage() {
     const userJson = window.localStorage.getItem('loggedUser')
@@ -10,8 +12,8 @@ function extractUserFromLocalStorage() {
 
 const Notes = ({errorMessage, successMessage}) => {
     const [notes, setNotes] = useState([])
-    const [newNote, setNewNote] = useState('')
     const [showAll, setShowAll] = useState(true)
+    const noteFormRef = useRef()
     const user = extractUserFromLocalStorage() // script uses useEffect for initialization. why?
 
     const fetchNotes = () => {
@@ -27,37 +29,18 @@ const Notes = ({errorMessage, successMessage}) => {
     useEffect(fetchNotes, [])
     console.log('render', notes.length, 'notes')
 
-    const addNote = (event) => {
-        event.preventDefault()
-        const newNoteObject = {
-            content: newNote,
-            important: Math.random() < 0.5,
-        }
-
-        console.log('addNote: ', newNoteObject)
-        console.log('token: ', user.token)
-        noteService
-            .create(newNoteObject, user.token)
-            .then(newNote => {
-                console.log('newNote: ', newNote)
-                setNotes(notes.concat(newNote))
-                setNewNote('')
-                document.getElementById('newNoteInputField').value = ''
-                successMessage(`added note: ${newNote.content}`)
-            }).catch(error => {
-                errorMessage(`error: ${error.response.data.error}`)
-        })
-    }
-
-    const handleNoteChange = (event) => {
-        setNewNote(event.target.value)
+    const createNote = async (newNoteObject) => {
+        noteFormRef.current.toggleVisibility()
+        const newNote = await noteService.create(newNoteObject, user.token)
+        setNotes(notes.concat(newNote))
+        successMessage(`added note: ${newNote.content}`)
     }
 
     const toggleImportanceOf = (id) => () => {
         console.log(`toggle ${id} requested`)
         const note = notes.find(n => n.id === id)
         console.log('toggle note: ', note)
-        const changedNote = { ...note, important: !note.important }
+        const changedNote = {...note, important: !note.important}
 
         noteService
             .update(id, changedNote, user.token)
@@ -71,24 +54,26 @@ const Notes = ({errorMessage, successMessage}) => {
                 setNotes(notes.filter(n => n.id !== id))
             })
     }
-    const notesToRender = showAll? notes : notes.filter(note => note.important)
+    const notesToRender = showAll ? notes : notes.filter(note => note.important)
     return (
         <div>
             <h1>Notes</h1>
-            <button onClick={() => setShowAll(!showAll)}>show {showAll? 'only important':'all'}</button>
+            <RenderOnlyWhen condition={user}>
+                <Togglable showButtonLabel="add note" hideButtonLabel="cancel" ref={noteFormRef}>
+                    <NoteForm
+                        createNote={createNote}
+                        value={''}
+                    />
+                </Togglable>
+            </RenderOnlyWhen>
+            <button onClick={() => setShowAll(!showAll)}>show {showAll ? 'only important' : 'all'}</button>
             <ul>
                 {notesToRender.map(note => user
                     ? <Note key={note.id} note={note} toggleImportance={toggleImportanceOf(note.id)}/>
-                    : <Note key={note.id} note={note} />
+                    : <Note key={note.id} note={note}/>
                 )}
             </ul>
-            {user
-                ? (
-                    <form onSubmit={addNote}>
-                        <input id="newNoteInputField" defaultValue={newNote} onChange={handleNoteChange}/>
-                        <button type="submit">save</button>
-                    </form>
-                ) : ""}
+
         </div>
     )
 }
