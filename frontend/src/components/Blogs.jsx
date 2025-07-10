@@ -19,6 +19,19 @@ const Blogs = ({successMessage}) => {
         blogFormRef.current.toggleVisibility()
     }
 
+    const updateBlog = async (blog) => {
+        const updatedBlog = await blogService.update(blog, user.token)
+        console.log('updatedBlog: ', updatedBlog)
+        await fetchBlogs()
+        successMessage(`${updatedBlog.title} by ${updatedBlog.author} updated`)
+    }
+
+    const deleteBlog = async (blog) => {
+        await blogService.remove(blog.id, user.token)
+        await fetchBlogs()
+        successMessage(`${blog.title} by ${blog.author} removed`)
+    }
+
     const fetchBlogs = async () => {
         console.log('fetch blogs')
         const blogs = await blogService.getAll()
@@ -42,11 +55,18 @@ const Blogs = ({successMessage}) => {
             </RenderOnlyWhen>
 
             <h2>suggested blog reads</h2>
-            {blogs.map(blog =>
-                <div key={blog.id}>
-                    <Blog blog={blog}/>
-                </div>
-            )}
+            {blogs
+                .sort((lBlog, rBlog) => rBlog.likes - lBlog.likes)
+                .map(blog => (
+                    <div key={blog.id}>
+                        <Blog
+                            blog={blog}
+                            loggedUser={user}
+                            deleteBlog={deleteBlog}
+                            updateBlog={updateBlog}/>
+                    </div>
+                ))
+            }
 
         </div>
     )

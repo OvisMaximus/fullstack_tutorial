@@ -1,7 +1,42 @@
-const Blog = ({blog}) => {
+import CollapseDetails from "./CollapseDetails.jsx";
+import {Button} from "./Button.jsx";
+
+const Blog = ({blog, loggedUser, updateBlog, deleteBlog}) => {
+    const blogStyle = {
+        paddingTop: 10,
+        paddingLeft: 2,
+        border: 'solid',
+        borderWidth: 1,
+        marginBottom: 5
+    }
+    const summary = `${blog.title}  ${blog.author}`
+
+    const addLike = (blog) => {
+        return () => {
+            console.log('add like', blog)
+            const newBlog = {...blog, likes: blog.likes + 1}
+            updateBlog(newBlog)
+        }
+    }
+
+    const handleDeleteBlog = (blog) => {
+        return () => {
+            console.log('delete blog', blog)
+            if (!window.confirm(`delete ${blog.title} by ${blog.author}?`)) return
+            deleteBlog(blog)
+        }
+    }
+
     return (
-        <div>
-        {blog.title}  &nbsp; {blog.author}
+        <div style={blogStyle}>
+            <CollapseDetails summary={summary}>
+                <a href={blog.url}>{blog.url}</a><br/>
+                    likes: {blog.likes} &nbsp; <Button text="like" onClick={addLike(blog)}/><br/>
+                    owner: {blog.user? blog.user.name : 'user not initialized'}<br/>
+                {(blog.user && loggedUser && blog.user.username === loggedUser.username)
+                    ? <Button text="delete entry" onClick={handleDeleteBlog(blog)}/>
+                    : ''}
+            </CollapseDetails>
         </div>
     )
 }

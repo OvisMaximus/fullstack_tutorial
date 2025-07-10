@@ -8,6 +8,14 @@ export function NewBlogForm({storeBlog}) {
     const handleChange = (setValue) => (event) => {
         setValue(event.target.value)
     }
+    const clearInputFields = () => {
+        setNewTitle('')
+        setNewAuthor('')
+        setNewUrl('')
+        document.getElementById('newTitleInputField').value = ''
+        document.getElementById('newAuthorInputField').value = ''
+        document.getElementById('newUrlInputField').value = ''
+    }
 
     const addBlog = async (event) => {
         event.preventDefault()
@@ -17,6 +25,7 @@ export function NewBlogForm({storeBlog}) {
             url: newUrl,
         }
         storeBlog(newBlog)
+        clearInputFields()
     }
 
     return (
