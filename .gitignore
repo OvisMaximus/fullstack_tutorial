@@ -231,3 +231,4 @@ tags
 
 package-lock.json
 frontend/dist
+frontend/coverage
