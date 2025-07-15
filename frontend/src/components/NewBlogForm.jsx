@@ -1,6 +1,10 @@
 import {useState} from "react";
 
-export function NewBlogForm({storeBlog}) {
+const titlePlaceholder = 'insert the title';
+const authorPlaceholder = 'insert the author';
+const urlPlaceholder = 'add the url';
+
+function NewBlogForm({storeBlog}) {
     const [newTitle, setNewTitle] = useState('')
     const [newAuthor, setNewAuthor] = useState('')
     const [newUrl, setNewUrl] = useState('')
@@ -12,9 +16,9 @@ export function NewBlogForm({storeBlog}) {
         setNewTitle('')
         setNewAuthor('')
         setNewUrl('')
-        document.getElementById('newTitleInputField').value = ''
-        document.getElementById('newAuthorInputField').value = ''
-        document.getElementById('newUrlInputField').value = ''
+        document.getElementById(titlePlaceholder).value = ''
+        document.getElementById(authorPlaceholder).value = ''
+        document.getElementById(urlPlaceholder).value = ''
     }
 
     const addBlog = async (event) => {
@@ -32,14 +36,27 @@ export function NewBlogForm({storeBlog}) {
         <div>
             <h2>create a new blog entry</h2>
             <form onSubmit={addBlog}>
-                Title <input id="newTitleInputField" defaultValue={newTitle}
+                Title <input defaultValue={newTitle}
+                             id={titlePlaceholder}
+                             placeholder={titlePlaceholder}
                              onChange={handleChange(setNewTitle)}/><br/>
-                Author <input id="newAuthorInputField" defaultValue={newAuthor}
+                Author <input defaultValue={newAuthor}
+                              id={authorPlaceholder}
+                              placeholder={authorPlaceholder}
                               onChange={handleChange(setNewAuthor)}/><br/>
-                URL <input id="newUrlInputField" defaultValue={newUrl}
+                URL <input defaultValue={newUrl}
+                           id={urlPlaceholder}
+                           placeholder={urlPlaceholder}
                            onChange={handleChange(setNewUrl)}/><br/>
                 <button type="submit">save</button>
             </form>
         </div>
     )
+}
+
+module.exports = {
+    NewBlogForm,
+    titlePlaceholder,
+    authorPlaceholder,
+    urlPlaceholder
 }
