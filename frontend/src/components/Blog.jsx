@@ -28,14 +28,16 @@ const Blog = ({blog, loggedUser, updateBlog, deleteBlog}) => {
     }
 
     return (
-        <div style={blogStyle}>
+        <div className={blogStyle}>
             <CollapseDetails summary={summary}>
-                <a className={'blog_details'} href={blog.url}>{blog.url}</a><br/>
+                <div className={'blog_details'}>
+                    <a href={blog.url}>{blog.url}</a><br/>
                     likes: {blog.likes} &nbsp; <Button text="like" onClick={addLike(blog)}/><br/>
                     owner: {blog.user? blog.user.name : 'user not initialized'}<br/>
-                {(blog.user && loggedUser && blog.user.username === loggedUser.username)
-                    ? <Button text="delete entry" onClick={handleDeleteBlog(blog)}/>
-                    : ''}
+                    {(blog.user && loggedUser && blog.user.username === loggedUser.username)
+                        ? <Button text="delete entry" onClick={handleDeleteBlog(blog)}/>
+                        : ''}
+                </div>
             </CollapseDetails>
         </div>
     )
