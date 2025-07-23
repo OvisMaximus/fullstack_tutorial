@@ -32,6 +32,7 @@ const Login = ({successMessage, errorMessage}) => {
                 <div>
                     username
                     <input
+                        data-testid="username"
                         type="text"
                         value={username}
                         name="Username"
@@ -41,6 +42,7 @@ const Login = ({successMessage, errorMessage}) => {
                 <div>
                     password
                     <input
+                        data-testid="password"
                         type="password"
                         value={password}
                         name="Password"
