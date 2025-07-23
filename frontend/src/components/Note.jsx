@@ -9,4 +9,4 @@ const Note = ({note, toggleImportance}) => {
     )
 }
 
-module.exports = Note
+export default Note

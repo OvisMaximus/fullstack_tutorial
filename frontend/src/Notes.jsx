@@ -1,4 +1,4 @@
-import {Note} from "./components/Note.jsx";
+import Note from "./components/Note.jsx";
 import {useEffect, useRef, useState} from "react";
 import noteService from "./services/notes";
 import NoteForm from "./components/NoteForm.jsx";

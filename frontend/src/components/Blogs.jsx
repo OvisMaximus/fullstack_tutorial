@@ -4,7 +4,7 @@ import blog from "./Blog.jsx";
 import blogService from "../services/blogs.js"
 import Togglable from "./Togglable.jsx";
 import RenderOnlyWhen from "./RenderOnlyWhen.jsx";
-import {NewBlogForm} from "./NewBlogForm.jsx";
+import NewBlogForm from "./NewBlogForm.jsx";
 
 const Blogs = ({successMessage}) => {
     const [blogs, setBlogs] = useState([])

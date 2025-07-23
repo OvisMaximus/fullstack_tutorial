@@ -54,9 +54,13 @@ function NewBlogForm({storeBlog}) {
     )
 }
 
+export default NewBlogForm
+/*
 module.exports = {
     NewBlogForm,
     titlePlaceholder,
     authorPlaceholder,
     urlPlaceholder
 }
+
+ */
