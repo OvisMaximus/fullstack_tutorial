@@ -22,6 +22,19 @@ describe('Note app', () => {
         await expect(page.getByText('Note app, Department of Computer Science, University of Helsinki 2025')).toBeVisible()
     })
 
+    test('login fails with wrong password', async ({ page }) => {
+        await page.getByRole('button', { name: 'login' }).click()
+        await page.getByTestId('username').fill('testuser.username')
+        await page.getByTestId('password').fill('wrong')
+        await page.getByRole('button', { name: 'login' }).click()
+
+        const errorDiv = page.locator('.error')
+        await expect(errorDiv).toContainText('Wrong credentials')
+        await expect(errorDiv).toHaveCSS('border-style', 'solid')
+        await expect(errorDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
+        await expect(page.getByText(`${testUser.name} logged in`)).not.toBeVisible()
+    })
+
     describe('when logged in', () => {
         beforeEach(async ({ page }) => {
             await page.getByRole('button', { name: 'login' }).click()
