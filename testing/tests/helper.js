@@ -15,6 +15,7 @@ const createNewNote = async (page, noteContent) => {
     await page.getByRole('button', {name: 'add note'}).click()
     await page.getByRole('textbox').fill(noteContent)
     await page.getByRole('button', {name: 'save'}).click()
+    await page.getByText(noteContent, {exact: true}).waitFor()
 }
 
 module.exports = {

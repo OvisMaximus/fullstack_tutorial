@@ -6,7 +6,8 @@
   "scripts": {
     "test": "playwright test",
     "test:gui": "playwright test --ui",
-    "test:report": "npx playwright show-report"
+    "test:report": "npx playwright show-report",
+    "test:debug": "npx playwright test note_app --debug"
   },
   "keywords": [],
   "author": "",
