@@ -16,7 +16,7 @@ describe('Blog app', () => {
     })
     describe('when logged in', () => {
         beforeEach(async ({ page }) => {
-            await loginWith(page, testUser.username, testUser.password)
+            await loginWith(page, testUser.username, testUser.password, testUser.name)
         })
         test('a new blog can be created', async ({ page }) => {
             await createNewBlog(page, 'a blog created by playwright', 'Playwright', 'https://playwright.dev')
@@ -34,6 +34,15 @@ describe('Blog app', () => {
             await page.on('dialog', dialog => dialog.accept());
             await page.getByRole('button', {name:'delete entry'}).click()
             await expect(page.getByText('a redundant blog entry created by test Playwright')).not.toBeVisible()
+        })
+        test('deleting a blog is only offered if it is owned by logged in user', async ({ page, request }) => {
+            await createNewBlog(page, 'a blog created by another user', 'Playwright', 'https://playwright.dev')
+            await page.getByRole('button', {name:'log off', exact: true}).click()
+            const otherUser = {username: 'otheruser', password: 'passother', name: 'Other User'}
+            await request.post('/api/users', {data: otherUser})
+            await loginWith(page, otherUser.username, otherUser.password, otherUser.name)
+            await page.getByRole('button', {name:'show', exact: true}).click()
+            await expect(page.getByRole('button', {name:'delete entry'})).not.toBeVisible()
         })
     })
 })

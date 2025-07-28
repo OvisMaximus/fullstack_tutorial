@@ -4,11 +4,12 @@ const testUser = {
     password: 'WulleeBullee'
 }
 
-const loginWith = async (page, username, password) => {
+const loginWith = async (page, username, password, name) => {
     await page.getByRole('button', {name: 'login'}).click()
     await page.getByTestId('username').fill(username)
     await page.getByTestId('password').fill(password)
     await page.getByRole('button', {name: 'login'}).click()
+    await page.getByText(`Welcome ${name}`).waitFor()
 }
 
 const createNewNote = async (page, noteContent) => {
