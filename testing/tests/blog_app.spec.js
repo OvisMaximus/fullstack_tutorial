@@ -28,5 +28,12 @@ describe('Blog app', () => {
             await page.getByRole('button', {name:'like'}).click()
             await expect(page.getByText('likes: 1')).toBeVisible()
         })
+        test('a blog can be deleted', async ({ page }) => {
+            await createNewBlog(page, 'a redundant blog entry created by test', 'Playwright', 'https://playwright.dev')
+            await page.getByRole('button', {name:'show', exact: true}).click()
+            await page.on('dialog', dialog => dialog.accept());
+            await page.getByRole('button', {name:'delete entry'}).click()
+            await expect(page.getByText('a redundant blog entry created by test Playwright')).not.toBeVisible()
+        })
     })
 })
