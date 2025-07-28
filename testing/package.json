@@ -8,7 +8,7 @@
     "test:gui": "playwright test --ui",
     "test:report": "npx playwright show-report",
     "test:debug": "npx playwright test note_app --debug",
-    "test:codegen": "npx playwright codegen "
+    "test:codegen": "npx playwright codegen http://localhost:5173/"
   },
   "keywords": [],
   "author": "",

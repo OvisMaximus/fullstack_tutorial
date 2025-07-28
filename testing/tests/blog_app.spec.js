@@ -22,5 +22,11 @@ describe('Blog app', () => {
             await createNewBlog(page, 'a blog created by playwright', 'Playwright', 'https://playwright.dev')
             await expect(page.getByText('a blog created by playwright Playwright')).toBeVisible()
         })
+        test('a blog can be liked', async ({ page }) => {
+            await createNewBlog(page, 'a further blog entry created by test', 'Playwright', 'https://playwright.dev')
+            await page.getByRole('button', {name:'show', exact: true}).click()
+            await page.getByRole('button', {name:'like'}).click()
+            await expect(page.getByText('likes: 1')).toBeVisible()
+        })
     })
 })
