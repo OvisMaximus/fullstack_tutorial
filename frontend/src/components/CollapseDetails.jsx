@@ -11,7 +11,8 @@ const CollapseDetails = ({summary, children}) => {
 
     return (
         <div>
-            {summary} &nbsp; <Button onClick={toggleCollapsed} text={collapsed? 'show' : 'hide'}/>
+            <span>{summary}</span>
+            <Button onClick={toggleCollapsed} text={collapsed? 'show' : 'hide'}/>
             <RenderOnlyWhen condition={!collapsed}>
                 <br/>
                 {children}

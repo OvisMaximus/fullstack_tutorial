@@ -20,19 +20,17 @@ const Application = () => {
 
     return (
         <div>
-            <Notification message = {message} className={status}/>
+            <Notification message={message} className={status}/>
             <UserAuthentication errorMessage={errorMessage} successMessage={successMessage}/>
-            <Togglable showButtonLabel = "show Addressbook" hideButtonLabel = "hide Addressbook">
+            <Togglable showButtonLabel="show Addressbook" hideButtonLabel="hide Addressbook">
                 <AddressBook errorMessage={errorMessage} successMessage={successMessage}/>
             </Togglable>
-            <Togglable showButtonLabel = "show Notes" hideButtonLabel = "hide Notes">
+            <Togglable showButtonLabel="show Notes" hideButtonLabel="hide Notes">
                 <Notes successMessage={successMessage} errorMessage={errorMessage}/>
             </Togglable>
-            <RenderOnlyWhen condition={user}>
-                <Togglable showButtonLabel = "show Blog List" hideButtonLabel = "hide Blog List">
-                    <Blogs successMessage={successMessage} errorMessage={errorMessage} />
-                </Togglable>
-            </RenderOnlyWhen>
+            <Togglable showButtonLabel="show Blog List" hideButtonLabel="hide Blog List">
+                <Blogs successMessage={successMessage} errorMessage={errorMessage}/>
+            </Togglable>
             <Footer/>
         </div>
     )

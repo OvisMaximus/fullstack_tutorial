@@ -7,7 +7,8 @@
     "test": "playwright test",
     "test:gui": "playwright test --ui",
     "test:report": "npx playwright show-report",
-    "test:debug": "npx playwright test note_app --debug"
+    "test:debug": "npx playwright test note_app --debug",
+    "test:codegen": "npx playwright codegen "
   },
   "keywords": [],
   "author": "",
