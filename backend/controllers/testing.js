@@ -1,16 +1,15 @@
 const router = require('express').Router()
-const Note = require('../models/note')
-const User = require('../models/user')
-const Blog = require('../models/blog')
+const userTestHelper = require('../test/user_test_helper')
+const blogTestHelper = require('../test/blog_test_helper')
+const noteTestHelper = require('../test/notes_test_helper')
 
 const { info } = require('../utils/logger')
 
 const resetDatabase = async (request, response) => {
     info('resetting database')
-    await Note.deleteMany({})
-    await User.deleteMany({})
-    await Blog.deleteMany({})
-
+    await userTestHelper.initDatabase()
+    await noteTestHelper.initDatabase()
+    await blogTestHelper.initDatabase()
     response.status(204).end()
 }
 

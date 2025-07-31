@@ -13,7 +13,7 @@ export const Footer = () => {
         <div style={footerStyle}>
             <br />
             <p>
-                Note app, Department of Computer Science, University of Helsinki 2025
+                Weird Tutorial Combination, Ovis Maximus, 2025
             </p>
         </div>
     )

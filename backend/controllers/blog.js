@@ -79,7 +79,7 @@ const updateBlogPost = async (request, response) => {
 }
 
 blogsRouter.delete('/:id', mw.userExtractor, deleteBlogPost)
-blogsRouter.put('/:id', mw.userExtractor, updateBlogPost)
+blogsRouter.put('/:id', updateBlogPost)
 blogsRouter.get('/', getAllBlogPosts)
 blogsRouter.post('/', mw.userExtractor, addBlogPost)
 

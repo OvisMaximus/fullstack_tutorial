@@ -1,15 +1,15 @@
-const testUser = {
+const testUser =     {
+    username: 'test',
     name: 'Test User',
-    username: 'testuser',
-    password: 'WulleeBullee'
+    password: 'PumpaNiggel'
 }
 
-const loginWith = async (page, username, password, name) => {
+const loginWith = async (page, user) => {
     await page.getByRole('button', {name: 'login'}).click()
-    await page.getByTestId('username').fill(username)
-    await page.getByTestId('password').fill(password)
+    await page.getByTestId('username').fill(user.username)
+    await page.getByTestId('password').fill(user.password)
     await page.getByRole('button', {name: 'login'}).click()
-    await page.getByText(`Welcome ${name}`).waitFor()
+    await page.getByText(`Welcome ${user.name}`).waitFor()
 }
 
 const createNewNote = async (page, noteContent) => {

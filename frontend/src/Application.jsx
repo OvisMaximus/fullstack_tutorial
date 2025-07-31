@@ -7,16 +7,12 @@ import Notes from "./Notes.jsx";
 import Blogs from "./components/Blogs.jsx";
 import {Footer} from "./components/Footer.jsx";
 import Togglable from "./components/Togglable.jsx";
-import RenderOnlyWhen from "./components/RenderOnlyWhen.jsx";
 
 const Application = () => {
     const [message, setMessage] = useState(null)
     const [status, setStatus] = useState('success')
     const errorMessage = initErrorMessage(setMessage, setStatus)
     const successMessage = initSuccessMessage(setMessage, setStatus)
-    console.log('render errorMessage', errorMessage)
-
-    const user = localStorage.getItem('loggedUser')
 
     return (
         <div>

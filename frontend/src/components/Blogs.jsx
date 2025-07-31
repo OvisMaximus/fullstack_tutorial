@@ -20,7 +20,7 @@ const Blogs = ({successMessage}) => {
     }
 
     const updateBlog = async (blog) => {
-        const updatedBlog = await blogService.update(blog, user.token)
+        const updatedBlog = await blogService.update(blog)
         console.log('updatedBlog: ', updatedBlog)
         await fetchBlogs()
         successMessage(`${updatedBlog.title} by ${updatedBlog.author} updated`)

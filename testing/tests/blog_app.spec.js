@@ -14,34 +14,54 @@ describe('Blog app', () => {
         const BlogsHeadline = await page.getByText('Blogs', {exact: true})
         await expect(BlogsHeadline).toBeVisible()
     })
+    test('a blog can be liked', async ({ page }) => {
+        const blogEntry = {
+            title: 'React patterns',
+            author: 'Michael Chan',
+            url: 'https://reactpatterns.com/',
+        }
+        const selector = page.getByText(blogEntry.title, {exact: false}).locator('xpath=..')
+        await selector.getByRole('button', {name:'show', exact: true}).click()
+        await page.getByRole('button', {name:'like'}).click()
+        await expect(page.getByText('likes: 8')).toBeVisible()
+    })
     describe('when logged in', () => {
         beforeEach(async ({ page }) => {
-            await loginWith(page, testUser.username, testUser.password, testUser.name)
+            await loginWith(page, testUser)
         })
         test('a new blog can be created', async ({ page }) => {
             await createNewBlog(page, 'a blog created by playwright', 'Playwright', 'https://playwright.dev')
             await expect(page.getByText('a blog created by playwright Playwright')).toBeVisible()
         })
-        test('a blog can be liked', async ({ page }) => {
-            await createNewBlog(page, 'a further blog entry created by test', 'Playwright', 'https://playwright.dev')
-            await page.getByRole('button', {name:'show', exact: true}).click()
-            await page.getByRole('button', {name:'like'}).click()
-            await expect(page.getByText('likes: 1')).toBeVisible()
-        })
+
         test('a blog can be deleted', async ({ page }) => {
-            await createNewBlog(page, 'a redundant blog entry created by test', 'Playwright', 'https://playwright.dev')
-            await page.getByRole('button', {name:'show', exact: true}).click()
+            const blogEntry = {
+                title: 'a redundant blog entry created by test',
+                author: 'Playwright',
+                url: 'https://playwright.dev',
+            }
+            await createNewBlog(page, blogEntry.title , blogEntry.author , blogEntry.url )
+            const selector = page.getByText(`${blogEntry.title} ${blogEntry.author}`)
+                .locator('xpath=..')
+            await selector.getByRole('button', {name:'show', exact: true}).click()
             await page.on('dialog', dialog => dialog.accept());
             await page.getByRole('button', {name:'delete entry'}).click()
-            await expect(page.getByText('a redundant blog entry created by test Playwright')).not.toBeVisible()
+            await expect(page.getByText(`${blogEntry.title} ${blogEntry.author}`)).not.toBeVisible()
         })
         test('deleting a blog is only offered if it is owned by logged in user', async ({ page, request }) => {
-            await createNewBlog(page, 'a blog created by another user', 'Playwright', 'https://playwright.dev')
+            const blogEntry = {
+                title: 'a blog created by another user',
+                author: 'Playwright',
+                url: 'https://playwright.dev',
+            }
+            await createNewBlog(page, blogEntry.title , blogEntry.author , blogEntry.url)
             await page.getByRole('button', {name:'log off', exact: true}).click()
             const otherUser = {username: 'otheruser', password: 'passother', name: 'Other User'}
             await request.post('/api/users', {data: otherUser})
-            await loginWith(page, otherUser.username, otherUser.password, otherUser.name)
-            await page.getByRole('button', {name:'show', exact: true}).click()
+            await loginWith(page, otherUser)
+            const selector = page.getByText(`${blogEntry.title} ${blogEntry.author}`)
+                .locator('xpath=..')
+            await selector.getByRole('button', {name:'show', exact: true}).click()
             await expect(page.getByRole('button', {name:'delete entry'})).not.toBeVisible()
         })
     })
