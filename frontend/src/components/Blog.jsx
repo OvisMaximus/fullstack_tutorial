@@ -2,13 +2,6 @@ import CollapseDetails from "./CollapseDetails.jsx";
 import {Button} from "./Button.jsx";
 
 const Blog = ({blog, loggedUser, updateBlog, deleteBlog}) => {
-    const blogStyle = {
-        paddingTop: 10,
-        paddingLeft: 2,
-        border: 'solid',
-        borderWidth: 1,
-        marginBottom: 5
-    }
     const summary = `${blog.title}  ${blog.author}`
 
     const addLike = (blog) => {
@@ -28,7 +21,7 @@ const Blog = ({blog, loggedUser, updateBlog, deleteBlog}) => {
     }
 
     return (
-        <div className={blogStyle}>
+        <div className={'blog'}>
             <CollapseDetails summary={summary}>
                 <div className={'blog_details'}>
                     <a href={blog.url}>{blog.url}</a><br/>

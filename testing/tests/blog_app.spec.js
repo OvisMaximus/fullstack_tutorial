@@ -25,6 +25,13 @@ describe('Blog app', () => {
         await page.getByRole('button', {name:'like'}).click()
         await expect(page.getByText('likes: 8')).toBeVisible()
     })
+    test('the order of blogs equals the descending order of likes', async ({ page }) => {
+        const selector = await page.locator('css=.blog')
+        await selector.nth(0).getByText('Canonical string reduction').isVisible() // 12
+        await selector.nth(1).getByText('First class tests').isVisible() // 10
+        await selector.nth(2).getByText('React patterns').isVisible() // 7
+        await selector.nth(3).getByText('Go To Statement Considered Harmful').isVisible() // 5
+    })
     describe('when logged in', () => {
         beforeEach(async ({ page }) => {
             await loginWith(page, testUser)
