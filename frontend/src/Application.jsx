@@ -1,12 +1,12 @@
-import {useState} from "react";
-import {initErrorMessage, initSuccessMessage} from "./components/helper/notification.js";
-import {Notification} from "./components/Notification.jsx";
-import UserAuthentication from "./components/UserAuthentication.jsx";
-import AddressBook from "./AddressBook.jsx";
-import Notes from "./Notes.jsx";
-import Blogs from "./components/Blogs.jsx";
-import {Footer} from "./components/Footer.jsx";
-import Togglable from "./components/Togglable.jsx";
+import { useState } from 'react'
+import { initErrorMessage, initSuccessMessage } from './components/helper/notification.js'
+import { Notification } from './components/Notification.jsx'
+import UserAuthentication from './components/UserAuthentication.jsx'
+import AddressBook from './AddressBook.jsx'
+import Notes from './Notes.jsx'
+import Blogs from './components/Blogs.jsx'
+import { Footer } from './components/Footer.jsx'
+import Togglable from './components/Togglable.jsx'
 
 const Application = () => {
     const [message, setMessage] = useState(null)

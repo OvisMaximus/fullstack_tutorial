@@ -1,8 +1,8 @@
-import {useState, useEffect} from "react";
-import countryService from "./services/countries";
-import weatherService from "./services/openweathermap";
+import { useState, useEffect } from 'react'
+import countryService from './services/countries'
+import weatherService from './services/openweathermap'
 
-const SelectionInput = ({countryName, setCountryName}) => {
+const SelectionInput = ({ countryName, setCountryName }) => {
 
     const handleInput = (event) => {
         setCountryName(event.target.value)
@@ -16,33 +16,33 @@ const SelectionInput = ({countryName, setCountryName}) => {
         </div>
     )
 }
-const Flag = ({flag}) => {
+const Flag = ({ flag }) => {
     return (
         <img src={flag.png} alt={flag.alt} width="200"/>
     )
 }
-const CountryDescription = ({country}) => {
+const CountryDescription = ({ country }) => {
     if ( ! country) {
         return null
     }
     const languages = country.languages
     return (
-         <div>
-             <h1>{country.name.official}</h1>
+        <div>
+            <h1>{country.name.official}</h1>
              Capital {country.capital.join(', ')} <br/>
              area {country.area} km2
-             <h2>Languages</h2>
-             <ul>
-                 {Object.keys(languages).map(languageKey => (
-                      <li key = {languageKey}>
-                          {languages[languageKey]}
-                     </li>
-                     ))
-                 }
-             </ul>
-             <Flag flag={country.flags}/>
-         </div>
-     )
+            <h2>Languages</h2>
+            <ul>
+                {Object.keys(languages).map(languageKey => (
+                    <li key = {languageKey}>
+                        {languages[languageKey]}
+                    </li>
+                ))
+                }
+            </ul>
+            <Flag flag={country.flags}/>
+        </div>
+    )
 }
 
 const loadWeatherForCountry = (country, setWeather) => {
@@ -56,9 +56,9 @@ const loadWeatherForCountry = (country, setWeather) => {
     return () => setWeather(null)
 }
 
-const WeatherInCountry = ({country}) => {
+const WeatherInCountry = ({ country }) => {
     const [weather, setWeather] = useState(null)
-    useEffect(()=>loadWeatherForCountry(country, setWeather), [country])
+    useEffect(() => loadWeatherForCountry(country, setWeather), [country])
 
     if (!country) {
         return null
@@ -86,18 +86,18 @@ const WeatherInCountry = ({country}) => {
 
 }
 
-const CandidateList = ({countries, setSelectedCountry}) => {
+const CandidateList = ({ countries, setSelectedCountry }) => {
     if (countries === null || countries.length === 1) return null
 
     if (countries.length < 11 ) {
         return (
             <div>
-            {countries.map(country => (
-                <div key = {country.name.common}>
-                    {country.name.common} &nbsp; &nbsp; &nbsp;
-                    <button onClick={() => setSelectedCountry(country)}>show</button><br/>
-                </div>
-            ))}
+                {countries.map(country => (
+                    <div key = {country.name.common}>
+                        {country.name.common} &nbsp; &nbsp; &nbsp;
+                        <button onClick={() => setSelectedCountry(country)}>show</button><br/>
+                    </div>
+                ))}
             </div>
         )
     }

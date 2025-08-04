@@ -1,12 +1,12 @@
-import {useEffect, useRef, useState} from "react";
-import Blog from "./Blog.jsx";
-import blog from "./Blog.jsx";
-import blogService from "../services/blogs.js"
-import Togglable from "./Togglable.jsx";
-import RenderOnlyWhen from "./RenderOnlyWhen.jsx";
-import NewBlogForm from "./NewBlogForm.jsx";
+import { useEffect, useRef, useState } from 'react'
+import Blog from './Blog.jsx'
+import blog from './Blog.jsx'
+import blogService from '../services/blogs.js'
+import Togglable from './Togglable.jsx'
+import RenderOnlyWhen from './RenderOnlyWhen.jsx'
+import NewBlogForm from './NewBlogForm.jsx'
 
-const Blogs = ({successMessage}) => {
+const Blogs = ({ successMessage }) => {
     const [blogs, setBlogs] = useState([])
     const blogFormRef = useRef()
     const user = JSON.parse(window.localStorage.getItem('loggedUser'))
@@ -48,8 +48,8 @@ const Blogs = ({successMessage}) => {
             <h1>Blogs</h1>
             <RenderOnlyWhen condition={user}>
                 <Togglable showButtonLabel="create a new blog entry"
-                           hideButtonLabel="cancel"
-                           ref={blogFormRef}>
+                    hideButtonLabel="cancel"
+                    ref={blogFormRef}>
                     <NewBlogForm storeBlog={createBlog}/>
                 </Togglable>
             </RenderOnlyWhen>

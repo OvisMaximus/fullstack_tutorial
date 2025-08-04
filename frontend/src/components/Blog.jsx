@@ -1,13 +1,13 @@
-import CollapseDetails from "./CollapseDetails.jsx";
-import {Button} from "./Button.jsx";
+import CollapseDetails from './CollapseDetails.jsx'
+import { Button } from './Button.jsx'
 
-const Blog = ({blog, loggedUser, updateBlog, deleteBlog}) => {
+const Blog = ({ blog, loggedUser, updateBlog, deleteBlog }) => {
     const summary = `${blog.title}  ${blog.author}`
 
     const addLike = (blog) => {
         return () => {
             console.log('add like', blog)
-            const newBlog = {...blog, likes: blog.likes + 1}
+            const newBlog = { ...blog, likes: blog.likes + 1 }
             updateBlog(newBlog)
         }
     }

@@ -1,4 +1,4 @@
-import {Course} from "./components/Course";
+import { Course } from './components/Course'
 
 const Curriculum = () => {
     const courses = [

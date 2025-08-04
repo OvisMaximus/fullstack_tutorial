@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event'
-import {NewBlogForm, authorPlaceholder, titlePlaceholder, urlPlaceholder} from './NewBlogForm'
-import {act, render, screen} from "@testing-library/react";
+import { NewBlogForm, authorPlaceholder, titlePlaceholder, urlPlaceholder } from './NewBlogForm'
+import { act, render, screen } from '@testing-library/react'
 
 const testTitle = 'Component testing is done with react-testing-library'
 const testAuthor = 'Barnarne'

@@ -1,4 +1,4 @@
-export const Notification = ({message, className}) => {
+export const Notification = ({ message, className }) => {
     if (message === null) return null
 
     return (

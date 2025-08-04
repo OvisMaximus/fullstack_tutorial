@@ -2,13 +2,13 @@ import { useState } from 'react'
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
-const Header = ({headerText}) => (<div><h1>{headerText}</h1></div>)
+const Header = ({ headerText }) => (<div><h1>{headerText}</h1></div>)
 
-const StatisticLine = ({text, value}) => (
+const StatisticLine = ({ text, value }) => (
     <tr><td>{text}:</td><td>{value}</td></tr>
 )
 
-const Statistics = ({good, neutral, bad}) => {
+const Statistics = ({ good, neutral, bad }) => {
     const content = good + neutral + bad === 0 ? (<div>No feedback given</div>)
         :(
             <div>

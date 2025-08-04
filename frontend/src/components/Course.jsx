@@ -1,4 +1,4 @@
-const Header = ({course}) => {
+const Header = ({ course }) => {
     const name = course.name
     return (
         <div>
@@ -6,15 +6,15 @@ const Header = ({course}) => {
         </div>
     )
 }
-const Part = ({part}) => {
-    const {name, exercises} = part
+const Part = ({ part }) => {
+    const { name, exercises } = part
     return (
         <p>
             {name} {exercises}
         </p>
     )
 }
-const Content = ({course}) => {
+const Content = ({ course }) => {
     const parts = course.parts
     return (
         <div>
@@ -24,7 +24,7 @@ const Content = ({course}) => {
         </div>
     )
 }
-const Total = ({course}) => {
+const Total = ({ course }) => {
     const parts = course.parts
     const sumOfExercises = parts.reduce((a, part) => a + part.exercises, 0)
     return (
@@ -35,7 +35,7 @@ const Total = ({course}) => {
         </div>
     )
 }
-export const Course = ({course}) => {
+export const Course = ({ course }) => {
     console.log(course)
     return (
         <div>

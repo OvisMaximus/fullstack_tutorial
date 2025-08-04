@@ -1,29 +1,29 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import personService from './services/persons'
-import {Button} from "./components/Button.jsx";
+import { Button } from './components/Button.jsx'
 
 const handleWith = handler => (event) => handler(event.target.value)
 
 
-const Filter = ({filter, setFilter}) => {
+const Filter = ({ filter, setFilter }) => {
     return (
         <div>
             filter shown with <input id="filterInputField"
-                                     onChange={handleWith(setFilter)}
-                                     value={filter}/>
+                onChange={handleWith(setFilter)}
+                value={filter}/>
         </div>
     )
 }
 
-const NewPersonForm = ({persons, setPersons, successMessage, errorMessage}) => {
+const NewPersonForm = ({ persons, setPersons, successMessage, errorMessage }) => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
 
-    const byName = (searchName) => (candidate)=>
+    const byName = (searchName) => (candidate) =>
         candidate.name === searchName
 
-    const updatePerson = (existingPerson) =>{
-        console.log('update ', {existingPerson}, ' requested')
+    const updatePerson = (existingPerson) => {
+        console.log('update ', { existingPerson }, ' requested')
         personService
             .update(existingPerson.id, {
                 name: newName,
@@ -36,7 +36,7 @@ const NewPersonForm = ({persons, setPersons, successMessage, errorMessage}) => {
             .catch(error => {
                 console.log('error while updating person: ', error)
                 errorMessage(`${newName} could not be updated: ${error.response.data.error}`)
-             })
+            })
     }
 
     function createPerson() {
@@ -60,12 +60,12 @@ const NewPersonForm = ({persons, setPersons, successMessage, errorMessage}) => {
         const existingPerson = persons.find(byName(newName))
         let operationSuccessful = false
         if (existingPerson !== undefined) {
-             if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-                updatePerson(existingPerson);
+            if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+                updatePerson(existingPerson)
                 operationSuccessful = true
-             }
+            }
         } else {
-            createPerson();
+            createPerson()
             operationSuccessful = true
         }
         if (operationSuccessful) {
@@ -78,18 +78,18 @@ const NewPersonForm = ({persons, setPersons, successMessage, errorMessage}) => {
         <form onSubmit={handleSubmit}>
             <div>
                 name: <input id="newNameInputField"
-                             onChange={handleWith(setNewName)}
-                             value={newName}/><br/>
+                    onChange={handleWith(setNewName)}
+                    value={newName}/><br/>
                 number: <input id="newNumberInputField"
-                               onChange={handleWith(setNewNumber)}
-                               value={newNumber}/><br/>
+                    onChange={handleWith(setNewNumber)}
+                    value={newNumber}/><br/>
                 <button type="submit">add</button>
             </div>
         </form>
     )
 }
 
-const Person = ({person, handleDeletePerson}) => {
+const Person = ({ person, handleDeletePerson }) => {
 
     return (
         <div>
@@ -98,7 +98,7 @@ const Person = ({person, handleDeletePerson}) => {
     )
 }
 
-const ListOfPersons = ({persons, setPersons, successMessage, errorMessage, filter}) => {
+const ListOfPersons = ({ persons, setPersons, successMessage, errorMessage, filter }) => {
     const byPartialName = (searchName) => (arrayEntry) =>
         arrayEntry.name.toLowerCase().includes(searchName.toLowerCase())
 
@@ -132,7 +132,7 @@ const ListOfPersons = ({persons, setPersons, successMessage, errorMessage, filte
     )
 }
 
-const AddressBook = ({errorMessage, successMessage}) => {
+const AddressBook = ({ errorMessage, successMessage }) => {
     const [persons, setPersons] = useState([])
     const [filter, setFilter] = useState('')
 

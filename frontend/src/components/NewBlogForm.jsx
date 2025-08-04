@@ -1,10 +1,10 @@
-import {useState} from "react";
+import { useState } from 'react'
 
-const titlePlaceholder = 'insert the title';
-const authorPlaceholder = 'insert the author';
-const urlPlaceholder = 'add the url';
+const titlePlaceholder = 'insert the title'
+const authorPlaceholder = 'insert the author'
+const urlPlaceholder = 'add the url'
 
-function NewBlogForm({storeBlog}) {
+function NewBlogForm({ storeBlog }) {
     const [newTitle, setNewTitle] = useState('')
     const [newAuthor, setNewAuthor] = useState('')
     const [newUrl, setNewUrl] = useState('')
@@ -37,17 +37,17 @@ function NewBlogForm({storeBlog}) {
             <h2>create a new blog entry</h2>
             <form onSubmit={addBlog}>
                 Title <input defaultValue={newTitle}
-                             id={titlePlaceholder}
-                             placeholder={titlePlaceholder}
-                             onChange={handleChange(setNewTitle)}/><br/>
+                    id={titlePlaceholder}
+                    placeholder={titlePlaceholder}
+                    onChange={handleChange(setNewTitle)}/><br/>
                 Author <input defaultValue={newAuthor}
-                              id={authorPlaceholder}
-                              placeholder={authorPlaceholder}
-                              onChange={handleChange(setNewAuthor)}/><br/>
+                    id={authorPlaceholder}
+                    placeholder={authorPlaceholder}
+                    onChange={handleChange(setNewAuthor)}/><br/>
                 URL <input defaultValue={newUrl}
-                           id={urlPlaceholder}
-                           placeholder={urlPlaceholder}
-                           onChange={handleChange(setNewUrl)}/><br/>
+                    id={urlPlaceholder}
+                    placeholder={urlPlaceholder}
+                    onChange={handleChange(setNewUrl)}/><br/>
                 <button type="submit">save</button>
             </form>
         </div>

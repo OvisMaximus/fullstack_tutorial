@@ -1,16 +1,16 @@
-import Note from "./components/Note.jsx";
-import {useEffect, useRef, useState} from "react";
-import noteService from "./services/notes";
-import NoteForm from "./components/NoteForm.jsx";
-import Togglable from "./components/Togglable.jsx";
-import RenderOnlyWhen from "./components/RenderOnlyWhen.jsx";
+import Note from './components/Note.jsx'
+import { useEffect, useRef, useState } from 'react'
+import noteService from './services/notes'
+import NoteForm from './components/NoteForm.jsx'
+import Togglable from './components/Togglable.jsx'
+import RenderOnlyWhen from './components/RenderOnlyWhen.jsx'
 
 function extractUserFromLocalStorage() {
     const userJson = window.localStorage.getItem('loggedUser')
-    return userJson ? JSON.parse(userJson) : null;
+    return userJson ? JSON.parse(userJson) : null
 }
 
-const Notes = ({errorMessage, successMessage}) => {
+const Notes = ({ errorMessage, successMessage }) => {
     const [notes, setNotes] = useState([])
     const [showAll, setShowAll] = useState(true)
     const noteFormRef = useRef()
@@ -40,7 +40,7 @@ const Notes = ({errorMessage, successMessage}) => {
         console.log(`toggle ${id} requested`)
         const note = notes.find(n => n.id === id)
         console.log('toggle note: ', note)
-        const changedNote = {...note, important: !note.important}
+        const changedNote = { ...note, important: !note.important }
 
         noteService
             .update(id, changedNote, user.token)

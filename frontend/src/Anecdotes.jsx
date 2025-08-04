@@ -1,9 +1,9 @@
 import { useState } from 'react'
 
-const Header = ({headerText}) => (<h1>{headerText}</h1>)
-const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
+const Header = ({ headerText }) => (<h1>{headerText}</h1>)
+const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
-const Votes = ({value}) => <div>has {value} votes</div>
+const Votes = ({ value }) => <div>has {value} votes</div>
 
 const App = () => {
     const anecdotes = [
