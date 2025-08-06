@@ -1,6 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import anecdoteReducer, {createAnecdote, upvote} from "../reducers/anecdoteReducer.js";
 import {createStore} from "redux";
+import AnecdoteForm from "./AnecdoteForm.jsx";
 
 const Header = ({headerText}) => (<h1>{headerText}</h1>)
 const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
@@ -29,7 +30,6 @@ const anecdoteTexts = [
     'The only way to go fast, is to go well.'
 ]
 
-
 const Anecdote = ({anecdote, upvoteAction}) => (
     <div>
         {anecdote.content}
@@ -44,6 +44,7 @@ const Anecdotes = () => {
     return (
         <div>
             <Header headerText='Anecdotes'/>
+            <AnecdoteForm/>
             <div>
                 {anecdotesOrderedByVotes.map((anecdote) =>
                     <Anecdote
