@@ -1,24 +1,8 @@
-import {useDispatch, useSelector} from "react-redux";
-import anecdoteReducer, {createAnecdote, upvote} from "../reducers/anecdoteReducer.js";
+import anecdoteReducer, {createAnecdote} from "../reducers/anecdoteReducer.js";
 import {createStore} from "redux";
 import AnecdoteForm from "./AnecdoteForm.jsx";
+import AnecdoteList from "./AnecdoteList.jsx";
 
-const Header = ({headerText}) => (<h1>{headerText}</h1>)
-const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
-
-const Votes = ({value, upvoteAction}) => (
-    <div>
-        has {value} votes <Button onClick={upvoteAction} text='vote'/>
-    </div>
-)
-
-export const initStore = () => {
-    const store = createStore(anecdoteReducer)
-    for (let i = 0; i < anecdoteTexts.length; i++) {
-        store.dispatch(createAnecdote(anecdoteTexts[i], i))
-    }
-    return store
-}
 const anecdoteTexts = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -30,32 +14,20 @@ const anecdoteTexts = [
     'The only way to go fast, is to go well.'
 ]
 
-const Anecdote = ({anecdote, upvoteAction}) => (
-    <div>
-        {anecdote.content}
-        <Votes value={anecdote.votes} upvoteAction={upvoteAction}/>
-    </div>
-)
-const Anecdotes = () => {
-    const dispatch = useDispatch()
-    const anecdotes = useSelector(state => state)
-    const anecdotesOrderedByVotes = anecdotes.sort((a, b) => b.votes - a.votes)
+export const initStore = () => {
+    const store = createStore(anecdoteReducer)
+    for (let i = 0; i < anecdoteTexts.length; i++) {
+        store.dispatch(createAnecdote(anecdoteTexts[i], i))
+    }
+    return store
+}
 
+const Anecdotes = () => {
     return (
         <div>
-            <Header headerText='Anecdotes'/>
+            <h1>Anecdotes</h1>
+            <AnecdoteList/>
             <AnecdoteForm/>
-            <div>
-                {anecdotesOrderedByVotes.map((anecdote) =>
-                    <Anecdote
-                        key={anecdote.id}
-                        anecdote={anecdote}
-                        upvoteAction={
-                            ()=> dispatch(upvote(anecdote.id))
-                        }
-                    />
-                )}
-            </div>
         </div>
     )
 }
