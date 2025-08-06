@@ -1,20 +1,18 @@
 import './index.css'
-import React, { StrictMode } from 'react'
+import React, {StrictMode} from 'react'
 import ReactDOM from 'react-dom/client'
+import {Provider} from 'react-redux'
 
-import { Unicafe, initStore } from './components/UnicafeApp.redux.jsx'
+import {Notes, initStore} from './components/NotesApp.redux.jsx'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 const store = initStore()
 
-const renderApp = () => {
-    root.render(
-        <StrictMode>
-            <Unicafe/>
-        </StrictMode>
-    )
-}
-
-renderApp()
-store.subscribe(renderApp)
+root.render (
+    <StrictMode>
+        <Provider store={store}>
+            <Notes/>
+        </Provider>
+    </StrictMode>
+)
