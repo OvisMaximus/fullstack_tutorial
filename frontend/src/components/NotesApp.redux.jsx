@@ -1,10 +1,14 @@
-import { createStore } from 'redux'
-import {createNote, toggleImportanceOf} from '../reducers/noteReducer.js'
-import noteReducer from '../reducers/noteReducer.js'
-import { useSelector, useDispatch } from 'react-redux'
+import {createStore} from 'redux'
+import noteReducer, {createNote, toggleImportanceOf} from '../reducers/noteReducer.js'
 import NewNote from "./NewNote.redux.jsx";
+import NotesList from "./NotesList.jsx";
 
-const initStore = () => {
+
+// TODO https://fullstackopen.com/en/part6/many_reducers#combined-reducers
+
+
+
+export const initStore = () => {
     const store = createStore(noteReducer)
 
     console.log('store state 0', store.getState())
@@ -19,40 +23,25 @@ const initStore = () => {
     return store
 }
 
-const Note = ({ note, handleClick }) => {
-    return(
-        <li onClick={handleClick}>
-            {note.content}
-            <strong> {note.important ? 'important' : ''}</strong>
-        </li>
-    )
-}
-
 const Notes = () => {
-    const dispatch = useDispatch()
-    const notes = useSelector(state => state)
-
-
+    const filterSelected = (value) => {
+        console.log(value)
+    }
     return (
         <div>
             <h1>Notes</h1>
             <NewNote/>
-            <ul>
-                {notes.map(note =>
-                    <Note
-                        key={note.id}
-                        note={note}
-                        handleClick={() =>
-                            dispatch(toggleImportanceOf(note.id))
-                        }
-                    />
-                )}
-            </ul>
+            <div>
+                all          <input type="radio" name="filter"
+                                    onChange={() => filterSelected('ALL')} />
+                important    <input type="radio" name="filter"
+                                    onChange={() => filterSelected('IMPORTANT')} />
+                nonimportant <input type="radio" name="filter"
+                                    onChange={() => filterSelected('NONIMPORTANT')} />
+            </div>
+            <NotesList/>
         </div>
     )
 }
 
-export {
-    Notes,
-    initStore
-}
+export default Notes
