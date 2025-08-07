@@ -1,15 +1,18 @@
-import {createStore} from 'redux'
+import {combineReducers, createStore} from 'redux'
 import noteReducer, {createNote, toggleImportanceOf} from '../reducers/noteReducer.js'
 import NewNote from "./NewNote.redux.jsx";
 import NotesList from "./NotesList.jsx";
-
-
-// TODO https://fullstackopen.com/en/part6/many_reducers#combined-reducers
-
-
+import filterReducer, {filterChange} from "../reducers/filterReducer.js";
 
 export const initStore = () => {
-    const store = createStore(noteReducer)
+    const reducer = combineReducers( {
+        notes: noteReducer,
+        filter: filterReducer
+    })
+    const store = createStore(reducer)
+    store.subscribe(() => console.log(store.getState()))
+    store.dispatch(filterChange('IMPORTANT'))
+
 
     console.log('store state 0', store.getState())
     store.dispatch(createNote('the app state is in redux store'))
