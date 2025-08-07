@@ -15,12 +15,19 @@ const Anecdote = ({anecdote, upvoteAction}) => (
 )
 const AnecdoteList = () => {
     const dispatch = useDispatch()
-    const anecdotes = useSelector(state => state)
-    const anecdotesOrderedByVotes = anecdotes.sort((a, b) => b.votes - a.votes)
+    const anecdotes = useSelector(state => state.anecdotes)
+    const filterText = useSelector(state => state.filterText)
+    const anecdotesToDisplay = anecdotes
+        .filter((anecdote) => {
+            const text = anecdote.content
+            console.log("anecdote Text: ", text)
+            return text.toLowerCase().includes(filterText.toLowerCase())
+        })
+        .sort((a, b) => b.votes - a.votes)
 
     return (
         <div>
-            {anecdotesOrderedByVotes.map((anecdote) =>
+            {anecdotesToDisplay.map((anecdote) =>
                 <Anecdote
                     key={anecdote.id}
                     anecdote={anecdote}

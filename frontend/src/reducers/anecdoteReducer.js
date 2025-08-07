@@ -18,8 +18,6 @@ export const upvote = (index) => {
 }
 
 const anecdoteReducer = (state = [], action) => {
-    console.log('action received', action)
-    console.log('state before', state)
     let newState = state
     switch (action.type) {
         case 'NEW_ANECDOTE':
@@ -34,8 +32,6 @@ const anecdoteReducer = (state = [], action) => {
         }
         default:
     }
-
-    console.log('state after', newState)
     return newState
 }
 
