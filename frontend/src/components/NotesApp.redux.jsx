@@ -3,6 +3,7 @@ import noteReducer, {createNote, toggleImportanceOf} from '../reducers/noteReduc
 import NewNote from "./NewNote.redux.jsx";
 import NotesList from "./NotesList.jsx";
 import filterReducer, {filterChange} from "../reducers/filterReducer.js";
+import VisibilityFilter from "./VisibilityFilter.jsx";
 
 export const initStore = () => {
     const reducer = combineReducers( {
@@ -27,21 +28,11 @@ export const initStore = () => {
 }
 
 const Notes = () => {
-    const filterSelected = (value) => {
-        console.log(value)
-    }
     return (
         <div>
             <h1>Notes</h1>
             <NewNote/>
-            <div>
-                all          <input type="radio" name="filter"
-                                    onChange={() => filterSelected('ALL')} />
-                important    <input type="radio" name="filter"
-                                    onChange={() => filterSelected('IMPORTANT')} />
-                nonimportant <input type="radio" name="filter"
-                                    onChange={() => filterSelected('NONIMPORTANT')} />
-            </div>
+            <VisibilityFilter/>
             <NotesList/>
         </div>
     )
