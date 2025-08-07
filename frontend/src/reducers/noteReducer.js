@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, current } from '@reduxjs/toolkit'
 
 const generateId = () =>
     Number((Math.random() * 1000000).toFixed(0))
@@ -17,8 +17,7 @@ const noteSlice = createSlice({
         },
         toggleImportanceOf(state, action) {
             const id = action.payload
-            const noteToChange = state.find(n => n.id === id)
-            console.log('toggle importance of ', noteToChange)
+            const noteToChange = current(state).find(n => n.id === id)
             const changedNote = { ...noteToChange, important: !noteToChange.important }
             return state.map(n => n.id === id ? changedNote : n)
         }

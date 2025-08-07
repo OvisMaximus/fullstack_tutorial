@@ -22,7 +22,8 @@ export const initStore = () => {
     let secondNoteAction = createNote('state changes are made with actions')
     store.dispatch(secondNoteAction)
     console.log('store state 2', store.getState())
-    store.dispatch(toggleImportanceOf(secondNoteAction.payload.id))
+    const id = store.getState().notes[1].id
+    store.dispatch(toggleImportanceOf(id))
     console.log('store state 3', store.getState())
 
     return store
