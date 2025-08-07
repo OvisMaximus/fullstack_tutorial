@@ -1,16 +1,17 @@
-import {combineReducers, createStore} from 'redux'
 import noteReducer, {createNote, toggleImportanceOf} from '../reducers/noteReducer.js'
 import NewNote from "./NewNote.redux.jsx";
 import NotesList from "./NotesList.jsx";
 import filterReducer, {filterChange} from "../reducers/filterReducer.js";
 import VisibilityFilter from "./VisibilityFilter.jsx";
+import {configureStore} from "@reduxjs/toolkit";
 
 export const initStore = () => {
-    const reducer = combineReducers( {
-        notes: noteReducer,
-        filter: filterReducer
+    const store = configureStore({
+        reducer: {
+            notes: noteReducer,
+            filter: filterReducer
+        }
     })
-    const store = createStore(reducer)
     store.subscribe(() => console.log(store.getState()))
     store.dispatch(filterChange('IMPORTANT'))
 

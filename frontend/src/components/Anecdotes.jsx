@@ -1,9 +1,9 @@
 import anecdoteReducer, {createAnecdote} from "../reducers/anecdoteReducer.js";
-import {createStore, combineReducers} from "redux";
 import AnecdoteForm from "./AnecdoteForm.jsx";
 import AnecdoteList from "./AnecdoteList.jsx";
 import AnecdotesFilter from "./AnecdotesFilter.jsx";
 import anecdotesFilterReducer from "../reducers/anecdotesFilterReducer.js";
+import {configureStore} from "@reduxjs/toolkit";
 
 const anecdoteTexts = [
     'If it hurts, do it more often.',
@@ -17,11 +17,12 @@ const anecdoteTexts = [
 ]
 
 export const initStore = () => {
-    const reducer = combineReducers({
-        anecdotes: anecdoteReducer,
-        filterText: anecdotesFilterReducer
+    const store = configureStore({
+        reducer: {
+            anecdotes: anecdoteReducer,
+            filterText: anecdotesFilterReducer
+        }
     })
-    const store = createStore(reducer)
     store.subscribe(() => console.log('store state', store.getState()))
     for (let i = 0; i < anecdoteTexts.length; i++) {
         store.dispatch(createAnecdote(anecdoteTexts[i], i))
