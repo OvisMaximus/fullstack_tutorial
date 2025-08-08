@@ -1,6 +1,7 @@
 import {configureStore} from "@reduxjs/toolkit";
-import anecdoteReducer, {createAnecdote} from "../reducers/anecdoteReducer.js";
-import anecdotesFilterReducer from "../reducers/anecdotesFilterReducer.js";
+import anecdoteReducer, {createAnecdote} from "../../reducers/anecdoteReducer.js";
+import anecdotesFilterReducer from "../../reducers/anecdotesFilterReducer.js";
+import notificationReducer from "../../reducers/notificationReducer.js";
 
 const anecdoteTexts = [
     'If it hurts, do it more often.',
@@ -17,7 +18,8 @@ export const initStore = () => {
     const store = configureStore({
         reducer: {
             anecdotes: anecdoteReducer,
-            filterText: anecdotesFilterReducer
+            filterText: anecdotesFilterReducer,
+            notification: notificationReducer
         }
     })
     store.subscribe(() => console.log('store state', store.getState()))

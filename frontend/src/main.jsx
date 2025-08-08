@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client'
 import {Provider} from 'react-redux'
 
 import Anecdotes  from './components/Anecdotes.jsx'
-import {initStore} from "./components/AnecdotesStore.jsx";
+import {initStore} from "./components/helper/anecdotesStore.jsx";
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
