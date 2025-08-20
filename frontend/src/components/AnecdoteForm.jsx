@@ -1,6 +1,6 @@
-import {useDispatch, useSelector} from "react-redux";
-import {createAnecdote} from "../reducers/anecdoteReducer.js";
-import {successMessage} from "./Notification.redux.jsx";
+import { useDispatch, useSelector } from 'react-redux'
+import { createAnecdote } from '../reducers/anecdoteReducer.js'
+import { successMessage } from './Notification.redux.jsx'
 
 const AnecdoteForm = () => {
     const dispatch = useDispatch()
@@ -9,7 +9,7 @@ const AnecdoteForm = () => {
     const addAnecdote = (event) => {
         event.preventDefault()
         const content = event.target.anecdote.value
-        dispatch(createAnecdote({content: content, id: anecdotes.length}))
+        dispatch(createAnecdote({ content: content, id: anecdotes.length }))
         successMessage(dispatch, `you added ${content}`)
     }
 

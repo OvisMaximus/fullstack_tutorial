@@ -1,5 +1,5 @@
-import {useSelector} from "react-redux";
-import {clearMessage, displayMessage} from '../reducers/notificationReducer.js'
+import { useSelector } from 'react-redux'
+import { clearMessage, displayMessage } from '../reducers/notificationReducer.js'
 let pendingTimeout = -1
 
 const displayMessageHelper = (dispatch, messageObject) => {
@@ -20,7 +20,7 @@ const successMessage = (dispatch, message) => {
 
 const Notification = () => {
     const message = useSelector(state => state.notification)
-    if (message == null || message.text === null) return null
+    if (message === null || message.text === null) return null
 
     return (
         <div className={`message ${message.className}`}>
