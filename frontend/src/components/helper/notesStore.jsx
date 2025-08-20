@@ -1,5 +1,5 @@
 import {configureStore} from "@reduxjs/toolkit";
-import notesReducer, {appendNote, setNotes} from "../../reducers/noteReducer.js";
+import notesReducer from "../../reducers/noteReducer.js";
 import filterReducer from "../../reducers/filterReducer.js";
 
 export const initStore = () => {

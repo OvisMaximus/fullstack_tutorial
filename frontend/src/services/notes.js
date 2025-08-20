@@ -7,6 +7,13 @@ const getAll = async () => {
     return response.data
 }
 
+// for dummy backend
+const createNew = async (content) => {
+    const note = { content, important: false }
+    const response = await axios.post(baseUrl, note)
+    return response.data
+}
+
 const authorizationHeader = token => {
     return {
         headers: {
@@ -15,6 +22,7 @@ const authorizationHeader = token => {
     }
 }
 
+// for real backend
 const create = (newObject, token) => {
     const request = axios.post(baseUrl, newObject, authorizationHeader(token))
     return request
@@ -33,4 +41,4 @@ const update = (id, newObject, token) => {
         })
 }
 
-export default { getAll, create, update }
+export default { getAll, createNew, create, update }
