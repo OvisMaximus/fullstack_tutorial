@@ -20,17 +20,19 @@ const NotesList = () => {
             ? notes.filter(note => note.important)
             : notes.filter(note => !note.important)
     })
+
     return (
         <ul>
             {notes.map(note =>
-                <Note
-                    key={note.id}
-                    note={note}
-                    handleClick={() =>
-                        dispatch(toggleImportanceOf(note.id))
-                    }
-                />
-            )}
+                    <Note
+                        key={note.id}
+                        note={note}
+                        handleClick={() =>
+                            dispatch(toggleImportanceOf(note.id))
+                        }
+                    />
+                )
+            }
         </ul>
     )
 }

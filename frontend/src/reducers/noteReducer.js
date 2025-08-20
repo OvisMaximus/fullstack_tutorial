@@ -18,11 +18,18 @@ const noteSlice = createSlice({
         toggleImportanceOf(state, action) {
             const id = action.payload
             const noteToChange = current(state).find(n => n.id === id)
+            console.log('note to change: ', noteToChange)
             const changedNote = { ...noteToChange, important: !noteToChange.important }
             return state.map(n => n.id === id ? changedNote : n)
+        },
+        appendNote(state, action) {
+            state.push(action.payload)
+        },
+        setNotes(state, action) {
+            return action.payload
         }
     }
 })
 
-export const { createNote, toggleImportanceOf } = noteSlice.actions
+export const { createNote, toggleImportanceOf, appendNote, setNotes } = noteSlice.actions
 export default noteSlice.reducer
