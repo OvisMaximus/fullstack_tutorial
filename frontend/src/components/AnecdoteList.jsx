@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { voteAnecdote } from '../reducers/anecdoteReducer.js'
+import { voteForAnecdote } from '../reducers/anecdoteReducer.js'
 import { successMessage } from './Notification.redux.jsx'
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
@@ -36,7 +36,7 @@ const AnecdoteList = () => {
                     anecdote={anecdote}
                     upvoteAction={
                         () => {
-                            dispatch(voteAnecdote(anecdote.id))
+                            dispatch(voteForAnecdote(anecdote.id))
                             successMessage(dispatch,`you voted for ${anecdote.content}`)
                         }
                     }
