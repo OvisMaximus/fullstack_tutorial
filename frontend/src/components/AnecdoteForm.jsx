@@ -9,7 +9,7 @@ const AnecdoteForm = () => {
     const addAnecdote = (event) => {
         event.preventDefault()
         const content = event.target.anecdote.value
-        anecdoteService.create({content, important:false}).then(newAnecdote => {
+        anecdoteService.create({ content, important:false }).then(newAnecdote => {
             dispatch(createAnecdote(newAnecdote))
             successMessage(dispatch, `you added ${content}`)
         })

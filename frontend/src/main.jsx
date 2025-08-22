@@ -3,8 +3,8 @@ import React, { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 
-import Application  from './components/NotesApp.redux.jsx'
-import { initStore } from './components/helper/notesStore.jsx'
+import Application  from './components/Anecdotes.jsx'
+import { initStore } from './components/helper/anecdotesStore.jsx'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
