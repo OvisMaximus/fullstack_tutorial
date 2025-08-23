@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer.js'
-import { successMessage } from './Notification.redux.jsx'
+import { successMessage } from '../reducers/notificationReducer.js'
 
 const AnecdoteForm = () => {
     const dispatch = useDispatch()
@@ -14,7 +14,7 @@ const AnecdoteForm = () => {
             votes: 0
         }
         dispatch(createAnecdote(newAnecdote))
-        successMessage(dispatch, `you added ${content}`)
+        dispatch(successMessage(`you added ${content}`))
     }
 
 
