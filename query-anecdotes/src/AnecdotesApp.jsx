@@ -2,12 +2,16 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {createAnecdote, updateAnecdote, getAnecdotes} from "./requests.js";
-import {successMessage, useNotificationDispatch} from "./NotificationContext.jsx";
+import {errorMessage, successMessage, useNotificationDispatch} from "./NotificationContext.jsx";
 
 
 const AnecdotesApp = () => {
     const queryClient = useQueryClient()
     const dispatch = useNotificationDispatch()
+
+    const onError = async (error) => {
+        errorMessage(`error: ${error.message}`, dispatch)
+    }
 
     const newAnecdoteMutation = useMutation(
         {
@@ -15,7 +19,8 @@ const AnecdotesApp = () => {
             onSuccess: (newAnecdote) => {
                 const anecdotes = queryClient.getQueryData(['anecdotes'])
                 queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
-            }
+            },
+            onError: onError
         }
     )
 

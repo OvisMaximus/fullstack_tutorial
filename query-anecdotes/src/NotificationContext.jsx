@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {createContext, useContext, useReducer} from 'react'
 import PropTypes from "prop-types";
 
@@ -64,6 +65,6 @@ export const successMessage = (notification, dispatch) => {
     dispatchMessage(notification, 'NOTIFY_SUCCESS', dispatch)
 }
 
-
-
-export default NotificationContext
+export const errorMessage = (notification, dispatch) => {
+    dispatchMessage(notification, 'NOTIFY_ERROR', dispatch)
+}
