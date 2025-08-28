@@ -41,25 +41,29 @@ NotificationContextProvider.propTypes = {
 
 const useNotificationContextElement = (index) => {
     const notificationAndDispatch = useContext(NotificationContext)
-    return notificationAndDispatch[index];
+    const result = notificationAndDispatch[index];
+    console.log('useNotificationContextElement> ', result)
+    return result;
 }
 
 export const useNotificationValue = () => useNotificationContextElement(0)
 export const useNotificationDispatch = () => useNotificationContextElement(1)
 
+
 let timeoutId = null
-const dispatchMessage = (notification, type) => dispatch => {
+const dispatchMessage = (notification, type, dispatch) => {
+    console.log('dispatch Message', notification)
     dispatch({type, notification})
     if (timeoutId) {
         clearTimeout(timeoutId)
     }
     timeoutId = setTimeout(() => dispatch({type: 'NOTIFY_CLEAR'}), 5000)
 }
-export const errorMessage = (notification) => {
-    dispatchMessage(notification, 'NOTIFY_ERROR')
+
+export const successMessage = (notification, dispatch) => {
+    dispatchMessage(notification, 'NOTIFY_SUCCESS', dispatch)
 }
-export const successMessage = (notification) => dispatch => {
-    dispatchMessage(notification, 'NOTIFY_SUCCESS')
-}
+
+
 
 export default NotificationContext
