@@ -66,6 +66,7 @@ const updateNote = async (request, response) => {
 
     // noinspection JSCheckFunctionSignatures
     const note = await Note.findById(id)
+
     if( ! note.user.equals(request.user._id)) {
         response.status(FORBIDDEN).json({ error: 'authenticated user is not owner' }).end()
         return

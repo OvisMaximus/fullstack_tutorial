@@ -47,11 +47,11 @@ const Notes = ({ errorMessage, successMessage }) => {
             .then(updatedNote => {
                 console.log('updated note: ', updatedNote)
                 setNotes(notes.map(note => note.id === id ? updatedNote : note))
+                successMessage(`note '${updatedNote.content}' ${updatedNote.important ? 'made' : 'removed'} important`)
             })
             .catch(error => {
-                errorMessage(`error: The note '${note.content}' was already removed from server`)
+                errorMessage(`error: '${note.content}' could not be modified: ${error.response.data.error}`)
                 console.log('error: ', error)
-                setNotes(notes.filter(n => n.id !== id))
             })
     }
     const notesToRender = showAll ? notes : notes.filter(note => note.important)

@@ -55,7 +55,7 @@ const Login = ({ successMessage, errorMessage }) => {
     )
 }
 
-const ActiveUser = ({ user, successMessage }) => {
+export const ActiveUser = ({ user, successMessage }) => {
     const logOff = () => {
         window.localStorage.removeItem('loggedUser')
         successMessage('logged off')

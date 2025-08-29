@@ -1,5 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const mongodb = require('./utils/mongodb.js')
 const middleware = require('./utils/middleware')
 const testingRouter = require('./controllers/testing.js')
@@ -12,8 +13,10 @@ const usersRouter = require('./controllers/user')
 mongodb.connect()
 
 const app = express()
+app.use(cors())
 app.use(express.static('dist'))
 app.use(express.json())
+
 
 morgan.token('request-json', function (req) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :request-json'))
