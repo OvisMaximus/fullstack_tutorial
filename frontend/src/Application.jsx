@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {initErrorMessage, initSuccessMessage} from './components/helper/notification.js'
 import Notification from './components/Notification.jsx'
-import UserAuthentication, {ActiveUser, Login} from './components/UserAuthentication.jsx'
+import {ActiveUser, Login} from './components/UserAuthentication.jsx'
 import AddressBook from './AddressBook.jsx'
 import Notes from './Notes.jsx'
 import Blogs from './components/Blogs.jsx'
@@ -9,10 +9,11 @@ import {Footer} from './components/Footer.jsx'
 
 import {
     BrowserRouter as Router,
-    Routes, Route, Link
+    Routes, Route, Link, Navigate
 } from 'react-router-dom'
 import Home from "./components/Home.jsx";
 import NoteDetailView from "./components/NoteDetailView.jsx";
+import Users from "./components/Users.jsx";
 
 
 const getLoggedInUser = () => {
@@ -40,7 +41,7 @@ const Application = () => {
                 <Link style={padding} to="/users">Users</Link>
                 {user
                     ? <ActiveUser user={user} setUser={setUser} successMessage={successMessage} errorMessage={errorMessage}/>
-                    : <Login setUser={setUser} successMessage={successMessage} errorMessage={errorMessage}/>
+                    : <Link style={padding} to="/login">Login</Link>
                 }
             </div>
 
@@ -51,7 +52,8 @@ const Application = () => {
                 <Route path="/notes" element={<Notes successMessage={successMessage} errorMessage={errorMessage}/>}/>
                 <Route path="/blogs" element={<Blogs successMessage={successMessage} errorMessage={errorMessage}/>}/>
                 <Route path="/addressbook" element={<AddressBook successMessage={successMessage} errorMessage={errorMessage}/>}/>
-                <Route path="/users" element={<UserAuthentication setUser={setUser} errorMessage={errorMessage} successMessage={successMessage}/>}/>
+                <Route path="/users" element={user ? <Users /> : <Navigate replace to="/login" />} />
+                <Route path="/login" element={<Login setUser={setUser} successMessage={successMessage} errorMessage={errorMessage}/>}/>
             </Routes>
             <Footer/>
         </Router>
