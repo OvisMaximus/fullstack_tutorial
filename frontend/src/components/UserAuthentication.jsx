@@ -3,10 +3,12 @@ import { useState } from 'react'
 import { Button } from './Button.jsx'
 import Togglable from './Togglable.jsx'
 import RenderOnlyWhen from './RenderOnlyWhen.jsx'
+import { useNavigate } from 'react-router-dom'
 
-const Login = ({ successMessage, errorMessage }) => {
+export const Login = ({ setUser, successMessage, errorMessage }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const navigate = useNavigate()
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -18,8 +20,10 @@ const Login = ({ successMessage, errorMessage }) => {
 
             successMessage(`Welcome ${user.name}`)
             window.localStorage.setItem('loggedUser', JSON.stringify(user))
+            setUser(user)
             setUsername('')
             setPassword('')
+            navigate('/')
         } catch (_) {
             console.log('login failed', _)
             errorMessage('Wrong credentials')
@@ -55,9 +59,10 @@ const Login = ({ successMessage, errorMessage }) => {
     )
 }
 
-export const ActiveUser = ({ user, successMessage }) => {
+export const ActiveUser = ({ user, setUser, successMessage }) => {
     const logOff = () => {
         window.localStorage.removeItem('loggedUser')
+        setUser(null)
         successMessage('logged off')
     }
     return (
@@ -68,7 +73,7 @@ export const ActiveUser = ({ user, successMessage }) => {
         </div>
     )
 }
-const UserAuthentication = ({ successMessage, errorMessage }) => {
+const UserAuthentication = ({ setUser, successMessage, errorMessage }) => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     const user = loggedUserJSON ? JSON.parse(loggedUserJSON) : null
 
@@ -85,6 +90,7 @@ const UserAuthentication = ({ successMessage, errorMessage }) => {
                 <Togglable showButtonLabel='login'
                     hideButtonLabel='cancel' >
                     <Login
+                        setUser={setUser}
                         errorMessage={errorMessage}
                         successMessage={successMessage}
                     />
