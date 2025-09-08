@@ -11,7 +11,7 @@ const AnecdotesApp = () => {
     useEffect(() => {
         console.log('fetching anecdotes')
         dispatch(initializeAnecdotes())
-    }, [])
+    }, [dispatch])
     return (
         <div>
             <h1>Anecdotes</h1>

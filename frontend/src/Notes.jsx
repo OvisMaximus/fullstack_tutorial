@@ -4,7 +4,7 @@ import noteService from './services/notes'
 import NoteForm from './components/NoteForm.jsx'
 import Togglable from './components/Togglable.jsx'
 import RenderOnlyWhen from './components/RenderOnlyWhen.jsx'
-import localStorage from "./components/helper/localStorageTools.js";
+import localStorage from './components/helper/localStorageTools.js'
 
 const Notes = ({ errorMessage, successMessage }) => {
     const [notes, setNotes] = useState([])

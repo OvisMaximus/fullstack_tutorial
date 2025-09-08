@@ -8,6 +8,7 @@ import babelParser from '@babel/eslint-parser'
 
 export default [
     js.configs.recommended,
+    reactHooks.configs['recommended-latest'],
     {
         ignores: [
             'node_modules',
@@ -47,7 +48,6 @@ export default [
         settings: { react: { version: '18.2' } },
         plugins: {
             'react-refresh': reactRefresh,
-            'react-hooks': reactHooks,
             'vitest-globals': vitestGlobals,
             'vitest': vitest
         },
@@ -63,6 +63,8 @@ export default [
             'no-console': 0,
             'react/react-in-jsx-scope': 'off',
             'react/prop-types': 0,
+            'react-hooks/rules-of-hooks': 'error',
+            'react-hooks/exhaustive-deps': 'warn',
             'no-unused-vars': 0
         },
     }

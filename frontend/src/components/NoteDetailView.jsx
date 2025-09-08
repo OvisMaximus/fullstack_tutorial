@@ -3,7 +3,7 @@ import noteService from '../services/notes'
 import { useEffect, useState } from 'react'
 
 const NoteDetailView = () => {
-    const [note, setNote] = useState({content: '', user: {name: ''}, important: false})
+    const [note, setNote] = useState({ content: '', user: { name: '' }, important: false })
     const id = useParams().id
     console.log('looking for note with id ' + id + '')
     useEffect(() => {

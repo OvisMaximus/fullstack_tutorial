@@ -1,8 +1,8 @@
-import anecdotesService from "../services/anecdotesService.js";
-import localStorage from "./helper/localStorageTools.js";
-import {useNavigate} from "react-router-dom";
+import anecdotesService from '../services/anecdotesService.js'
+import localStorage from './helper/localStorageTools.js'
+import { useNavigate } from 'react-router-dom'
 
-const AnecdoteForm = ({successMessage, errorMessage}) => {
+const AnecdoteForm = ({ successMessage, errorMessage }) => {
     const navigate = useNavigate()
     const addAnecdote = async (event) => {
         event.preventDefault()

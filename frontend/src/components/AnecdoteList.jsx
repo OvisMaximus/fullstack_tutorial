@@ -1,7 +1,7 @@
-import {useEffect, useState} from "react";
-import anecdotesService from "../services/anecdotesService.js";
-import localStorage from "./helper/localStorageTools.js";
-import {Link} from "react-router-dom";
+import { useEffect, useState } from 'react'
+import anecdotesService from '../services/anecdotesService.js'
+import localStorage from './helper/localStorageTools.js'
+import { Link } from 'react-router-dom'
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 const Votes = ({ value, upvoteAction }) => (
@@ -14,7 +14,7 @@ const AnecdoteListItem = ({ anecdote, upvoteAction }) => (
         <Link to={anecdote.id}>{anecdote.content}</Link>
     </li>
 )
-const AnecdoteList = ({successMessage}) => {
+const AnecdoteList = ({ successMessage }) => {
     const [anecdotes, setAnecdotes] = useState([])
     const [filterText, setFilterText] = useState('')
 
@@ -51,18 +51,18 @@ const AnecdoteList = ({successMessage}) => {
         <div>
             <Link to='/anecdotes/create'>create new</Link>
             <ul>
-            {anecdotesToDisplay.map((anecdote) =>
-                <AnecdoteListItem
-                    key={anecdote.id}
-                    anecdote={anecdote}
-                    upvoteAction={
-                        () => {
-                            upvoteAnecdote(anecdote)
-                            successMessage(`you voted for ${anecdote.content}`)
+                {anecdotesToDisplay.map((anecdote) =>
+                    <AnecdoteListItem
+                        key={anecdote.id}
+                        anecdote={anecdote}
+                        upvoteAction={
+                            () => {
+                                upvoteAnecdote(anecdote)
+                                successMessage(`you voted for ${anecdote.content}`)
+                            }
                         }
-                    }
-                />
-            )}
+                    />
+                )}
             </ul>
         </div>
     )

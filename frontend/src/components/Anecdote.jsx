@@ -1,9 +1,9 @@
-import {useParams} from "react-router-dom";
-import anecdotesService from "../services/anecdotesService.js";
-import {useEffect, useState} from "react";
+import { useParams } from 'react-router-dom'
+import anecdotesService from '../services/anecdotesService.js'
+import { useEffect, useState } from 'react'
 
-const Anecdote = ({errorMessage}) => {
-    const [anecdote, setAnecdote] = useState({content: 'undefined', author: '', url: '', likes: 0})
+const Anecdote = ({ errorMessage }) => {
+    const [anecdote, setAnecdote] = useState({ content: 'undefined', author: '', url: '', likes: 0 })
     const id = useParams().id
     const fetchAnecdote = async () => {
         const loadedObject = await anecdotesService.get(id)
@@ -14,7 +14,7 @@ const Anecdote = ({errorMessage}) => {
             errorMessage(error.message)
         })
         return () => {}
-    },[])
+    },[errorMessage, fetchAnecdote])
 
     return (
         <div>

@@ -9,7 +9,7 @@ const Notes = () => {
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(initializeNotes())
-    }, [])
+    }, [dispatch])
     return (
         <div>
             <h1>Notes</h1>
