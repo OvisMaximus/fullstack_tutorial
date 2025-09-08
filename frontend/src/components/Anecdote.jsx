@@ -14,7 +14,7 @@ const Anecdote = ({ errorMessage }) => {
             errorMessage(error.message)
         })
         return () => {}
-    },[errorMessage, fetchAnecdote])
+    },)
 
     return (
         <div>

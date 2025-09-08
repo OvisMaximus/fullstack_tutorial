@@ -1,24 +1,26 @@
 import anecdotesService from '../services/anecdotesService.js'
 import localStorage from './helper/localStorageTools.js'
 import { useNavigate } from 'react-router-dom'
+import { useField } from '../hooks'
 
 const AnecdoteForm = ({ successMessage, errorMessage }) => {
     const navigate = useNavigate()
+    const content = useField('text', 'anecdote', 'enter an anecdote')
+    const author = useField('text', 'author', 'enter an author')
+    const url = useField('text', 'url', 'enter an url')
+
     const addAnecdote = async (event) => {
         event.preventDefault()
-        const content = event.target.anecdote.value
-        const author = event.target.author.value
-        const url = event.target.url.value
         const newAnecdote = {
-            content,
-            author,
-            url
+            content: content.value,
+            author: author.value,
+            url: url.value
         }
         try {
             const token = localStorage.extractUser().token
             const anecdote = await anecdotesService.create(newAnecdote, token)
             console.log('new anecdote created', anecdote)
-            successMessage(`you added ${content}`)
+            successMessage(`you added ${content.value}`)
             navigate('/Anecdotes')
         } catch (error) {
             errorMessage(error.message)
@@ -30,9 +32,9 @@ const AnecdoteForm = ({ successMessage, errorMessage }) => {
         <div>
             <h2>create a new anecdote</h2>
             <form onSubmit={addAnecdote}>
-                <input name="anecdote" placeholder="enter an anecdote"/><br/>
-                <input name="author" placeholder="enter an author"/><br/>
-                <input name="url" placeholder="enter an url providing more info"/><br/>
+                <input {...content} /><br/>
+                <input {...author} /><br/>
+                <input {...url} /><br/>
                 <button type="submit">add</button>
             </form>
         </div>
