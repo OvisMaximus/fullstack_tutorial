@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/user')
-const logger = require('../utils/logger')
+
 require('../utils/http_status_code')
 const OK = global.HttpStatus.OK.code
 const BAD_REQUEST = global.HttpStatus.BAD_REQUEST.code

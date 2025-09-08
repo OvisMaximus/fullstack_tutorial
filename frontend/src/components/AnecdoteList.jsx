@@ -1,6 +1,7 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { voteForAnecdote } from '../reducers/anecdoteReducer.js'
-import { successMessage } from '../reducers/notificationReducer.js'
+import {useEffect, useState} from "react";
+import anecdotesService from "../services/anecdotesService.js";
+import localStorage from "./helper/localStorageTools.js";
+import {Link} from "react-router-dom";
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 const Votes = ({ value, upvoteAction }) => (
@@ -8,18 +9,36 @@ const Votes = ({ value, upvoteAction }) => (
         has {value} votes <Button onClick={upvoteAction} text='vote'/>
     </div>
 )
-const Anecdote = ({ anecdote, upvoteAction }) => (
-    <div>
-        {anecdote.content}
-        <Votes value={anecdote.votes} upvoteAction={upvoteAction}/>
-    </div>
+const AnecdoteListItem = ({ anecdote, upvoteAction }) => (
+    <li key={anecdote.id}>
+        <Link to={anecdote.id}>{anecdote.content}</Link>
+    </li>
 )
-const AnecdoteList = () => {
-    const dispatch = useDispatch()
-    const anecdotes = useSelector(state => state.anecdotes)
-    const filterText = useSelector(state => state.filterText)
+const AnecdoteList = ({successMessage}) => {
+    const [anecdotes, setAnecdotes] = useState([])
+    const [filterText, setFilterText] = useState('')
+
+    useEffect(() => {
+        loadAnecdotes()
+        return () => {}
+    }, [])
+
+    const loadAnecdotes = async () => {
+        const anecdotes = await anecdotesService.getAll()
+        setAnecdotes(anecdotes)
+    }
+
+    const upvoteAnecdote = async (anecdote) => {
+        const updatedAnecdote = await anecdotesService.update({
+            ...anecdote,
+            likes: anecdote.likes + 1
+        }, localStorage.extractUser().token)
+        setAnecdotes(anecdotes.map(a => a.id !== updatedAnecdote.id ? a : updatedAnecdote))
+    }
+
     console.log('anecdotes: ', anecdotes)
     console.log('filterText: ', filterText)
+
     const anecdotesToDisplay = anecdotes
         .filter((anecdote) => {
             const text = anecdote.content
@@ -30,18 +49,21 @@ const AnecdoteList = () => {
 
     return (
         <div>
+            <Link to='/anecdotes/create'>create new</Link>
+            <ul>
             {anecdotesToDisplay.map((anecdote) =>
-                <Anecdote
+                <AnecdoteListItem
                     key={anecdote.id}
                     anecdote={anecdote}
                     upvoteAction={
                         () => {
-                            dispatch(voteForAnecdote(anecdote.id))
-                            dispatch(successMessage(`you voted for ${anecdote.content}`))
+                            upvoteAnecdote(anecdote)
+                            successMessage(`you voted for ${anecdote.content}`)
                         }
                     }
                 />
             )}
+            </ul>
         </div>
     )
 }

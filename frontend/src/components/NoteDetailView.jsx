@@ -1,10 +1,10 @@
-import {useParams} from "react-router-dom";
+import { useParams } from 'react-router-dom'
 import noteService from '../services/notes'
-import {useEffect, useState} from "react";
+import { useEffect, useState } from 'react'
 
 const NoteDetailView = () => {
+    const [note, setNote] = useState({content: '', user: {name: ''}, important: false})
     const id = useParams().id
-    const [note, setNote] = useState({content: 'not loaded yet', user: 'none', important: false})
     console.log('looking for note with id ' + id + '')
     useEffect(() => {
         const fetchNote = async () => {

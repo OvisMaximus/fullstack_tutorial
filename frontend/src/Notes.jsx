@@ -4,17 +4,13 @@ import noteService from './services/notes'
 import NoteForm from './components/NoteForm.jsx'
 import Togglable from './components/Togglable.jsx'
 import RenderOnlyWhen from './components/RenderOnlyWhen.jsx'
-
-function extractUserFromLocalStorage() {
-    const userJson = window.localStorage.getItem('loggedUser')
-    return userJson ? JSON.parse(userJson) : null
-}
+import localStorage from "./components/helper/localStorageTools.js";
 
 const Notes = ({ errorMessage, successMessage }) => {
     const [notes, setNotes] = useState([])
     const [showAll, setShowAll] = useState(true)
     const noteFormRef = useRef()
-    const user = extractUserFromLocalStorage() // script uses useEffect for initialization. why?
+    const user = localStorage.extractUser() // script uses useEffect for initialization. why?
 
     const fetchNotes = () => {
         console.log('fetch notes')

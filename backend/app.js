@@ -9,6 +9,7 @@ const notesRoutes = require('./controllers/notes.js')
 const personsRouter = require('./controllers/persons.js')
 const blogsRouter = require('./controllers/blog')
 const usersRouter = require('./controllers/user')
+const anecdotesRouter = require('./controllers/anecdotes')
 
 mongodb.connect()
 
@@ -34,6 +35,7 @@ app.use('/api/notes', notesRoutes)
 app.use('/api/persons', personsRouter)
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/anecdotes', anecdotesRouter)
 
 
 app.use(middleware.unknownEndpoint)
