@@ -27,15 +27,22 @@ const AnecdoteForm = ({ successMessage, errorMessage }) => {
         }
     }
 
+    const resetForm = () => {
+        content.onReset()
+        author.onReset()
+        url.onReset()
+    }
+
 
     return (
         <div>
             <h2>create a new anecdote</h2>
-            <form onSubmit={addAnecdote}>
+            <form onSubmit={addAnecdote} onReset={resetForm}>
                 <input {...content} /><br/>
                 <input {...author} /><br/>
                 <input {...url} /><br/>
                 <button type="submit">add</button>
+                <button type="reset">reset</button>
             </form>
         </div>
     )
