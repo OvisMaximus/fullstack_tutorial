@@ -1,8 +1,9 @@
 import anecdotesService from "../services/anecdotesService.js";
 import localStorage from "./helper/localStorageTools.js";
+import {useNavigate} from "react-router-dom";
 
 const AnecdoteForm = ({successMessage, errorMessage}) => {
-
+    const navigate = useNavigate()
     const addAnecdote = async (event) => {
         event.preventDefault()
         const content = event.target.anecdote.value
@@ -18,6 +19,7 @@ const AnecdoteForm = ({successMessage, errorMessage}) => {
             const anecdote = await anecdotesService.create(newAnecdote, token)
             console.log('new anecdote created', anecdote)
             successMessage(`you added ${content}`)
+            navigate('/Anecdotes')
         } catch (error) {
             errorMessage(error.message)
         }
