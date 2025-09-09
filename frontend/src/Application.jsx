@@ -16,6 +16,7 @@ import Users from './components/Users.jsx'
 import AnecdoteList from './components/AnecdoteList.jsx'
 import Anecdote from './components/Anecdote.jsx'
 import AnecdoteForm from './components/AnecdoteForm.jsx'
+import CountryInfo from "./components/CountryInfo.jsx";
 
 
 const getLoggedInUser = () => {
@@ -42,6 +43,7 @@ const Application = () => {
                 <Link style={padding} to="/blogs">Blog Suggestions</Link>
                 <Link style={padding} to="/addressbook">Address Book</Link>
                 <Link style={padding} to="/anecdotes">Anecdotes</Link>
+                <Link style={padding} to="/countries">Country Info</Link>
                 <Link style={padding} to="/users">Users</Link>
                 {user
                     ?
@@ -62,6 +64,7 @@ const Application = () => {
                 <Route path="/anecdotes/create" element={<AnecdoteForm successMessage={successMessage} errorMessage={errorMessage}/>}/>
                 <Route path="/addressbook"
                     element={<AddressBook successMessage={successMessage} errorMessage={errorMessage}/>}/>
+                <Route path="/countries" element={<CountryInfo/>}/>
                 <Route path="/users" element={user ? <Users/> : <Navigate replace to="/login"/>}/>
                 <Route path="/login"
                     element={<Login setUser={setUser} successMessage={successMessage}
