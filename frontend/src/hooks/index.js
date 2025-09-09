@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import countryService from '../services/countries.js'
+import crud from '../services/crud.js'
 
 export const useField = (type, name, placeholder) => {
     const [value, setValue] = useState('')
@@ -43,5 +44,40 @@ export const useCountry = (initialCountryName) => {
     return {
         country,
         setCountryName
+    }
+}
+
+export const useResource = (baseUrl, initialToken) => {
+    const [token, setToken] = useState(initialToken)
+
+    const getAll = async () => {
+        const result = await crud.getAll(baseUrl)
+        console.log('got all ', result)
+        return result
+    }
+
+    const get = async (id) => {
+        return await crud.get(baseUrl, id)
+    }
+
+    const create = async (newObject) => {
+        return await crud.create(baseUrl, newObject, token)
+    }
+
+    const update = async (id, modifiedObject) => {
+        return await crud.update(baseUrl, id, modifiedObject, token)
+    }
+
+    const deleteId = async (id) => {
+        return await crud.deleteId(baseUrl, id, token)
+    }
+
+    return {
+        setToken,
+        getAll,
+        get,
+        create,
+        update,
+        deleteId
     }
 }

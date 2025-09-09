@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import personService from './services/persons'
+import { useResource } from './hooks/index.js'
 import { Button } from './components/Button.jsx'
 
 const handleWith = handler => (event) => handler(event.target.value)
@@ -18,6 +18,7 @@ const Filter = ({ filter, setFilter }) => {
 const NewPersonForm = ({ persons, setPersons, successMessage, errorMessage }) => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
+    const personService = useResource('/api/persons')
 
     const byName = (searchName) => (candidate) =>
         candidate.name === searchName
@@ -99,6 +100,8 @@ const Person = ({ person, handleDeletePerson }) => {
 }
 
 const ListOfPersons = ({ persons, setPersons, successMessage, errorMessage, filter }) => {
+    const personService = useResource('/api/persons')
+
     const byPartialName = (searchName) => (arrayEntry) =>
         arrayEntry.name.toLowerCase().includes(searchName.toLowerCase())
 
@@ -135,6 +138,7 @@ const ListOfPersons = ({ persons, setPersons, successMessage, errorMessage, filt
 const AddressBook = ({ errorMessage, successMessage }) => {
     const [persons, setPersons] = useState([])
     const [filter, setFilter] = useState('')
+    const personService = useResource('/api/persons')
 
     const fetchPersons = () => {
         console.log('fetch persons')
@@ -147,7 +151,6 @@ const AddressBook = ({ errorMessage, successMessage }) => {
     }
 
     useEffect(fetchPersons, [])
-    useEffect(() => personService.registerAutoUpdateForPersons(setPersons), [])
 
     return (
         <div>
