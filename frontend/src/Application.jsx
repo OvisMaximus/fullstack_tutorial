@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { initErrorMessage, initSuccessMessage } from './components/helper/notification.js'
-import { ActiveUser, Login } from './components/UserAuthentication.jsx'
+import {useState} from 'react'
+import {initErrorMessage, initSuccessMessage} from './components/helper/notification.js'
+import {ActiveUser, Login} from './components/UserAuthentication.jsx'
 import AddressBook from './AddressBook.jsx'
 import Notes from './Notes.jsx'
 import Blogs from './components/Blogs.jsx'
-import { Footer } from './components/Footer.jsx'
+import {Footer} from './components/Footer.jsx'
 
 import {
     Routes, Route, Link, Navigate
@@ -16,7 +16,7 @@ import AnecdoteList from './components/AnecdoteList.jsx'
 import Anecdote from './components/Anecdote.jsx'
 import AnecdoteForm from './components/AnecdoteForm.jsx'
 import CountryInfo from "./components/CountryInfo.jsx";
-import {Alert} from "react-bootstrap";
+import {Alert, Nav, Navbar} from "react-bootstrap";
 
 
 const getLoggedInUser = () => {
@@ -37,21 +37,40 @@ const Application = () => {
 
     return (
         <div>
-            <div>
-                <Link style={padding} to="/">Home</Link>
-                <Link style={padding} to="/notes">Notes</Link>
-                <Link style={padding} to="/blogs">Blog Suggestions</Link>
-                <Link style={padding} to="/addressbook">Address Book</Link>
-                <Link style={padding} to="/anecdotes">Anecdotes</Link>
-                <Link style={padding} to="/countries">Country Info</Link>
-                <Link style={padding} to="/users">Users</Link>
-                {user
-                    ?
-                    <ActiveUser user={user} setUser={setUser} successMessage={successMessage}
-                        errorMessage={errorMessage}/>
-                    : <Link style={padding} to="/login">Login</Link>
-                }
-            </div>
+            <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
+                <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="me-auto">
+                        <Nav.Link href="#" as='span'>
+                            <Link style={padding} to="/">Home</Link>
+                        </Nav.Link>
+                        <Nav.Link href="#" as='span'>
+                            <Link style={padding} to="/notes">Notes</Link>
+                        </Nav.Link>
+                        <Nav.Link href="#" as='span'>
+                            <Link style={padding} to="/blogs">Blog Suggestions</Link>
+                        </Nav.Link>
+                        <Nav.Link href="#" as='span'>
+                            <Link style={padding} to="/addressbook">Address Book</Link>
+                        </Nav.Link>
+                        <Nav.Link href="#" as='span'>
+                            <Link style={padding} to="/anecdotes">Anecdotes</Link>
+                        </Nav.Link>
+                        <Nav.Link href="#" as='span'>
+                            <Link style={padding} to="/countries">Country Info</Link>
+                        </Nav.Link>
+                        <Nav.Link href="#" as='span'>
+                            <Link style={padding} to="/users">Users</Link>
+                        </Nav.Link>
+                        {user
+                            ?
+                            <ActiveUser user={user} setUser={setUser} successMessage={successMessage}
+                                        errorMessage={errorMessage}/>
+                            : <Link style={padding} to="/login">Login</Link>
+                        }
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
             {message && <Alert variant={status}>{message}</Alert>}
 
             <Routes>
@@ -59,16 +78,19 @@ const Application = () => {
                 <Route path="/notes/:id" element={<NoteDetailView/>}/>
                 <Route path="/notes" element={<Notes successMessage={successMessage} errorMessage={errorMessage}/>}/>
                 <Route path="/blogs" element={<Blogs successMessage={successMessage} errorMessage={errorMessage}/>}/>
-                <Route path="/anecdotes/:id" element={<Anecdote successMessage={successMessage} errorMessage={errorMessage}/>}/>
-                <Route path="/anecdotes" element={<AnecdoteList successMessage={successMessage} errorMessage={errorMessage}/>}/>
-                <Route path="/anecdotes/create" element={<AnecdoteForm successMessage={successMessage} errorMessage={errorMessage}/>}/>
+                <Route path="/anecdotes/:id"
+                       element={<Anecdote successMessage={successMessage} errorMessage={errorMessage}/>}/>
+                <Route path="/anecdotes"
+                       element={<AnecdoteList successMessage={successMessage} errorMessage={errorMessage}/>}/>
+                <Route path="/anecdotes/create"
+                       element={<AnecdoteForm successMessage={successMessage} errorMessage={errorMessage}/>}/>
                 <Route path="/addressbook"
-                    element={<AddressBook successMessage={successMessage} errorMessage={errorMessage}/>}/>
+                       element={<AddressBook successMessage={successMessage} errorMessage={errorMessage}/>}/>
                 <Route path="/countries" element={<CountryInfo/>}/>
                 <Route path="/users" element={user ? <Users/> : <Navigate replace to="/login"/>}/>
                 <Route path="/login"
-                    element={<Login setUser={setUser} successMessage={successMessage}
-                        errorMessage={errorMessage}/>}/>
+                       element={<Login setUser={setUser} successMessage={successMessage}
+                                       errorMessage={errorMessage}/>}/>
             </Routes>
             <Footer/>
         </div>
