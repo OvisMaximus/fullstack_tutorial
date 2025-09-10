@@ -1,16 +1,20 @@
-const Note = ({ note, toggleImportance }) => {
+import {TableCell, TableRow} from "@mui/material";
+
+const Note = ({note, toggleImportance}) => {
     const label = note.important
         ? 'make not important' : 'make important'
     return (
-        <tr key={note.id}>
-        <td>
-            <a href={`/notes/${note.id}`}>{note.content}</a>
-        </td><td>
-            {note.user.name}
-        </td><td>
-            {toggleImportance? <button onClick={toggleImportance}>{label}</button> : ''}
-        </td>
-        </tr>
+        <TableRow key={note.id}>
+            <TableCell>
+                <a href={`/notes/${note.id}`}>{note.content}</a>
+            </TableCell>
+            <TableCell>
+                {note.user.name}
+            </TableCell>
+            <TableCell>
+                {toggleImportance ? <button onClick={toggleImportance}>{label}</button> : ''}
+            </TableCell>
+        </TableRow>
     )
 }
 

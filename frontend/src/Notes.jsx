@@ -6,13 +6,14 @@ import RenderOnlyWhen from './components/RenderOnlyWhen.jsx'
 import localStorage from './components/helper/localStorageTools.js'
 import {useResource} from "./hooks/index.js";
 import {Table} from "react-bootstrap";
+import {Paper, TableBody, TableContainer} from "@mui/material";
 
 const Notes = ({errorMessage, successMessage}) => {
     const [notes, setNotes] = useState([])
     const [showAll, setShowAll] = useState(true)
     const noteFormRef = useRef()
     const user = localStorage.extractUser() // script uses useEffect for initialization. why?
-    const noteService = useResource('http://localhost:3001/api/notes', user.token)
+    const noteService = useResource('http://localhost:3001/api/notes', user? user.token : null)
 
     const fetchNotes = async () => {
         console.log('fetch notes')
@@ -61,14 +62,16 @@ const Notes = ({errorMessage, successMessage}) => {
                 </Togglable>
             </RenderOnlyWhen>
             <button onClick={() => setShowAll(!showAll)}>show {showAll ? 'only important' : 'all'}</button>
-            <Table striped>
-                <tbody>
-                {notesToRender.map(note => user
-                    ? <Note key={note.id} note={note} toggleImportance={toggleImportanceOf(note.id)}/>
-                    : <Note key={note.id} note={note}/>
-                )}
-                </tbody>
-            </Table>
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableBody>
+                        {notesToRender.map(note => user
+                            ? <Note key={note.id} note={note} toggleImportance={toggleImportanceOf(note.id)}/>
+                            : <Note key={note.id} note={note}/>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
 
         </div>
     )

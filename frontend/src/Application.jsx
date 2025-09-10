@@ -16,8 +16,7 @@ import AnecdoteList from './components/AnecdoteList.jsx'
 import Anecdote from './components/Anecdote.jsx'
 import AnecdoteForm from './components/AnecdoteForm.jsx'
 import CountryInfo from "./components/CountryInfo.jsx";
-import {Alert, Nav, Navbar} from "react-bootstrap";
-
+import {Alert, AppBar, Button, Container, Toolbar} from "@mui/material";
 
 const getLoggedInUser = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -31,47 +30,41 @@ const Application = () => {
 
     const errorMessage = initErrorMessage(setMessage, setStatus)
     const successMessage = initSuccessMessage(setMessage, setStatus)
-    const padding = {
-        padding: 5
-    }
 
     return (
-        <div>
-            <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
-                <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
-                <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="me-auto">
-                        <Nav.Link href="#" as='span'>
-                            <Link style={padding} to="/">Home</Link>
-                        </Nav.Link>
-                        <Nav.Link href="#" as='span'>
-                            <Link style={padding} to="/notes">Notes</Link>
-                        </Nav.Link>
-                        <Nav.Link href="#" as='span'>
-                            <Link style={padding} to="/blogs">Blog Suggestions</Link>
-                        </Nav.Link>
-                        <Nav.Link href="#" as='span'>
-                            <Link style={padding} to="/addressbook">Address Book</Link>
-                        </Nav.Link>
-                        <Nav.Link href="#" as='span'>
-                            <Link style={padding} to="/anecdotes">Anecdotes</Link>
-                        </Nav.Link>
-                        <Nav.Link href="#" as='span'>
-                            <Link style={padding} to="/countries">Country Info</Link>
-                        </Nav.Link>
-                        <Nav.Link href="#" as='span'>
-                            <Link style={padding} to="/users">Users</Link>
-                        </Nav.Link>
-                        {user
-                            ?
-                            <ActiveUser user={user} setUser={setUser} successMessage={successMessage}
-                                        errorMessage={errorMessage}/>
-                            : <Link style={padding} to="/login">Login</Link>
-                        }
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
-            {message && <Alert variant={status}>{message}</Alert>}
+        <Container>
+            {message && <Alert severity={status}>{message}</Alert>}
+            <AppBar position='static' >
+                <Toolbar>
+                    <Button color='inherit' component={Link} to="/">
+                        Home
+                    </Button>
+                    <Button color='inherit' component={Link} to="/blogs">
+                        Blog Suggestions
+                    </Button>
+                    <Button color='inherit' component={Link} to="/notes">
+                        Notes
+                    </Button>
+                    <Button color='inherit' component={Link} to="/addressbook">
+                        Address Book
+                    </Button>
+                    <Button color='inherit' component={Link} to="/anecdotes">
+                        Anecdotes
+                    </Button>
+                    <Button color='inherit' component={Link} to="/countries">
+                        Country Info
+                    </Button>
+                    <Button color='inherit' component={Link} to="/users">
+                        users
+                    </Button>
+                    {user
+                        ?
+                        <ActiveUser user={user} setUser={setUser} successMessage={successMessage}
+                                    errorMessage={errorMessage}/>
+                        : <Button color='inherit' component={Link} to="/login">Login</Button>
+                    }
+                </Toolbar>
+            </AppBar>
 
             <Routes>
                 <Route path="/" element={<Home/>}/>
@@ -93,7 +86,7 @@ const Application = () => {
                                        errorMessage={errorMessage}/>}/>
             </Routes>
             <Footer/>
-        </div>
+        </Container>
     )
 }
 

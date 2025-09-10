@@ -7,7 +7,7 @@ const displayMessage = (setMessage, setStatus, status, message) => {
 }
 
 const initErrorMessage = (setMessage, setStatus) => (message) => {
-    displayMessage(setMessage, setStatus, 'danger', message)
+    displayMessage(setMessage, setStatus, 'error', message)
 }
 
 const initSuccessMessage = (setMessage, setStatus) => (message) => {

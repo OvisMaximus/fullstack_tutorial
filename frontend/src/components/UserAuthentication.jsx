@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Togglable from './Togglable.jsx'
 import RenderOnlyWhen from './RenderOnlyWhen.jsx'
 import { useNavigate } from 'react-router-dom'
-import {Button, Form} from "react-bootstrap";
+import {Button, TextField} from '@mui/material'
 
 export const Login = ({ setUser, successMessage, errorMessage }) => {
     const [username, setUsername] = useState('')
@@ -34,27 +34,17 @@ export const Login = ({ setUser, successMessage, errorMessage }) => {
     return (
         <div>
             <h2>login to application</h2>
-            <Form onSubmit={handleLogin}>
-                <Form.Group>
-                    <Form.Label column={false}>username:</Form.Label>
-                    <Form.Control
-                        data-testid="username"
-                        type="text"
-                        name="Username"
-                        onChange={({ target }) => setUsername(target.value)}
-                    />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label column={false}>password</Form.Label>
-                    <Form.Control
-                        data-testid="password"
-                        type="password"
-                        name="Password"
-                        onChange={({ target }) => setPassword(target.value)}
-                    />
-                </Form.Group>
-                <Button variant='primary' type="submit">login</Button>
-            </Form>
+            <form onSubmit={handleLogin}>
+                <div>
+                    <TextField label='username:' onChange={({ target }) => setUsername(target.value)}/>
+                </div>
+                <div>
+                    <TextField label='password:' type='password' onChange={({ target }) => setPassword(target.value)}/>
+                </div>
+                <div>
+                <Button variant='contained' color='primary' type="submit">login</Button>
+                </div>
+            </form>
         </div>
     )
 }
