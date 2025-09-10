@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { initErrorMessage, initSuccessMessage } from './components/helper/notification.js'
-import Notification from './components/Notification.jsx'
 import { ActiveUser, Login } from './components/UserAuthentication.jsx'
 import AddressBook from './AddressBook.jsx'
 import Notes from './Notes.jsx'
@@ -17,6 +16,7 @@ import AnecdoteList from './components/AnecdoteList.jsx'
 import Anecdote from './components/Anecdote.jsx'
 import AnecdoteForm from './components/AnecdoteForm.jsx'
 import CountryInfo from "./components/CountryInfo.jsx";
+import {Alert} from "react-bootstrap";
 
 
 const getLoggedInUser = () => {
@@ -52,8 +52,8 @@ const Application = () => {
                     : <Link style={padding} to="/login">Login</Link>
                 }
             </div>
+            {message && <Alert variant={status}>{message}</Alert>}
 
-            <Notification message={message} className={status}/>
             <Routes>
                 <Route path="/" element={<Home/>}/>
                 <Route path="/notes/:id" element={<NoteDetailView/>}/>
