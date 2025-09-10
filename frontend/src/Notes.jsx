@@ -5,6 +5,7 @@ import Togglable from './components/Togglable.jsx'
 import RenderOnlyWhen from './components/RenderOnlyWhen.jsx'
 import localStorage from './components/helper/localStorageTools.js'
 import {useResource} from "./hooks/index.js";
+import {Table} from "react-bootstrap";
 
 const Notes = ({errorMessage, successMessage}) => {
     const [notes, setNotes] = useState([])
@@ -20,7 +21,9 @@ const Notes = ({errorMessage, successMessage}) => {
         setNotes(allNotes)
     }
 
-    useEffect(() => {fetchNotes()}, [])
+    useEffect(() => {
+        fetchNotes()
+    }, [])
     console.log('render', notes.length, 'notes')
 
     const createNote = async (newNoteObject) => {
@@ -58,12 +61,14 @@ const Notes = ({errorMessage, successMessage}) => {
                 </Togglable>
             </RenderOnlyWhen>
             <button onClick={() => setShowAll(!showAll)}>show {showAll ? 'only important' : 'all'}</button>
-            <ul>
+            <Table striped>
+                <tbody>
                 {notesToRender.map(note => user
                     ? <Note key={note.id} note={note} toggleImportance={toggleImportanceOf(note.id)}/>
                     : <Note key={note.id} note={note}/>
                 )}
-            </ul>
+                </tbody>
+            </Table>
 
         </div>
     )

@@ -2,10 +2,15 @@ const Note = ({ note, toggleImportance }) => {
     const label = note.important
         ? 'make not important' : 'make important'
     return (
-        <li className='note'>
+        <tr key={note.id}>
+        <td>
             <a href={`/notes/${note.id}`}>{note.content}</a>
+        </td><td>
+            {note.user.name}
+        </td><td>
             {toggleImportance? <button onClick={toggleImportance}>{label}</button> : ''}
-        </li>
+        </td>
+        </tr>
     )
 }
 
