@@ -1,9 +1,9 @@
 import loginService from '../services/login.js'
 import { useState } from 'react'
-import { Button } from './Button.jsx'
 import Togglable from './Togglable.jsx'
 import RenderOnlyWhen from './RenderOnlyWhen.jsx'
 import { useNavigate } from 'react-router-dom'
+import {Button, Form} from "react-bootstrap";
 
 export const Login = ({ setUser, successMessage, errorMessage }) => {
     const [username, setUsername] = useState('')
@@ -29,32 +29,32 @@ export const Login = ({ setUser, successMessage, errorMessage }) => {
             errorMessage('Wrong credentials')
         }
     }
+// Form.Control: onChange={({ target }) => setPassword(target.value)}
 
     return (
         <div>
-            <form onSubmit={handleLogin}>
-                <div>
-                    username
-                    <input
+            <h2>login to application</h2>
+            <Form onSubmit={handleLogin}>
+                <Form.Group>
+                    <Form.Label column={false}>username:</Form.Label>
+                    <Form.Control
                         data-testid="username"
                         type="text"
-                        value={username}
                         name="Username"
                         onChange={({ target }) => setUsername(target.value)}
                     />
-                </div>
-                <div>
-                    password
-                    <input
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label column={false}>password</Form.Label>
+                    <Form.Control
                         data-testid="password"
                         type="password"
-                        value={password}
                         name="Password"
                         onChange={({ target }) => setPassword(target.value)}
                     />
-                </div>
-                <button type="submit">login</button>
-            </form>
+                </Form.Group>
+                <Button variant='primary' type="submit">login</Button>
+            </Form>
         </div>
     )
 }
@@ -68,7 +68,7 @@ export const ActiveUser = ({ user, setUser, successMessage }) => {
     return (
         <div>
             <p>
-                {user.name} logged in <Button text='log off' onClick={logOff}/>
+                {user.name} logged in <Button onClick={logOff}>log off</Button>
             </p>
         </div>
     )
