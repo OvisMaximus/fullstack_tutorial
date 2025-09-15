@@ -1,23 +1,23 @@
-import { useState } from 'react'
-import { Button } from './Button.jsx'
-import RenderOnlyWhen from './RenderOnlyWhen.jsx'
+import { useState } from "react";
+import { Button } from "./Button.jsx";
+import RenderOnlyWhen from "./RenderOnlyWhen.jsx";
 
 const CollapseDetails = ({ summary, children }) => {
-    const [collapsed, setCollapsed] = useState(true)
+  const [collapsed, setCollapsed] = useState(true);
 
-    const toggleCollapsed = () => {
-        setCollapsed(!collapsed)
-    }
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
 
-    return (
-        <div>
-            <span>{summary}</span>
-            <Button onClick={toggleCollapsed} text={collapsed? 'show' : 'hide'}/>
-            <RenderOnlyWhen condition={!collapsed}>
-                <br/>
-                {children}
-            </RenderOnlyWhen>
-        </div>
-    )
-}
-export default CollapseDetails
+  return (
+    <div>
+      <span>{summary}</span>
+      <Button onClick={toggleCollapsed} text={collapsed ? "show" : "hide"} />
+      <RenderOnlyWhen condition={!collapsed}>
+        <br />
+        {children}
+      </RenderOnlyWhen>
+    </div>
+  );
+};
+export default CollapseDetails;
