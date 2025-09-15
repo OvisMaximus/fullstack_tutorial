@@ -1,84 +1,84 @@
-const User = require("../models/user");
-const userTools = require("../utils/userTools");
+const User = require('../models/user')
+const userTools = require('../utils/userTools')
 
 const initialUsers = [
-  {
-    username: "root",
-    name: "Super User",
-    password: "PratziFatzi",
-  },
-  {
-    username: "test",
-    name: "Test User",
-    password: "PumpaNiggel",
-  },
-];
+    {
+        username: 'root',
+        name: 'Super User',
+        password: 'PratziFatzi',
+    },
+    {
+        username: 'test',
+        name: 'Test User',
+        password: 'PumpaNiggel',
+    },
+]
 
 const initDatabase = async () => {
-  await User.deleteMany({});
-  const promises = [];
-  initialUsers.forEach((user) => {
-    promises.push(
-      userTools.createUserInDb(user.username, user.name, user.password),
-    );
-  });
-  // noinspection JSUnresolvedReference
-  await Promise.all(promises);
-};
+    await User.deleteMany({})
+    const promises = []
+    initialUsers.forEach((user) => {
+        promises.push(
+            userTools.createUserInDb(user.username, user.name, user.password),
+        )
+    })
+    // noinspection JSUnresolvedReference
+    await Promise.all(promises)
+}
 
 const usersInDb = async () => {
-  // noinspection JSCheckFunctionSignatures
-  const users = await User.find({});
-  // noinspection JSUnresolvedReference
-  return users.map((u) => u.toJSON());
-};
+    // noinspection JSCheckFunctionSignatures
+    const users = await User.find({})
+    // noinspection JSUnresolvedReference
+    return users.map((u) => u.toJSON())
+}
 
 const getUserFromDb = async (userId) => {
-  const matchingUsers = await User.find({ _id: userId });
-  const user = User(matchingUsers[0]);
-  await user.populate("notes", { content: 1, important: 1 });
-  return await user.populate("blogs", {
-    title: 1,
-    author: 1,
-    url: 1,
-    likes: 1,
-  });
-};
+    const matchingUsers = await User.find({ _id: userId })
+    const user = User(matchingUsers[0])
+    await user.populate('notes', { content: 1, important: 1 })
+    return await user.populate('blogs', {
+        title: 1,
+        author: 1,
+        url: 1,
+        likes: 1,
+    })
+}
 
 const validUserId = async () => {
-  const users = await usersInDb();
-  return users[0].id.toString();
-};
+    const users = await usersInDb()
+    return users[0].id.toString()
+}
 
 const authenticatedUserToken = async (user, api) => {
-  const loginUser = { username: user.username, password: user.password };
+    const loginUser = { username: user.username, password: user.password }
 
-  let response = undefined;
-  await api
-    .post("/api/login")
-    .send(loginUser)
-    .expect(200)
-    .expect((result) => {
-      response = result.body;
-      return true;
-    });
+    let response = undefined
+    await api
+        .post('/api/login')
+        .send(loginUser)
+        .expect(200)
+        .expect((result) => {
+            response = result.body
+            return true
+        })
 
-  return response.token;
-};
+    return response.token
+}
 
 async function tokenOfDifferentUser(user, api) {
-  const username = user.username;
-  const otherUsers = initialUsers.filter((user) => user.username !== username);
+    const username = user.username
+    const otherUsers = initialUsers.filter((user) => user.username !== username)
 
-  return await authenticatedUserToken(otherUsers[0], api);
+    return await authenticatedUserToken(otherUsers[0], api)
 }
 
 module.exports = {
-  initialUsers,
-  initDatabase,
-  usersInDb,
-  getUserFromDb,
-  validUserId,
-  authenticatedUserToken,
-  tokenOfDifferentUser: tokenOfDifferentUser,
-};
+    initialUsers,
+    initDatabase,
+    usersInDb,
+    getUserFromDb,
+    validUserId,
+    authenticatedUserToken,
+    tokenOfDifferentUser: tokenOfDifferentUser,
+}

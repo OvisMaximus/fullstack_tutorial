@@ -1,34 +1,34 @@
-import globals from "globals";
-import js from "@eslint/js";
-import stylisticJs from "@stylistic/eslint-plugin-js";
-import eslintConfigPrettier from "eslint-config-prettier/flat";
+import globals from 'globals'
+import js from '@eslint/js'
+import stylisticJs from '@stylistic/eslint-plugin-js'
+import eslintConfigPrettier from 'eslint-config-prettier/flat'
 
 export default [
-  js.configs.recommended,
-  {
-    files: ["**/*.js"],
-    languageOptions: {
-      sourceType: "commonjs",
-      globals: { ...globals.node },
-      ecmaVersion: "latest",
+    js.configs.recommended,
+    {
+        files: ['**/*.js'],
+        languageOptions: {
+            sourceType: 'commonjs',
+            globals: { ...globals.node },
+            ecmaVersion: 'latest',
+        },
+        plugins: {
+            '@stylistic/js': stylisticJs,
+        },
+        rules: {
+            '@stylistic/js/indent': ['error', 4],
+            '@stylistic/js/linebreak-style': ['error', 'unix'],
+            '@stylistic/js/quotes': ['error', 'single'],
+            '@stylistic/js/semi': ['error', 'never'],
+            eqeqeq: ['error', 'always'],
+            'no-trailing-spaces': 'error',
+            'object-curly-spacing': ['error', 'always'],
+            'arrow-spacing': ['error', { before: true, after: true }],
+            'no-console': 'error',
+        },
     },
-    plugins: {
-      "@stylistic/js": stylisticJs,
+    {
+        ignores: ['dist/**', 'node_modules/**'],
     },
-    rules: {
-      "@stylistic/js/indent": ["error", 4],
-      "@stylistic/js/linebreak-style": ["error", "unix"],
-      "@stylistic/js/quotes": ["error", "single"],
-      "@stylistic/js/semi": ["error", "never"],
-      eqeqeq: ["error", "always"],
-      "no-trailing-spaces": "error",
-      "object-curly-spacing": ["error", "always"],
-      "arrow-spacing": ["error", { before: true, after: true }],
-      "no-console": "error",
-    },
-  },
-  {
-    ignores: ["dist/**", "node_modules/**"],
-  },
-  eslintConfigPrettier,
-];
+    eslintConfigPrettier,
+]

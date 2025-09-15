@@ -1,23 +1,23 @@
-import { filterChange } from "../reducers/anecdotesFilterReducer.js";
-import { useDispatch } from "react-redux";
+import { filterChange } from '../reducers/anecdotesFilterReducer.js'
+import { useDispatch } from 'react-redux'
 
 const AnecdotesFilter = () => {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch()
 
-  const handleChange = (event) => {
-    const filterText = event.target.value;
-    dispatch(filterChange(filterText));
-  };
+    const handleChange = (event) => {
+        const filterText = event.target.value
+        dispatch(filterChange(filterText))
+    }
 
-  const style = {
-    marginBottom: 10,
-  };
+    const style = {
+        marginBottom: 10,
+    }
 
-  return (
-    <div style={style}>
-      filter <input name="anecdoteFilterText" onChange={handleChange} />
-    </div>
-  );
-};
+    return (
+        <div style={style}>
+            filter <input name="anecdoteFilterText" onChange={handleChange} />
+        </div>
+    )
+}
 
-export default AnecdotesFilter;
+export default AnecdotesFilter

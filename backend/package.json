@@ -1,41 +1,46 @@
 {
-  "name": "fullstack_tutorial_backend",
-  "version": "0.0.0",
-  "description": "https://fullstackopen.com/en/part3/node_js_and_express",
-  "main": "index.js",
-  "scripts": {
-    "start": "cross-env NODE_ENV=production node index.js",
-    "dev": "cross-env NODE_ENV=development node --watch index.js",
-    "test": "cross-env  NODE_ENV=test node --test",
-    "debug": "cross-env  NODE_ENV=development node --inspect --watch index.js",
-    "test:only": "cross-env  NODE_ENV=test node --test-only --test",
-    "build:ui": "cd ../frontend && npm run deploy",
-    "deploy:full": "npm run build:ui && git add dist && git commit -m uibuild && git push",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "start:test": "cross-env NODE_ENV=test node index.js"
-  },
-  "author": "Laura Wetterwachs",
-  "license": "MIT",
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "cors": "^2.8.5",
-    "cross-env": "^10.0.0",
-    "dotenv": "^17.2.2",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "lodash": "^4.17.21",
-    "mongodb": "^6.19.0",
-    "mongoose": "^8.18.1",
-    "morgan": "^1.10.1"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.35.0",
-    "@stylistic/eslint-plugin-js": "^4.4.1",
-    "eslint": "^9.35.0",
-    "eslint-config-prettier": "^10.1.8",
-    "globals": "^16.4.0",
-    "prettier": "3.6.2",
-    "supertest": "^7.1.4"
-  }
+    "name": "fullstack_tutorial_backend",
+    "version": "0.0.0",
+    "description": "https://fullstackopen.com/en/part3/node_js_and_express",
+    "main": "index.js",
+    "scripts": {
+        "start": "cross-env NODE_ENV=production node index.js",
+        "dev": "cross-env NODE_ENV=development node --watch index.js",
+        "test": "cross-env  NODE_ENV=test node --test",
+        "debug": "cross-env  NODE_ENV=development node --inspect --watch index.js",
+        "test:only": "cross-env  NODE_ENV=test node --test-only --test",
+        "build:ui": "cd ../frontend && npm run deploy",
+        "deploy:full": "npm run build:ui && git add dist && git commit -m uibuild && git push",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "start:test": "cross-env NODE_ENV=test node index.js"
+    },
+    "author": "Laura Wetterwachs",
+    "license": "MIT",
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "cors": "^2.8.5",
+        "cross-env": "^10.0.0",
+        "dotenv": "^17.2.2",
+        "express": "^5.1.0",
+        "jsonwebtoken": "^9.0.2",
+        "lodash": "^4.17.21",
+        "mongodb": "^6.19.0",
+        "mongoose": "^8.18.1",
+        "morgan": "^1.10.1"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.35.0",
+        "@stylistic/eslint-plugin-js": "^4.4.1",
+        "eslint": "^9.35.0",
+        "eslint-config-prettier": "^10.1.8",
+        "globals": "^16.4.0",
+        "prettier": "3.6.2",
+        "supertest": "^7.1.4"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "semi": false,
+        "singleQuote": true
+    }
 }
