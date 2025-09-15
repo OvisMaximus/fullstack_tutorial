@@ -18,6 +18,8 @@ import AnecdoteForm from './components/AnecdoteForm.jsx'
 import CountryInfo from "./components/CountryInfo.jsx";
 import {Alert, AppBar, Button, Container, Toolbar} from "@mui/material";
 
+// TODO https://fullstackopen.com/en/part7/exercises_extending_the_bloglist
+
 const getLoggedInUser = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     return loggedUserJSON ? JSON.parse(loggedUserJSON) : null
