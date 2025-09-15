@@ -5,10 +5,12 @@ import blogService from '../services/blogs.js'
 import Togglable from './Togglable.jsx'
 import RenderOnlyWhen from './RenderOnlyWhen.jsx'
 import NewBlogForm from './NewBlogForm.jsx'
+import { useDispatch } from 'react-redux'
 
 const Blogs = ({ successMessage }) => {
     const [blogs, setBlogs] = useState([])
     const blogFormRef = useRef()
+    const dispatch = useDispatch()
     const user = JSON.parse(window.localStorage.getItem('loggedUser'))
 
     const createBlog = async (newBlog) => {
@@ -17,7 +19,7 @@ const Blogs = ({ successMessage }) => {
         await fetchBlogs()
         successMessage(
             `${newBlogObject.title} by ${newBlogObject.author} added`,
-        )
+        )(dispatch)
         blogFormRef.current.toggleVisibility()
     }
 
@@ -25,13 +27,15 @@ const Blogs = ({ successMessage }) => {
         const updatedBlog = await blogService.update(blog)
         console.log('updatedBlog: ', updatedBlog)
         await fetchBlogs()
-        successMessage(`${updatedBlog.title} by ${updatedBlog.author} updated`)
+        successMessage(`${updatedBlog.title} by ${updatedBlog.author} updated`)(
+            dispatch,
+        )
     }
 
     const deleteBlog = async (blog) => {
         await blogService.remove(blog.id, user.token)
         await fetchBlogs()
-        successMessage(`${blog.title} by ${blog.author} removed`)
+        successMessage(`${blog.title} by ${blog.author} removed`)(dispatch)
     }
 
     const fetchBlogs = async () => {

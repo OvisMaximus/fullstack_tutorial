@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useResource } from './hooks/index.js'
-import { Button } from './components/Button.jsx'
+import { useResource } from '../hooks/index.js'
+import { Button } from './Button.jsx'
+import { useDispatch } from 'react-redux'
 
 const handleWith = (handler) => (event) => handler(event.target.value)
 
@@ -26,6 +27,7 @@ const NewPersonForm = ({
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const personService = useResource('/api/persons')
+    const dispatch = useDispatch()
 
     const byName = (searchName) => (candidate) => candidate.name === searchName
 
@@ -42,13 +44,13 @@ const NewPersonForm = ({
                         person.id === updatedPerson.id ? updatedPerson : person,
                     ),
                 )
-                successMessage(`updated ${newName}`)
+                successMessage(`updated ${newName}`)(dispatch)
             })
             .catch((error) => {
                 console.log('error while updating person: ', error)
                 errorMessage(
                     `${newName} could not be updated: ${error.response.data.error}`,
-                )
+                )(dispatch)
             })
     }
 
@@ -60,13 +62,13 @@ const NewPersonForm = ({
             })
             .then((newPerson) => {
                 setPersons(persons.concat(newPerson))
-                successMessage(`added ${newName}`)
+                successMessage(`added ${newName}`)(dispatch)
             })
             .catch((error) => {
                 console.log('error while creating person: ', error)
                 errorMessage(
                     `${newName} could not be added: ${error.response.data.error}`,
-                )
+                )(dispatch)
             })
     }
 
@@ -133,6 +135,7 @@ const ListOfPersons = ({
     filter,
 }) => {
     const personService = useResource('/api/persons')
+    const dispatch = useDispatch()
 
     const byPartialName = (searchName) => (arrayEntry) =>
         arrayEntry.name.toLowerCase().includes(searchName.toLowerCase())
@@ -145,13 +148,13 @@ const ListOfPersons = ({
             .then((deletedPerson) => {
                 console.log('deleted person: ', deletedPerson)
                 setPersons(persons.filter((p) => p.id !== personToBeDeleted.id))
-                successMessage(`deleted ${personToBeDeleted.name}`)
+                successMessage(`deleted ${personToBeDeleted.name}`)(dispatch)
             })
             .catch((error) => {
                 console.log('error: ', error)
                 errorMessage(
                     `error: The person ${personToBeDeleted.name} was already removed from server`,
-                )
+                )(dispatch)
             })
     }
 
@@ -170,7 +173,7 @@ const ListOfPersons = ({
     )
 }
 
-const AddressBook = ({ errorMessage, successMessage }) => {
+const Phonebook = ({ errorMessage, successMessage }) => {
     const [persons, setPersons] = useState([])
     const [filter, setFilter] = useState('')
     const personService = useResource('/api/persons')
@@ -208,4 +211,4 @@ const AddressBook = ({ errorMessage, successMessage }) => {
     )
 }
 
-export default AddressBook
+export default Phonebook

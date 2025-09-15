@@ -2,12 +2,14 @@ import anecdotesService from '../services/anecdotesService.js'
 import localStorage from './helper/localStorageTools.js'
 import { useNavigate } from 'react-router-dom'
 import { useField } from '../hooks'
+import { useDispatch } from 'react-redux'
 
 const AnecdoteForm = ({ successMessage, errorMessage }) => {
     const navigate = useNavigate()
     const content = useField('text', 'anecdote', 'enter an anecdote')
     const author = useField('text', 'author', 'enter an author')
     const url = useField('text', 'url', 'enter an url')
+    const dispatch = useDispatch()
 
     const addAnecdote = async (event) => {
         event.preventDefault()
@@ -20,10 +22,10 @@ const AnecdoteForm = ({ successMessage, errorMessage }) => {
             const token = localStorage.extractUser().token
             const anecdote = await anecdotesService.create(newAnecdote, token)
             console.log('new anecdote created', anecdote)
-            successMessage(`you added ${content.value}`)
+            successMessage(`you added ${content.value}`)(dispatch)
             navigate('/Anecdotes')
         } catch (error) {
-            errorMessage(error.message)
+            errorMessage(error.message)(dispatch)
         }
     }
 

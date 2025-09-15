@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import anecdotesService from '../services/anecdotesService.js'
 import localStorage from './helper/localStorageTools.js'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 const Votes = ({ value, upvoteAction }) => (
@@ -12,11 +13,13 @@ const Votes = ({ value, upvoteAction }) => (
 const AnecdoteListItem = ({ anecdote, upvoteAction }) => (
     <li key={anecdote.id}>
         <Link to={anecdote.id}>{anecdote.content}</Link>
+        <Votes value={anecdote.likes} upvoteAction={upvoteAction} />
     </li>
 )
 const AnecdoteList = ({ successMessage }) => {
     const [anecdotes, setAnecdotes] = useState([])
-    const [filterText, setFilterText] = useState('')
+    const [filterText] = useState('')
+    const dispatch = useDispatch()
 
     useEffect(() => {
         loadAnecdotes()
@@ -41,6 +44,7 @@ const AnecdoteList = ({ successMessage }) => {
                 a.id !== updatedAnecdote.id ? a : updatedAnecdote,
             ),
         )
+        successMessage(`you voted for ${anecdote.content}`)(dispatch)
     }
 
     console.log('anecdotes: ', anecdotes)
@@ -64,7 +68,6 @@ const AnecdoteList = ({ successMessage }) => {
                         anecdote={anecdote}
                         upvoteAction={() => {
                             upvoteAnecdote(anecdote)
-                            successMessage(`you voted for ${anecdote.content}`)
                         }}
                     />
                 ))}

@@ -1,10 +1,6 @@
 import { useState } from 'react'
-import {
-    initErrorMessage,
-    initSuccessMessage,
-} from './components/helper/notification.js'
 import { ActiveUser, Login } from './components/UserAuthentication.jsx'
-import AddressBook from './AddressBook.jsx'
+import Phonebook from './components/Phonebook.jsx'
 import Notes from './Notes.jsx'
 import Blogs from './components/Blogs.jsx'
 import { Footer } from './components/Footer.jsx'
@@ -17,7 +13,9 @@ import AnecdoteList from './components/AnecdoteList.jsx'
 import Anecdote from './components/Anecdote.jsx'
 import AnecdoteForm from './components/AnecdoteForm.jsx'
 import CountryInfo from './components/CountryInfo.jsx'
-import { Alert, AppBar, Button, Container, Toolbar } from '@mui/material'
+import { AppBar, Button, Container, Toolbar } from '@mui/material'
+import Notification from './components/Notification.redux.jsx'
+import { successMessage, errorMessage } from './reducers/notificationReducer.js'
 
 const getLoggedInUser = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -25,16 +23,10 @@ const getLoggedInUser = () => {
 }
 
 const Application = () => {
-    const [message, setMessage] = useState(null)
-    const [status, setStatus] = useState('success')
     const [user, setUser] = useState(getLoggedInUser())
-
-    const errorMessage = initErrorMessage(setMessage, setStatus)
-    const successMessage = initSuccessMessage(setMessage, setStatus)
 
     return (
         <Container>
-            {message && <Alert severity={status}>{message}</Alert>}
             <AppBar position="static">
                 <Toolbar>
                     <Button color="inherit" component={Link} to="/">
@@ -72,7 +64,7 @@ const Application = () => {
                     )}
                 </Toolbar>
             </AppBar>
-
+            <Notification />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/notes/:id" element={<NoteDetailView />} />
@@ -124,7 +116,7 @@ const Application = () => {
                 <Route
                     path="/addressbook"
                     element={
-                        <AddressBook
+                        <Phonebook
                             successMessage={successMessage}
                             errorMessage={errorMessage}
                         />

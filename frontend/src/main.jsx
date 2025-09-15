@@ -4,12 +4,17 @@ import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 
 import Application from './Application.jsx'
-import { initStore } from './components/helper/notesStore.jsx'
 import { BrowserRouter as Router } from 'react-router-dom'
+import { configureStore } from '@reduxjs/toolkit'
+import notificationReducer from './reducers/notificationReducer.js'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
-const store = initStore()
+const store = configureStore({
+    reducer: {
+        notification: notificationReducer,
+    },
+})
 
 root.render(
     <StrictMode>

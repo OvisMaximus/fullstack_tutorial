@@ -7,10 +7,12 @@ import localStorage from './components/helper/localStorageTools.js'
 import { useResource } from './hooks/index.js'
 import { Table } from 'react-bootstrap'
 import { Paper, TableBody, TableContainer } from '@mui/material'
+import { useDispatch } from 'react-redux'
 
 const Notes = ({ errorMessage, successMessage }) => {
     const [notes, setNotes] = useState([])
     const [showAll, setShowAll] = useState(true)
+    const dispatch = useDispatch()
     const noteFormRef = useRef()
     const user = localStorage.extractUser() // script uses useEffect for initialization. why?
     const noteService = useResource(
@@ -34,7 +36,7 @@ const Notes = ({ errorMessage, successMessage }) => {
         noteFormRef.current.toggleVisibility()
         const newNote = await noteService.create(newNoteObject, user.token)
         setNotes(notes.concat(newNote))
-        successMessage(`added note: ${newNote.content}`)
+        successMessage(`added note: ${newNote.content}`)(dispatch)
     }
 
     const toggleImportanceOf = (id) => async () => {
@@ -51,11 +53,11 @@ const Notes = ({ errorMessage, successMessage }) => {
             setNotes(notes.map((note) => (note.id === id ? updatedNote : note)))
             successMessage(
                 `note '${updatedNote.content}' ${updatedNote.important ? 'made' : 'removed'} important`,
-            )
+            )(dispatch)
         } catch (error) {
             errorMessage(
                 `error: '${note.content}' could not be modified: ${error.response.data.error}`,
-            )
+            )(dispatch)
             console.log('error: ', error)
         }
     }
