@@ -7,12 +7,14 @@ import Application from './Application.jsx'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { configureStore } from '@reduxjs/toolkit'
 import notificationReducer from './reducers/notificationReducer.js'
+import blogReducer from './reducers/blogReducer.js'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 const store = configureStore({
     reducer: {
         notification: notificationReducer,
+        blog: blogReducer,
     },
 })
 

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ActiveUser, Login } from './components/UserAuthentication.jsx'
 import Phonebook from './components/Phonebook.jsx'
 import Notes from './Notes.jsx'
-import Blogs from './components/Blogs.jsx'
+import Blogs from './components/Blogs.redux.jsx'
 import { Footer } from './components/Footer.jsx'
 
 import { Routes, Route, Link, Navigate } from 'react-router-dom'

@@ -16,10 +16,12 @@ const create = async (newBlog, token) => {
     return response.data
 }
 
-const update = async (newBlog) => {
-    console.log('create blog with ', newBlog)
-
-    const response = await axios.put(`${baseUrl}/${newBlog.id}`, newBlog)
+const update = async (modifiedBlog) => {
+    console.log('update blog with ', modifiedBlog)
+    const response = await axios.put(
+        `${baseUrl}/${modifiedBlog.id}`,
+        modifiedBlog,
+    )
     return response.data
 }
 
