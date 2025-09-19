@@ -173,7 +173,7 @@ const ListOfPersons = ({
     )
 }
 
-const Phonebook = ({ errorMessage, successMessage }) => {
+const AdressBook = ({ errorMessage, successMessage }) => {
     const [persons, setPersons] = useState([])
     const [filter, setFilter] = useState('')
     const personService = useResource('/api/persons')
@@ -190,7 +190,7 @@ const Phonebook = ({ errorMessage, successMessage }) => {
 
     return (
         <div>
-            <h2>Phonebook</h2>
+            <h1>Address Book</h1>
             <Filter filter={filter} setFilter={setFilter} />
             <h2>Add a new</h2>
             <NewPersonForm
@@ -211,4 +211,4 @@ const Phonebook = ({ errorMessage, successMessage }) => {
     )
 }
 
-export default Phonebook
+export default AdressBook

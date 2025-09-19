@@ -11,13 +11,13 @@ const Votes = ({ value, upvoteAction }) => (
 const Anecdote = ({ anecdote, upvoteAction }) => (
     <div>
         {anecdote.content}
-        <Votes value={anecdote.votes} upvoteAction={upvoteAction} />
+        <Votes value={anecdote.likes} upvoteAction={upvoteAction} />
     </div>
 )
 const AnecdoteList = () => {
     const dispatch = useDispatch()
     const anecdotes = useSelector((state) => state.anecdotes)
-    const filterText = useSelector((state) => state.setFilter)
+    const filterText = useSelector((state) => state.anecdotesFilter)
     console.log('anecdotes: ', anecdotes)
     console.log('filterText: ', filterText)
     const anecdotesToDisplay = anecdotes
@@ -30,12 +30,13 @@ const AnecdoteList = () => {
 
     return (
         <div>
+            <h2>our current anecdotes</h2>
             {anecdotesToDisplay.map((anecdote) => (
                 <Anecdote
                     key={anecdote.id}
                     anecdote={anecdote}
                     upvoteAction={() => {
-                        dispatch(voteForAnecdote(anecdote.id))
+                        voteForAnecdote(anecdote.id)(dispatch)
                         dispatch(
                             successMessage(`you voted for ${anecdote.content}`),
                         )

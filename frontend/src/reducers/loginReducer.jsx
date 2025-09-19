@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import loginService from '../services/login.js'
+import localStorage from '../components/helper/localStorage.js'
 
 const loggedOff = {
     user: null,
@@ -8,7 +9,7 @@ const loggedOff = {
 
 const loginSlice = createSlice({
     name: 'login',
-    initialState: loggedOff,
+    initialState: localStorage.extractLogin(),
     reducers: {
         login(state, action) {
             const { name, username, token } = action.payload

@@ -69,9 +69,9 @@ export const ActiveUser = ({ user, successMessage }) => {
     }
     return (
         <div>
-            <p>
+            <span>
                 {user.name} logged in <Button onClick={logOff}>log off</Button>
-            </p>
+            </span>
         </div>
     )
 }

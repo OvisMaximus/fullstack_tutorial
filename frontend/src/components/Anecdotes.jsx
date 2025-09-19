@@ -1,21 +1,22 @@
 import AnecdoteForm from './NewAnecdoteForm.jsx'
 import AnecdoteList from './AnecdoteList.jsx'
 import AnecdotesFilter from './AnecdotesFilter.jsx'
-import Notification from './Notification.jsx'
 import { useEffect } from 'react'
 import { initializeAnecdotes } from '../reducers/anecdoteReducer.js'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-const AnecdotesApp = () => {
+const Anecdotes = () => {
     const dispatch = useDispatch()
+
     useEffect(() => {
         console.log('fetching anecdotes')
-        dispatch(initializeAnecdotes())
-    }, [dispatch])
+        initializeAnecdotes(dispatch).then((r) =>
+            console.log('anecdotes initialized.'),
+        )
+    }, [])
     return (
         <div>
             <h1>Anecdotes</h1>
-            <Notification />
             <AnecdotesFilter />
             <AnecdoteList />
             <AnecdoteForm />
@@ -23,4 +24,4 @@ const AnecdotesApp = () => {
     )
 }
 
-export default AnecdotesApp
+export default Anecdotes

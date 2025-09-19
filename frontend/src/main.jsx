@@ -11,14 +11,18 @@ import blogReducer from './reducers/blogReducer.js'
 import loginReducer from './reducers/loginReducer.jsx'
 import noteReducer from './reducers/noteReducer.js'
 import filterReducer from './reducers/filterReducer.js'
+import anecdoteReducer from './reducers/anecdoteReducer.js'
+import anecdotesFilterReducer from './reducers/anecdotesFilterReducer.js'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 const store = configureStore({
     reducer: {
         notification: notificationReducer,
-        blogs: blogReducer,
         login: loginReducer,
+        anecdotes: anecdoteReducer,
+        anecdotesFilter: anecdotesFilterReducer,
+        blogs: blogReducer,
         notes: noteReducer,
         notesFilter: filterReducer,
     },

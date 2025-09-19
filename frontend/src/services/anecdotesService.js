@@ -1,49 +1,24 @@
-import axios from 'axios'
+import crud from './crud'
 const baseUrl = 'http://localhost:3001/api/anecdotes'
 
-const getAll = async () => {
-    const response = await axios.get(baseUrl)
-    console.log('anecdoteService.getAll: ', response)
-    return response.data
-}
-const authorizationHeader = (token) => {
-    return {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-}
-
-const create = async (newAnecdote, token) => {
-    console.log(
-        'create anecdote with ',
-        newAnecdote,
-        authorizationHeader(token),
-    )
-    const response = await axios.post(
-        baseUrl,
-        newAnecdote,
-        authorizationHeader(token),
-    )
-    return response.data
-}
-
 const get = async (id) => {
-    const response = await axios.get(`${baseUrl}/${id}`)
-    return response.data
+    return await crud.get(baseUrl, id)
 }
 
-const update = async (updatedAnecdote, token) => {
-    console.log(
-        'update anecdote with ',
-        updatedAnecdote,
-        authorizationHeader(token),
-    )
-    const response = await axios.put(
-        `${baseUrl}/${updatedAnecdote.id}`,
-        updatedAnecdote,
-    )
-    return response.data
+const getAll = async () => {
+    return await crud.getAll(baseUrl)
 }
 
-export default { get, getAll, create, update }
+const create = (newObject, token) => {
+    return crud.create(baseUrl, newObject, token)
+}
+
+const update = (id, newObject, token) => {
+    return crud.update(baseUrl, id, newObject, token)
+}
+
+const deleteId = (id, token) => {
+    return crud.deleteId(baseUrl, id, token)
+}
+
+export default { get, getAll, create, update, deleteId }

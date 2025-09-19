@@ -15,6 +15,7 @@ const AnecdotesFilter = () => {
 
     return (
         <div style={style}>
+            <h2>show Anecdotes containing text</h2>
             filter <input name="anecdoteFilterText" onChange={handleChange} />
         </div>
     )
