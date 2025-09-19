@@ -1,7 +1,6 @@
-import { useState } from 'react'
-import { ActiveUser, Login } from './components/UserAuthentication.jsx'
+import { ActiveUser, Login } from './components/UserAuthentication.redux.jsx'
 import Phonebook from './components/Phonebook.jsx'
-import Notes from './Notes.jsx'
+import Notes from './components/NotesApp.redux.jsx'
 import Blogs from './components/Blogs.redux.jsx'
 import { Footer } from './components/Footer.jsx'
 
@@ -16,14 +15,11 @@ import CountryInfo from './components/CountryInfo.jsx'
 import { AppBar, Button, Container, Toolbar } from '@mui/material'
 import Notification from './components/Notification.redux.jsx'
 import { successMessage, errorMessage } from './reducers/notificationReducer.js'
-
-const getLoggedInUser = () => {
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    return loggedUserJSON ? JSON.parse(loggedUserJSON) : null
-}
+import { useSelector } from 'react-redux'
 
 const Application = () => {
-    const [user, setUser] = useState(getLoggedInUser())
+    const login = useSelector((state) => state.login)
+    const user = login.user
 
     return (
         <Container>
@@ -53,9 +49,7 @@ const Application = () => {
                     {user ? (
                         <ActiveUser
                             user={user}
-                            setUser={setUser}
                             successMessage={successMessage}
-                            errorMessage={errorMessage}
                         />
                     ) : (
                         <Button color="inherit" component={Link} to="/login">
@@ -133,7 +127,6 @@ const Application = () => {
                     path="/login"
                     element={
                         <Login
-                            setUser={setUser}
                             successMessage={successMessage}
                             errorMessage={errorMessage}
                         />

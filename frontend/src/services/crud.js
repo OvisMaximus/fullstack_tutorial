@@ -28,6 +28,9 @@ const create = (baseUrl, newObject, token) => {
 
 const update = async (baseUrl, updatedObject, token) => {
     console.log('crud update with ', updatedObject)
+    if (token) {
+        console.log('  using token ', token)
+    }
     const response = token
         ? await axios.put(
               `${baseUrl}/${updatedObject.id}`,
@@ -40,9 +43,11 @@ const update = async (baseUrl, updatedObject, token) => {
 }
 
 const deleteId = (baseUrl, id, token) => {
+    const targetUrl = `${baseUrl}/${id}`
+    console.log(`deleteId ${targetUrl} with token '${token}'`)
     const request = token
-        ? axios.delete(`${baseUrl}/${id}`, authorizationHeader(token))
-        : axios.delete(`${baseUrl}/${id}`)
+        ? axios.delete(targetUrl, authorizationHeader(token))
+        : axios.delete(targetUrl)
     return request.then((response) => response.data)
 }
 

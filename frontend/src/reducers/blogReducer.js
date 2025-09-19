@@ -27,7 +27,7 @@ const blogSlice = createSlice({
 })
 
 export const { addBlog, updateBlog, setBlogs, removeBlog } = blogSlice.actions
-let token = ''
+
 export const initializeBlogs = () => {
     return async (dispatch) => {
         const blogs = await blogService.getAll()
@@ -35,28 +35,25 @@ export const initializeBlogs = () => {
         dispatch(setBlogs(blogs))
     }
 }
-export const createBlog = (blog) => {
+export const createBlog = (blog, login) => {
     return async (dispatch) => {
-        const newBlog = await blogService.create(blog, token)
+        const newBlog = await blogService.create(blog, login.token)
         dispatch(addBlog(newBlog))
     }
 }
-export const deleteBlog = (id) => {
+export const deleteBlog = (id, login) => {
     return async (dispatch) => {
-        await blogService.remove(id, token)
+        await blogService.remove(id, login.token)
         dispatch(removeBlog(id))
     }
 }
-export const likeBlog = (blog) => {
+export const likeBlog = (blog, login) => {
     return async (dispatch) => {
         console.log('likeBlog (unmodified): ', blog)
         const likedBlog = { ...blog, likes: blog.likes + 1 }
-        const updatedBlog = await blogService.update(likedBlog, token)
+        const updatedBlog = await blogService.update(likedBlog, login.token)
         dispatch(updateBlog(updatedBlog))
     }
-}
-export const setToken = (newToken) => {
-    token = newToken
 }
 
 export default blogSlice.reducer

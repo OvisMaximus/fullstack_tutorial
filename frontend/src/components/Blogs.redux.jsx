@@ -3,25 +3,23 @@ import Blog from './Blog.jsx'
 import Togglable from './Togglable.jsx'
 import RenderOnlyWhen from './RenderOnlyWhen.jsx'
 import NewBlogForm from './NewBlogForm.jsx'
-import { useDispatch, useSelector, useStore } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
     initializeBlogs,
     deleteBlog as deleteBlogReducer,
     likeBlog as likeBlogReducer,
     createBlog as createBlogReducer,
-    setToken,
 } from '../reducers/blogReducer.js'
 
 const Blogs = ({ successMessage }) => {
     const blogFormRef = useRef(null)
     const dispatch = useDispatch()
-    const blogs = [...useSelector((state) => state.blog)]
-    const store = useStore()
-    const user = JSON.parse(window.localStorage.getItem('loggedUser'))
-    setToken(user ? user.token : null)
+    const blogs = [...useSelector((state) => state.blogs)]
+    const login = useSelector((state) => state.login)
+    const user = login.user
 
     const createBlog = async (newBlogObject) => {
-        await createBlogReducer(newBlogObject)(dispatch)
+        await createBlogReducer(newBlogObject, login)(dispatch)
         successMessage(
             `${newBlogObject.title} by ${newBlogObject.author} added`,
         )(dispatch)
@@ -29,8 +27,8 @@ const Blogs = ({ successMessage }) => {
     }
 
     const likeBlog = async (blog) => {
-        await likeBlogReducer(blog)(dispatch)
-        const updatedBlog = store.getState().blog.find((b) => b.id === blog.id)
+        await likeBlogReducer(blog, login)(dispatch)
+        const updatedBlog = blogs.find((b) => b.id === blog.id)
         console.log('updatedBlog: ', updatedBlog)
         successMessage(`${updatedBlog.title} by ${updatedBlog.author} updated`)(
             dispatch,
@@ -38,7 +36,7 @@ const Blogs = ({ successMessage }) => {
     }
 
     const deleteBlog = async (blog) => {
-        await deleteBlogReducer(blog.id)(dispatch)
+        await deleteBlogReducer(blog.id, login)(dispatch)
         successMessage(`${blog.title} by ${blog.author} removed`)(dispatch)
     }
 

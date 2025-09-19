@@ -17,7 +17,7 @@ const Anecdote = ({ anecdote, upvoteAction }) => (
 const AnecdoteList = () => {
     const dispatch = useDispatch()
     const anecdotes = useSelector((state) => state.anecdotes)
-    const filterText = useSelector((state) => state.filterText)
+    const filterText = useSelector((state) => state.setFilter)
     console.log('anecdotes: ', anecdotes)
     console.log('filterText: ', filterText)
     const anecdotesToDisplay = anecdotes

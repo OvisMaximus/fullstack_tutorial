@@ -1,53 +1,24 @@
-import axios from 'axios'
+import crud from './crud'
 const baseUrl = 'http://localhost:3001/api/notes'
-//const baseUrl = '/api/notes'
 
 const get = async (id) => {
-    const response = await axios.get(`${baseUrl}/${id}`)
-    return response.data
+    return await crud.get(baseUrl, id)
 }
 
 const getAll = async () => {
-    const response = await axios.get(baseUrl)
-    return response.data
+    return await crud.getAll(baseUrl)
 }
 
-// for dummy backend
-const createNew = async (content) => {
-    const note = { content, important: false }
-    const response = await axios.post(baseUrl, note)
-    return response.data
-}
-
-const authorizationHeader = (token) => {
-    return {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-}
-
-// for real backend
 const create = (newObject, token) => {
-    const request = axios.post(baseUrl, newObject, authorizationHeader(token))
-    return request
-        .then((response) => response.data)
-        .catch((error) => {
-            throw error
-        })
+    return crud.create(baseUrl, newObject, token)
 }
 
 const update = (id, newObject, token) => {
-    const request = axios.put(
-        `${baseUrl}/${id}`,
-        newObject,
-        authorizationHeader(token),
-    )
-    return request
-        .then((response) => response.data)
-        .catch((error) => {
-            throw error
-        })
+    return crud.update(baseUrl, id, newObject, token)
 }
 
-export default { get, getAll, createNew, create, update }
+const deleteId = (id, token) => {
+    return crud.deleteId(baseUrl, id, token)
+}
+
+export default { get, getAll, create, update, deleteId }

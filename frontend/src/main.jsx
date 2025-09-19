@@ -8,13 +8,19 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { configureStore } from '@reduxjs/toolkit'
 import notificationReducer from './reducers/notificationReducer.js'
 import blogReducer from './reducers/blogReducer.js'
+import loginReducer from './reducers/loginReducer.jsx'
+import noteReducer from './reducers/noteReducer.js'
+import filterReducer from './reducers/filterReducer.js'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 const store = configureStore({
     reducer: {
         notification: notificationReducer,
-        blog: blogReducer,
+        blogs: blogReducer,
+        login: loginReducer,
+        notes: noteReducer,
+        notesFilter: filterReducer,
     },
 })
 

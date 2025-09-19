@@ -1,5 +1,5 @@
 import NewNote from './NewNote.redux.jsx'
-import NotesList from './NotesList.jsx'
+import NotesList from './NotesList.redux.jsx'
 import VisibilityFilter from './VisibilityFilter.jsx'
 import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'

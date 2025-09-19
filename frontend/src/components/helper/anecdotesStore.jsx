@@ -7,7 +7,7 @@ export const initStore = () => {
     const store = configureStore({
         reducer: {
             anecdotes: anecdoteReducer,
-            filterText: anecdotesFilterReducer,
+            setFilter: anecdotesFilterReducer,
             notification: notificationReducer,
         },
     })

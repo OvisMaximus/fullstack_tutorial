@@ -1,29 +1,29 @@
-import loginService from '../services/login.js'
 import { useState } from 'react'
 import Togglable from './Togglable.jsx'
 import RenderOnlyWhen from './RenderOnlyWhen.jsx'
 import { useNavigate } from 'react-router-dom'
 import { Button, TextField } from '@mui/material'
+import { loginUser, logout } from '../reducers/loginReducer.jsx'
+import { useDispatch, useStore } from 'react-redux'
 
-export const Login = ({ setUser, successMessage, errorMessage }) => {
+export const Login = ({ successMessage, errorMessage }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
+    const store = useStore()
 
+    const clearInputFields = () => {
+        setUsername('')
+        setPassword('')
+    }
     const handleLogin = async (event) => {
         event.preventDefault()
 
         try {
-            const user = await loginService.login({
-                username,
-                password,
-            })
-
-            successMessage(`Welcome ${user.name}`)
-            window.localStorage.setItem('loggedUser', JSON.stringify(user))
-            setUser(user)
-            setUsername('')
-            setPassword('')
+            await loginUser(username, password, store.dispatch)
+            const login = store.getState().login
+            successMessage(`Welcome ${login.user.name}`)
+            clearInputFields()
             navigate('/')
         } catch (_) {
             console.log('login failed', _)
@@ -58,10 +58,10 @@ export const Login = ({ setUser, successMessage, errorMessage }) => {
     )
 }
 
-export const ActiveUser = ({ user, setUser, successMessage }) => {
+export const ActiveUser = ({ user, successMessage }) => {
+    const dispatch = useDispatch()
     const logOff = () => {
-        window.localStorage.removeItem('loggedUser')
-        setUser(null)
+        dispatch(logout())
         successMessage('logged off')
     }
     return (
@@ -72,7 +72,7 @@ export const ActiveUser = ({ user, setUser, successMessage }) => {
         </div>
     )
 }
-const UserAuthentication = ({ setUser, successMessage, errorMessage }) => {
+const UserAuthentication = ({ successMessage, errorMessage }) => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     const user = loggedUserJSON ? JSON.parse(loggedUserJSON) : null
 
@@ -84,7 +84,6 @@ const UserAuthentication = ({ setUser, successMessage, errorMessage }) => {
             <RenderOnlyWhen condition={!user}>
                 <Togglable showButtonLabel="login" hideButtonLabel="cancel">
                     <Login
-                        setUser={setUser}
                         errorMessage={errorMessage}
                         successMessage={successMessage}
                     />
