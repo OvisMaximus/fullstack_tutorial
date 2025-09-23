@@ -24,6 +24,9 @@ morgan.token('request-json', function (req) {
 app.use(
     morgan(
         ':method :url :status :res[content-length] - :response-time ms :request-json',
+        {
+            skip: (req) => req.baseUrl.search(/\/login/) !== -1,
+        },
     ),
 )
 if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development') {

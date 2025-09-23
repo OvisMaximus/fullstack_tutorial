@@ -1,6 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer.js'
-import { successMessage } from '../reducers/notificationReducer.js'
+import {
+    errorMessage,
+    successMessage,
+} from '../reducers/notificationReducer.js'
 
 const AnecdoteForm = () => {
     const dispatch = useDispatch()
@@ -14,8 +17,18 @@ const AnecdoteForm = () => {
             important: false,
             votes: 0,
         }
-        dispatch(createAnecdote(newAnecdote))
-        dispatch(successMessage(`you added ${content}`))
+        createAnecdote(newAnecdote, login, dispatch)
+            .then((response) => {
+                console.log('anecdote created: ', response)
+                dispatch(successMessage(`you added ${content}`))
+            })
+            .catch((error) => {
+                dispatch(
+                    errorMessage(
+                        `Creation of anecdote failed: ${error.response.data.error}`,
+                    ),
+                )
+            })
     }
 
     return login && login.user ? (

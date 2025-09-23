@@ -43,7 +43,7 @@ export const createBlog = (blog, login) => {
 }
 export const deleteBlog = (id, login) => {
     return async (dispatch) => {
-        await blogService.remove(id, login.token)
+        await blogService.deleteId(id, login.token)
         dispatch(removeBlog(id))
     }
 }

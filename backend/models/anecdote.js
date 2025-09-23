@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const anecdoteSchema = mongoose.Schema({
     content: { type: String, required: true },
     author: String,
-    url: { type: String, required: true },
+    url: { type: String, required: false },
     likes: { type: Number, default: 0 },
     user: {
         type: mongoose.Schema.Types.ObjectId,

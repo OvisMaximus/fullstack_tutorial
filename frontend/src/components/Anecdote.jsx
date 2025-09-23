@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import anecdotesService from '../services/anecdotesService.js'
+import anecdotesService from '../services/anecdotes.js'
 import { useEffect, useState } from 'react'
 
 const Anecdote = ({ errorMessage }) => {

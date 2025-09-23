@@ -7,10 +7,14 @@ const setResponseToFail = (response, code, reason) => {
 }
 
 const requestLogger = (request, response, next) => {
+    logger.info('---')
     logger.info('Method:', request.method)
     logger.info('Path:  ', request.path)
-    logger.info('Body:  ', request.body)
-    logger.info('---')
+    logger.info(
+        'Body:  ',
+        request.path.search(/\/login\//) ? 'hidden' : request.body,
+    )
+
     next()
 }
 
@@ -65,9 +69,11 @@ const tokenExtractor = async (request, response, next) => {
     if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
         const token = decodeToken(authorization.substring(7))
         if (!token) {
+            logger.info('no token')
             response.status(401).json({ error: 'token invalid' }).end()
             return
         }
+        logger.info('token: ', token)
         request.token = token
     } else {
         request.token = null
